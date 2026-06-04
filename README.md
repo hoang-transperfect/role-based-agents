@@ -42,13 +42,13 @@ This folder follows the following structure:
 ├── ai.json                          # AI settings: rules, skills, mcp, ...
 ├── AGENT.md                         # Agent definition
 ├── CLAUDE.md, ...                   # Link to AGENT.md
-├── project.json                     # Project list including project name, in-progress tasks (status, description)
+├── project.md                       # Project list including project name, in-progress tasks
 └── [enterprise folders]/            # Organizations or departments
-    ├── resource.json                # Shared resources such as knowledge for the enterprise
+    ├── resource.md                  # Shared resources such as knowledge for the enterprise
     └── [team folders]/              # Specific teams within the enterprise
-        ├── resource.json            # Team-specific resources such as knowledge
+        ├── resource.md              # Team-specific resources such as knowledge
         └── [project folders]/       # Individual projects managed by the team
-            ├── resource.json        # Project-specific resources such as knowledge
+            ├── resource.md          # Project-specific resources such as knowledge
             ├── raw-conversation/    # Logs and transcripts of chat sessions
             └── in-progress-tasks/   # Manage in-progress tasks (Markdown files per task)
 ```
