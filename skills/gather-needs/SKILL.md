@@ -18,7 +18,7 @@ hands off to the appropriate skill with all needed information — no re-asking 
 All projects live under a single fixed root (no per-project working directory):
 
 ```bash
-PROJECTS_ROOT="$HOME/projects"   # change here if your root differs
+PROJECTS_ROOT="<assistant-folder>/projects"   # assistant-folder is the directory containing this assistant's definition file (e.g. assistants/ba-assistant)
 ```
 
 ---

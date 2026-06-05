@@ -17,7 +17,7 @@ be confirmed by the user (via gather-needs).
 All projects live under a single fixed root. There is **no per-project working directory**.
 
 ```bash
-PROJECTS_ROOT="$HOME/projects"   # change here if your root differs
+PROJECTS_ROOT="<assistant-folder>/projects"   # assistant-folder is the directory containing this assistant's definition file (e.g. assistants/ba-assistant)
 ```
 
 ## Inputs (provided by gather-needs)
