@@ -66,12 +66,15 @@ overwriting it. Update the `updated:` field in the frontmatter to today's date.
 
 ## Step 3 — Open the Next Chat Session
 
-Append the next session heading. The script auto-increments based on the highest existing
+Append the next session heading. Auto-increments based on the highest existing
 `## Chat Session N`, so a resumed task continues at Session 2, 3, and so on:
 
 ```bash
-python scripts/log_session.py start \
-  --log "$PROJECTS_ROOT/<project>/raw-conversation/<task-id>-conv-001.md"
+log_path="$PROJECTS_ROOT/<project>/raw-conversation/<task-id>-conv-001.md"
+n=$(grep -E '^## Chat Session [0-9]+' "$log_path" | grep -oE '[0-9]+' | sort -n | tail -1 || true)
+n=$(( ${n:-0} + 1 ))
+[[ -s "$log_path" ]] && [[ "$(tail -c1 "$log_path" | wc -l)" -eq 0 ]] && printf '\n' >> "$log_path"
+printf '\n## Chat Session %s — %s\n' "$n" "$(date +%Y-%m-%d)" >> "$log_path"
 ```
 
 ---

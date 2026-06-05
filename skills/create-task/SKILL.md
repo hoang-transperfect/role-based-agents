@@ -72,10 +72,15 @@ updated: <YYYY-MM-DD>
 
 ## Step 3 — Open Session 1
 
-Run the bundled script to append the first session heading:
+Append the first session heading to the conversation log:
 
 ```bash
-python scripts/log_session.py start --log <project>/raw-conversation/<task-id>-conv-001.md
+log_path="<project>/raw-conversation/<task-id>-conv-001.md"
+n=$(grep -E '^## Chat Session [0-9]+' "$log_path" | grep -oE '[0-9]+' | sort -n | tail -1 || true)
+n=$(( ${n:-0} + 1 ))
+[[ -s "$log_path" ]] && [[ "$(tail -c1 "$log_path" | wc -l)" -eq 0 ]] && printf '\n' >> "$log_path"
+printf '\n## Chat Session %s — %s\n' "$n" "$(date +%Y-%m-%d)" >> "$log_path"
+echo "$n"
 ```
 
 This appends `## Chat Session 1 — <today>` and prints the session number.

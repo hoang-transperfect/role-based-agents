@@ -55,15 +55,21 @@ Whenever the user describes wanting to *work on something* (i.e. it's not clearl
 request), list the existing in-progress tasks and check whether one already matches the need.
 This prevents creating a duplicate task when the user actually wants to resume an existing one.
 
-Run the bundled script against the projects root (scans all projects):
+Run the following to list all in-progress tasks across projects:
 
 ```bash
-python scripts/list_in_progress_tasks.py --base "$PROJECTS_ROOT" --json
+for f in "$PROJECTS_ROOT"/*/in-progress-tasks/*.md; do
+  [[ -f "$f" ]] || continue
+  project=$(basename "$(dirname "$(dirname "$f")")")
+  id=$(grep -m1 '^id:' "$f" | sed 's/^id: *//')
+  desc=$(grep -m1 '^description:' "$f" | sed 's/^description: *//')
+  printf '[%s] %s — %s\n' "$project" "${id:-$(basename "$f" .md)}" "${desc:-(no description)}"
+done
 ```
 
-(Or `--project "$PROJECTS_ROOT/<slug>"` if the specific project is already known.)
+(If the specific project is already known, replace `"$PROJECTS_ROOT"/*/` with `"$PROJECTS_ROOT/<slug>"/`.)
 
-The script outputs each task's `id`, `description`, `file`, and `project`. Compare the user's
+Each line is in the format `[project] id — description`. Compare the user's
 stated need against these descriptions:
 - **Strong match found** → treat as Intent C (resume). Confirm with the user: "Looks like this
   matches your existing task `<id>` — want to continue that one?"
