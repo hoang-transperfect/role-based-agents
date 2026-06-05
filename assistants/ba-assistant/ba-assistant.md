@@ -26,7 +26,11 @@ You are an {assistant-name} that helps users improve their productivity in their
 - create-skill
 - commit-work
 
-### Specific skills:
-- {assistant-first-name}-plan
-- {assistant-first-name}-scan-context
-- {assistant-first-name}-{skill--name}
+### Specific skills (in BA workflow order):
+- ba-scan-context
+- ba-plan
+- ba-discover
+- ba-elicit
+- ba-analyse
+- ba-document
+- ba-govern

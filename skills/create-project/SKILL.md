@@ -23,6 +23,10 @@ PROJECTS_ROOT="$HOME/projects"   # change here if your root differs
 ## Inputs (provided by gather-needs)
 
 - `project-name` — slugified folder name (lowercase, spaces → hyphens)
+- `real-project-path` — absolute path to the **real project folder**: where the actual work and
+  deliverables live (the codebase, project docs, existing documentation). This is distinct from
+  the workspace folder this skill creates under `$PROJECTS_ROOT`, which holds only the
+  assistant's bookkeeping (tasks, conversation logs, resource.md). Ask for it if not provided.
 - `resources` — list of `{ url, description }` entries (may be empty)
 
 ---
@@ -41,15 +45,36 @@ mkdir -p "$PROJECT_DIR/in-progress-tasks"
 
 Path: `$PROJECT_DIR/resource.md`
 
+The frontmatter records the **real project folder** so any skill can locate where deliverables
+and existing documentation live. This is the single source of truth for that path — skills read
+`real_project_path` from here rather than assuming a location.
+
 ```markdown
+---
+project_name: <Project Name>
+real_project_path: <absolute path to the real project folder>
+---
+
 # <Project Name> – Resources
 
 A curated list of resources for this project. Each entry has a link and a description
 so that agents can detect which resource is relevant and retrieve it when needed.
 
+**Real project folder:** `<absolute path>` — where the actual work, deliverables, and existing
+documentation live. Project artifacts are written under here.
+
 ## Resources
 
 - **[Resource Title](https://url)** — <one-sentence description of what this resource contains and when to use it>
+
+## Notes
+
+Project-specific preferences and decisions that should guide future work on this project. Any
+skill may append here when it learns something local to this project (for example, `improve-skill`
+records preferences that are project-specific rather than a skill gap). Keep entries short and
+dated so future work can honour them.
+
+<!-- - <date>: <preference or decision, stated as guidance for future work> -->
 ```
 
 Populate from the confirmed resources list. If empty, leave one placeholder line and a comment:
@@ -62,9 +87,10 @@ Populate from the confirmed resources list. If empty, leave one placeholder line
 ## Step 3 — Confirm Success
 
 Tell the user:
-- Full path to the new project folder (under the projects root)
+- Full path to the new workspace folder (under the projects root)
+- The recorded real project folder path (from `real_project_path`)
 - Brief explanation of each item:
-  - `resource.md` — curated resource list; each entry has a link + description so agents know what to retrieve and when
+  - `resource.md` — curated resource list + the real project folder path; each resource entry has a link + description so agents know what to retrieve and when
   - `raw-conversation/` — one `.md` log file per chat session (created by `create-task`)
   - `in-progress-tasks/` — one `.md` file per task (created by `create-task`)
   

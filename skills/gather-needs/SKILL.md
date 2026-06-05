@@ -23,6 +23,22 @@ PROJECTS_ROOT="$HOME/projects"   # change here if your root differs
 
 ---
 
+## Step 0 — Before-work guard (start of session)
+
+Because this skill runs once at the start of every conversation, it is the right place to make
+sure work begins on a clean slate. Invoke the **`commit-work` before-work guard** (Job 1) against
+the **real project repo** (`real_project_path` from `resource.md`) — where deliverables land — so
+that if its tree is dirty, the user stashes or commits before anything proceeds.
+
+Timing: the guard needs the project's `real_project_path`, so run it as soon as the target project
+is known. For **resume / new-task** intents the project is identified during intent detection
+below, so guard right after. For a **new-project** intent the path is supplied during intake
+(Step 2) and recorded by `create-project`, so guard once it exists. This is the *only* place the
+guard runs — individual skills do **not** re-check the tree in their input gates; they assume the
+session started clean.
+
+---
+
 ## Step 1 — Scan the Conversation for Intent
 
 Read the user's opening message(s) and infer which of the three scenarios applies:
@@ -65,9 +81,13 @@ inferrable from context and present it as the default.
 ### If Intent A — New Project
 Needed by `create-project`:
 - Project name *(infer from context if possible)*
+- Real project path — absolute path to the **real project folder** where the actual work,
+  deliverables, and existing docs live *(ask if not stated; it is recorded in resource.md and is
+  where project artifacts get written)*
 - Resources: a list of links + descriptions *(infer any URLs/docs mentioned)*
 
-(No working directory — the project is created under `$PROJECTS_ROOT` automatically.)
+(The workspace folder is created under `$PROJECTS_ROOT` automatically; the real project folder
+is a separate location the user supplies.)
 
 ### If Intent B — New Task
 Needed by `create-task`:

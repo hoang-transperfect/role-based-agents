@@ -1,0 +1,185 @@
+---
+name: ba-document
+description: >
+  Handles Business Analysis step 7 — turning prioritised, validated requirements into the formal
+  agile backlog other teams build from. Invoke when a BA needs to write or update epics, features,
+  and user stories, or when the task's ## Plan marks Step 7 as next. It authors the Epic → Feature
+  → User Story tree as markdown in the real project's ba-requirement folder — each story clear,
+  uniquely ID'd, and testable (Given/When/Then acceptance criteria), with non-functional and
+  service-level needs explicitly captured — then ticks the checklist box. Behaviour adapts to the
+  work mode (build the tree from scratch, extend it, or update a story in place).
+---
+
+# ba-document
+
+Covers **Step 7 (Document Requirements)**. This is where validated requirements become the formal
+**agile backlog** — the Epic → Feature → User Story tree that Designers and Developers build from
+(tracked alongside Bitbucket). The bar is high because other teams act on this directly: every
+story must be **clear, traceable, and testable**, and the easily-forgotten things — non-functional
+requirements and the end-to-end service view — must be captured, not dropped.
+
+## Where things live
+
+- Read `real_project_path` from the project's `resource.md` frontmatter.
+- Write the formal backlog under `<real_project_path>/ba-requirement/` as markdown:
+
+```
+ba-requirement/
+  epic-01-<slug>/
+    epic.md                      # EPIC-01: goal, scope, linked features
+    feature-01-<slug>/
+      feature.md                 # FEAT-01: description + its user stories (US-001…) with AC
+  non-functional.md              # NFR-01…: cross-cutting NFRs, linked to the features they constrain
+```
+
+- IDs: `EPIC-01`, `FEAT-01`, `US-001`, `NFR-01` — unique and never reused. **Read the existing
+  tree first** and continue numbering from the highest used, so develop/maintain work never
+  collides with or renumbers what's already there.
+- Tick Step 7 in the task file's `## Plan` checklist when confirmed. (Working notes for this task
+  stay in `ba-artifacts/<task-id>/`; only the formal backlog goes in `ba-requirement/`.)
+
+---
+
+## The skill contract
+
+### Inputs
+- `ba-artifacts/<task-id>/prioritised-requirements.md` from `ba-analyse`.
+- The existing `ba-requirement/` tree (for develop/maintain — what to extend or change).
+- The stakeholder register (who each item serves) and the business problem.
+
+### Input Acceptance Criteria
+- A prioritised, validated requirements set exists. If requirements are still unvalidated or
+  unranked, hand back to `ba-analyse` — publishing assumptions as a formal backlog is exactly what
+  this step must avoid.
+- For `develop`/`maintain`: the relevant part of the existing tree has been located (via
+  `ba-scan-context`). If it wasn't, find it before writing, so you extend/edit rather than
+  duplicate.
+
+### Outputs
+- New or updated `epic.md` / `feature.md` files (and `non-functional.md`) under `ba-requirement/`.
+
+### Output Quality Criteria
+- **Hierarchy is sound:** every story sits under a feature, every feature under an epic. A story
+  that's really an epic (too big to build/test as one increment) is split.
+- **Clear:** each item is unambiguous — a developer/designer can't reasonably read it two ways.
+- **Traceable:** each item has a unique ID and references its source (prioritised requirement /
+  finding), so it can be traced **back to its origin**. (Forward tracing to design/build/test
+  belongs to the delivery teams in their tools — not the BA backlog.)
+- **Testable:** each story has acceptance criteria in **Given/When/Then** form. If you can't write
+  the test, the story isn't specified well enough yet.
+- **Behaviour is explicit (see / do / get):** each story states what **information the user must
+  see**, what **actions** they can take, and what **response** each action returns — success *and*
+  failure — never left to inference from the story sentence.
+- **Ready for other teams (Definition of Ready):** each story carries enough *functional* context
+  that **Design can write its design requirement and Dev can build — without coming back to the
+  BA**: the see/do/get **behaviour**, business rules, roles/permissions, dependencies, error/edge
+  cases, and explicit out-of-scope. (Experience/UX is Design's to define; analytics only when the
+  BA has raised it.) A field left blank that a team would need is a defect in the item.
+- **Non-functional requirements are explicit** — performance, usability, accessibility, security —
+  captured as their own `NFR-*` items and linked to the features/stories they constrain, not
+  buried or assumed.
+- **The functional user flow is documented** — main flow plus **alternate/exception paths** — at
+  the feature level (epic level for a cross-feature journey; story level only when a single story's
+  sequence is non-trivial). This is the end-to-end journey, not the UI (Design's). Exception
+  branches must be explicit — that's where requirements are usually weakest.
+- **Service-level perspective is represented** — end-to-end journeys, governance, support/
+  operational needs — not only discrete features.
+- **Priority carries through:** each story keeps the MoSCoW/Kano priority agreed in `ba-analyse`.
+- **Goals trace down:** the epic's goal and success metrics align with the Plan's Problem framing
+  (objectives + success criteria) — the backlog serves the stated problem, not a drifted one.
+
+---
+
+## The 3-gate flow
+
+### Gate 1 — Input
+Read inputs, check against Input Acceptance Criteria. If requirements aren't validated/prioritised,
+hand back to `ba-analyse`; for develop/maintain, make sure you've located the existing tree first.
+Do not assume. (Tree already clean from the session-start guard.)
+
+### Gate 2 — Process
+Author the backlog, adapting to the **work mode** recorded in `## Plan`:
+
+- **from-scratch** — derive epics from the big capabilities, break each into features, then write
+  stories. Build the whole tree.
+- **develop** — slot new stories under the right existing feature/epic, or add a new feature/epic;
+  assign the next free IDs; keep existing items intact.
+- **maintain** — edit the affected story/feature in place; keep its ID; note what changed (the
+  change record itself is `ba-govern`'s job).
+
+Write items in these shapes. Fill every field a consuming team would need — a thin field forces a
+round-trip back to the BA, which is exactly what the backlog must prevent. Omit a field only when
+it genuinely doesn't apply.
+
+```markdown
+# EPIC-01 — <name>
+**Goal / outcome:** <the capability and the business outcome it delivers>
+**Business value / why:** <the problem it solves>
+**Success metrics:** <how we'll know it worked>
+**Scope:** In — <…> · Out — <…>
+**Owner / sponsor:** <who>   **Priority:** Must
+**Features:** FEAT-01, FEAT-02
+**Dependencies / constraints:** <other epics, systems, regulatory>
+
+# FEAT-01 — <name>   (epic: EPIC-01)
+**Intent / user value:** <what this feature enables and for whom>
+**Scope:** In — <…> · Out — <…>
+**Stories:** US-001, US-002       **Applies NFRs:** NFR-01
+**Dependencies:** <APIs, other features>     **Open questions:** <…>
+**User flow (functional — not UI):**
+  _Main flow:_ 1. <step> → 2. <step> → 3. <step>
+  _Alternate / exception flows:_ 2a. <branch>; 3a. <exception → which story handles it>
+
+## US-001 — <title>   (feature: FEAT-01)
+**Priority:** Must   **Source:** <req/finding ref>   **Status:** ready / provisional
+**Story:** As a <role>, I want <capability> so that <benefit>.
+**Roles / permissions:** <who may perform this>
+**Preconditions / trigger:** <entry state; what starts the flow>
+**Behaviour (what the user sees / does / gets):**
+- **Information shown:** <data/elements the user must see — conceptual, not UI layout>
+- **Actions available:** <what the user can do here>
+- **Responses:** <what each action returns — the success result *and* the failure/feedback>
+**Acceptance criteria (Given/When/Then):**   *(verifies the behaviour above)*
+- Given <context>, when <action>, then <result>.
+**Business rules:** <the logic Dev must encode>
+**Dependencies:** <other stories, systems, APIs>
+**NFRs / constraints:** <which NFR-* apply>
+**Error / edge cases:** <exceptional paths beyond the standard responses>
+**Out of scope:** <explicit non-goals>
+**Open questions / assumptions:** <…>
+
+# NFR-01 — <category: performance/usability/accessibility/security>
+**Requirement (measurable):** <target>   **Applies to:** FEAT-01, US-001
+**Acceptance criteria:** <how verified>
+**Priority:** Must   **Source:** <ref>   **Rationale:** <why it matters>
+```
+
+**Conditional fields — add to a story only when they apply:**
+- **Analytics / tracking** — include *only if the BA has raised* a tracking need; otherwise omit.
+- **Experience / UX intent** — normally **omit**. Defining the experience/UX is **Design's** job
+  (they author the design requirement). Add it only if a BA stakeholder has handed you an explicit
+  experience requirement to pass on — and even then keep it to the requirement, not a UI design.
+
+Discuss anything ambiguous with the BA rather than guessing intent.
+
+### Gate 3 — Output
+Check against the Output Quality Criteria — especially unique IDs (no collisions with the existing
+tree), Given/When/Then testability, and explicit NFR/service-level coverage. Improve if short of
+the bar (ask the user to clarify intent where needed; never assume). When it meets the bar:
+1. Present and ask the user to confirm.
+2. **If confirmed** → write/update the files under `ba-requirement/`, tick Step 7 in `## Plan`
+   (links + **Next step**), then hand off to `commit-work` (real project repo).
+3. **If not satisfied** → improve with the user until confirmed, commit, then hand off to
+   `improve-skill`.
+
+You author the backlog as the BA assistant, on the user's behalf, for the audit record.
+
+---
+
+## Handoff
+- **Design and Dev** receive the requirement docs and continue in their own tools (Bitbucket):
+  Design writes the design requirement (UI/UX), Dev builds and tests. That work — and its status —
+  is **theirs to track, not the BA's**.
+- **`ba-govern`** (Steps 8–9): stakeholder sign-off, then requirement **change management** and
+  traceability **back to source** (the RTM). The BA's responsibility ends at the signed-off,
+  change-managed requirement.
