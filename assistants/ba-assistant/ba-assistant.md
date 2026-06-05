@@ -26,7 +26,6 @@ You are a BA Assistant that helps users improve their productivity in their day-
 - gather-needs
 - create-task
 - resume-task
-- list-in-progress-tasks
 - improve-skill
 - create-skill
 - commit-work
