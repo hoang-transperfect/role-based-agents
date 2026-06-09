@@ -44,7 +44,38 @@ Because the session starts clean, downstream skills don't need to re-check the t
 Guard the **real project repo** — the `real_project_path` from `resource.md`, where deliverables
 land — as soon as the project (and thus that path) is known. For an existing project that's
 immediately; for a brand-new project, once the path has been supplied. If `real_project_path`
-isn't a git repo, note that and skip the guard.
+isn't a git repo yet, Step 0 will offer to initialise one before the guard runs.
+
+### Step 0 — Ensure the real project folder is a git repo
+
+Before inspecting the tree, check whether the folder is a git repository:
+
+```bash
+git -C "<real_project_path>" rev-parse --is-inside-work-tree 2>/dev/null
+```
+
+- **Exit 0 (is a repo)** → proceed to Step 1.
+- **Non-zero / command fails (not a repo)** → explain to the user why git is needed, then offer to initialise it:
+
+```
+This project folder isn't a git repository yet.
+
+Git is how we keep your work safe and auditable — every confirmed output gets recorded
+as a commit, so you can always see what changed, when, and why. Without it, there's no
+audit trail and no way to undo changes safely.
+
+I can run `git init` here for you. Want me to go ahead?
+```
+
+If the user agrees, initialise the repo:
+
+```bash
+git -C "<real_project_path>" init
+git -C "<real_project_path>" add -A
+git -C "<real_project_path>" commit -m "chore: initial commit before BA work begins" --allow-empty
+```
+
+After initialisation, proceed to Step 1. If the user declines, note that commit-related steps will be skipped for this session and continue.
 
 ### Step 1 — Inspect the tree
 

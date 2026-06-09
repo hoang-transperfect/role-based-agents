@@ -16,7 +16,7 @@ assumed to already be confirmed by the user (via gather-needs).
 ## Projects root
 
 ```bash
-PROJECTS_ROOT="$HOME/projects"   # must match the value used by create-project / gather-needs
+PROJECTS_ROOT="<assistant-folder>/projects"   # must match the value used by create-project / gather-needs
 ```
 
 ## Inputs (provided by gather-needs)
@@ -81,10 +81,16 @@ printf '\n## Chat Session %s — %s\n' "$n" "$(date +%Y-%m-%d)" >> "$log_path"
 
 ## Step 4 — Log Every Turn Verbatim (standing behavior)
 
-From this point on, for the rest of the conversation, **after every user message**, append that
-turn to the conversation log. Capture both sides **verbatim** — the user's exact words and your
-exact response. Use a bash heredoc with a quoted delimiter (preserves backticks, quotes, `$`,
-and newlines without escaping):
+From this point on, for the rest of the conversation, **the very last action of every response**
+must be appending that turn to the conversation log — before anything else starts for the next
+turn. This fires unconditionally: regardless of which skill is active, whether a skill is handing
+off to another, or whether anything else is happening.
+
+**Timing rule: append first, then do nothing else for this turn.** The log append is the final
+tool call of every response. Do not defer it to the end of a skill block, do not batch multiple
+turns, do not skip it because a handoff is in progress.
+
+Use a bash heredoc with a quoted delimiter (preserves backticks, quotes, `$`, and newlines):
 
 ```bash
 cat >> "$PROJECTS_ROOT/<project>/raw-conversation/<task-id>-conv-001.md" << 'CLAUDE_LOG_EOF'
@@ -98,9 +104,10 @@ CLAUDE_LOG_EOF
 ```
 
 Rules for logging:
-- Do this every turn, automatically, without being asked.
+- **Append immediately** — the log append is the last tool call of every single response, no exceptions.
+- **Never batch** — each turn gets its own append. Do not accumulate turns and flush later.
+- **Never skip on handoff** — if a skill is handing off to another skill, still append this turn before the handoff completes.
 - Verbatim — do not summarize, paraphrase, or trim either side.
-- Append the user's message and your response together, once per turn.
 - The new turns land under the session heading created in Step 3, continuing the same log file.
 
 ---
