@@ -67,6 +67,16 @@ ba-requirement/
 - **Hierarchy is sound:** every story sits under a feature, every feature under an epic. A story
   that's really an epic (too big to build/test as one increment) is split.
 - **Clear:** each item is unambiguous — a developer/designer can't reasonably read it two ways.
+- **Gathered, not invented:** every item, behaviour, and acceptance criterion traces to a
+  requirement actually gathered/validated (`prioritised-requirements.md` / findings). Never
+  fabricate variants, states, behaviours, business rules, or AC to satisfy the template or the
+  see/do/get fields. If a field would require inventing, **omit it or mark it deferred** — a
+  thin-but-true backlog beats a rich-but-fabricated one. A story may legitimately be as small as
+  *"provide a shared `<component>`, consistent with the design system."*
+- **Design/UI detail stays out:** the BA backlog states *what capability* is needed and *why*, not
+  how it looks or behaves visually. Appearance, variants, visual states, and interaction behaviour
+  belong to the design requirement (Design's) — reference it, don't restate it. Especially for
+  UI-component-library work.
 - **Traceable:** each item has a unique ID and references its source (prioritised requirement /
   finding), so it can be traced **back to its origin**. (Forward tracing to design/build/test
   belongs to the delivery teams in their tools — not the BA backlog.)
@@ -112,9 +122,11 @@ Author the backlog, adapting to the **work mode** recorded in `## Plan`:
 - **maintain** — edit the affected story/feature in place; keep its ID; note what changed (the
   change record itself is `ba-govern`'s job).
 
-Write items in these shapes. Fill every field a consuming team would need — a thin field forces a
-round-trip back to the BA, which is exactly what the backlog must prevent. Omit a field only when
-it genuinely doesn't apply.
+Write items in these shapes. Fill every field a consuming team would need **from what was actually
+gathered** — a thin field forces a round-trip back to the BA. But **never invent content to fill a
+field**: if the requirement wasn't gathered, or it's design/UX detail, omit the field or mark it
+deferred rather than fabricating it. Completeness means capturing all *known* facts, not
+manufacturing plausible ones.
 
 ```markdown
 # EPIC-01 — <name>
