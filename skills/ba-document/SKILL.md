@@ -7,8 +7,9 @@ description: >
   → User Story tree as markdown in the real project's ba-requirement folder — each story clear,
   uniquely ID'd, and testable (Given/When/Then acceptance criteria), with non-functional,
   service-level, and transition needs explicitly captured and terminology kept consistent via a
-  shared glossary — then ticks the checklist box. Behaviour adapts to the
-  work mode (build the tree from scratch, extend it, or update a story in place).
+  shared glossary. It also derives UAT scenarios from the acceptance criteria so the business can
+  validate the build, and renders functional user flows as diagrams — then ticks the checklist box.
+  Behaviour adapts to the work mode (build the tree from scratch, extend it, or update a story in place).
 ---
 
 # ba-document
@@ -44,6 +45,10 @@ ba-requirement/
   grep -rhoE 'EPIC-[0-9]+|FEAT-[0-9]+|US-[0-9]+|NFR-[0-9]+|TR-[0-9]+' "<real_project_path>/ba-requirement/" 2>/dev/null \
     | awk -F- '{n=$2+0; if (n>m[$1]) m[$1]=n} END{for (p in m) printf "%s next: %d\n", p, m[p]+1}'
   ```
+- **UAT scenarios** derived from the acceptance criteria →
+  `ba-assistant-artifacts/tasks/<task-id>/uat-scenarios.md`. They restate the AC as something the
+  business can execute; they trace to story IDs but aren't part of the formal requirement tree, so
+  they live in the task folder, not `ba-requirement/`.
 - Tick Step 7 in the task file's `## Plan` checklist when confirmed. (Working notes for this task
   stay in the task folder `ba-assistant-artifacts/tasks/<task-id>/`; only the formal backlog goes
   in `ba-requirement/`.)
@@ -68,6 +73,7 @@ ba-requirement/
 ### Outputs
 - New or updated `epic.md` / `feature.md` files (and `non-functional.md`, `transition.md`,
   `glossary.md`) under `ba-requirement/`.
+- `uat-scenarios.md` in the task folder — UAT scenarios derived from the stories' acceptance criteria.
 
 ### Output Quality Criteria
 - **Hierarchy is sound:** every story sits under a feature, every feature under an epic. A story
@@ -84,10 +90,16 @@ ba-requirement/
   belong to the design requirement (Design's) — reference it, don't restate it. Especially for
   UI-component-library work.
 - **Traceable:** each item has a unique ID and references its source (prioritised requirement /
-  finding), so it can be traced **back to its origin**. (Forward tracing to design/build/test
-  belongs to the delivery teams in their tools — not the BA backlog.)
+  finding), so it can be traced **back to its origin**. (Forward tracing to design/build and
+  technical testing belongs to the delivery teams in their tools — not the BA backlog. The
+  exception is UAT, which the BA derives from the AC here.)
 - **Testable:** each story has acceptance criteria in **Given/When/Then** form. If you can't write
   the test, the story isn't specified well enough yet.
+- **UAT scenarios are derived, not invented:** each story's acceptance criteria yield
+  user-acceptance scenarios in **business language**, traced to the story ID, covering the success
+  path plus the key failure/edge paths the AC define. They restate the AC as something the business
+  can execute — they never introduce behaviour the AC don't already specify. (Execution mechanics
+  and technical testing remain the delivery team's.)
 - **Behaviour is explicit (see / do / get):** each story states what **information the user must
   see**, what **actions** they can take, and what **response** each action returns — success *and*
   failure — never left to inference from the story sentence.
@@ -110,7 +122,9 @@ ba-requirement/
 - **The functional user flow is documented** — main flow plus **alternate/exception paths** — at
   the feature level (epic level for a cross-feature journey; story level only when a single story's
   sequence is non-trivial). This is the end-to-end journey, not the UI (Design's). Exception
-  branches must be explicit — that's where requirements are usually weakest.
+  branches must be explicit — that's where requirements are usually weakest. **Render it as a
+  mermaid flowchart** where that aids clarity, and where a `ba-model` To-Be process exists, keep the
+  feature flow aligned with it rather than redrawing a conflicting one.
 - **Service-level perspective is represented** — end-to-end journeys, governance, support/
   operational needs — not only discrete features.
 - **Priority carries through:** each story keeps the MoSCoW/Kano priority agreed in `ba-analyse`.
@@ -157,7 +171,7 @@ manufacturing plausible ones.
 **Scope:** In — <…> · Out — <…>
 **Stories:** US-001, US-002       **Applies NFRs / TRs:** NFR-01, TR-01
 **Dependencies:** <APIs, other features>     **Open questions:** <…>
-**User flow (functional — not UI):**
+**User flow (functional — not UI):**   <!-- numbered steps, or a mermaid flowchart where clearer -->
   _Main flow:_ 1. <step> → 2. <step> → 3. <step>
   _Alternate / exception flows:_ 2a. <branch>; 3a. <exception → which story handles it>
 
@@ -194,6 +208,12 @@ manufacturing plausible ones.
 | Term | Definition | Avoid (synonyms) | Source |
 |------|------------|------------------|--------|
 | <term> | <one meaning, in business language> | <words people use that mean this> | <ref> |
+
+# UAT Scenarios — <task / feature>   (uat-scenarios.md — task folder)
+Derived from the acceptance criteria; business-readable; for the business to validate the built solution.
+| ID | Story | Scenario (business language) | Steps | Expected result | Covers AC |
+|----|-------|------------------------------|-------|-----------------|-----------|
+| UAT-001 | US-001 | <what's being checked, incl. a failure/edge path> | <do this> | <see this> | <which Given/When/Then> |
 ```
 
 **Conditional fields — add to a story only when they apply:**
@@ -220,8 +240,8 @@ You author the backlog as the BA assistant, on the user's behalf, for the audit 
 
 ## Handoff
 - **Design and Dev** receive the requirement docs and continue in their own tools (Bitbucket):
-  Design writes the design requirement (UI/UX), Dev builds and tests. That work — and its status —
-  is **theirs to track, not the BA's**.
-- **`ba-govern`** (Steps 8–9): stakeholder sign-off, then requirement **change management** and
-  traceability **back to source** (the RTM). The BA's responsibility ends at the signed-off,
-  change-managed requirement.
+  Design writes the design requirement (UI/UX), Dev builds and runs technical testing. That work —
+  and its status — is **theirs to track, not the BA's**.
+- **`ba-govern`** (Steps 8–9): consumes the `uat-scenarios.md` to confirm acceptance, runs
+  stakeholder sign-off, then requirement **change management** and traceability **back to source**
+  (the RTM). The BA's responsibility ends at the signed-off, change-managed requirement.

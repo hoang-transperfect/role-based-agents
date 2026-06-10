@@ -91,7 +91,8 @@ Adapt to the **work mode** in `## Plan`:
 
 Then work through the findings **with** the BA: organise, interpret, and challenge. Debate
 priorities openly — disagree where the evidence warrants, and ask the user to confirm each
-requirement's accuracy (recording who) and rank. Draft:
+requirement's accuracy (recording who) and rank. Log any risk, assumption, issue, or dependency
+that analysis surfaces to the project `raid-log.md`. Draft:
 
 ```markdown
 # Prioritised Requirements — <project>

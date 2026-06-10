@@ -35,6 +35,9 @@ Read `real_project_path` from the project's index file
 - `<real_project_path>/ba-requirement/` — the **formal backlog** other teams consume, an agile
   Epic → Feature → User Story tree in markdown. This persists across tasks; tasks create or
   extend parts of it.
+- `<real_project_path>/ba-assistant-artifacts/raid-log.md` — the **project-wide RAID log** (Risks,
+  Assumptions, Issues, Dependencies). This skill seeds it from problem framing; `ba-govern`
+  maintains it; any skill may append to it when it surfaces one.
 
 (Everything lives with the real project; the assistant folder keeps only the project index
 file — the pointer plus the in-progress task list.)
@@ -50,6 +53,8 @@ must meet. This makes the gates below objective rather than vibes.
 - The task file (`<real_project_path>/ba-assistant-artifacts/tasks/<task-id>/task.md`).
 - The business context / problem the task is meant to solve (from the task description, the
   project's `resource.md` in `ba-assistant-artifacts/`, or the user).
+- The **`options-appraisal.md` artifact** (in the task folder) from `ba-appraise`, if present —
+  the chosen option and its expected benefits, which this plan frames and plans for.
 - The **`related-context.md` artifact** (in the task folder) from
   `ba-scan-context`, if present — so the plan reflects what's already known and targets the gaps.
 
@@ -82,6 +87,11 @@ must meet. This makes the gates below objective rather than vibes.
 - The plan notes the cross-cutting concerns so later steps don't forget them: non-functional
   requirements, transition needs (migration, training, cutover), service-level/end-to-end
   perspective, and continuous stakeholder engagement beyond sign-off.
+- **The RAID log is seeded.** The assumptions and key risks named in problem framing (and any
+  carried in from `ba-appraise`) are recorded in `raid-log.md`, so they're tracked and validated
+  rather than captured once and forgotten.
+- If an `options-appraisal.md` exists, the framing **builds on the chosen option** and its expected
+  benefits — the plan doesn't re-litigate the decision, it plans the work to deliver it.
 - It is unambiguous which step is next.
 
 ---
@@ -149,16 +159,19 @@ for the audit trail — applicable ones as open boxes, skipped ones struck throu
 - [ ] Step 2 — Plan Requirements Gathering       → <artifact link>
 - [ ] Step 3 — Conduct Elicitation Sessions      → <artifact link>
 - [ ] Step 4 — Document Observations & Findings  → <artifact link>
+- [ ] Step 4b — Model As-Is/To-Be process & gap analysis (process-shaped efforts) → <artifact link>
 - [ ] Step 5 — Analyse & Validate Requirements   → <artifact link>
 - [ ] Step 6 — Prioritise Requirements           → <artifact link>
 - [ ] Step 7 — Document Requirements (epic/feature/story) → <artifact link>
 - [ ] Step 8 — Review & Stakeholder Sign-Off     → <artifact link>
 - [ ] Step 9 — Manage Changes & Maintain RTM     → <artifact link>
+- [ ] Step 10 — Evaluate benefits realisation (after go-live; often a follow-up task) → <artifact link>
 
 **Cross-cutting (apply throughout, don't defer):**
 - Non-functional requirements — performance, usability, accessibility, security.
 - Transition needs — data migration, training, cutover, parallel running: temporary requirements
   for reaching the future state.
+- RAID — keep logging and validating risks, assumptions, issues, and dependencies in `raid-log.md`.
 - Service-level perspective — end-to-end journeys, governance, support models, not only features.
 - Continuous stakeholder engagement — keep validating after sign-off; requirements evolve.
 
@@ -169,8 +182,9 @@ for the audit trail — applicable ones as open boxes, skipped ones struck throu
 step's status with the user; any step may be needed or skipped depending on mode and effort.)
 
 Map the skill that handles each step so the BA knows where to go next:
-Steps 1–2 → `ba-discover` · 3–4 → `ba-elicit` · 5–6 → `ba-analyse` · 7 → `ba-document` ·
-8–9 → `ba-govern`.
+Steps 1–2 → `ba-discover` · 3–4 → `ba-elicit` · 4b → `ba-model` · 5–6 → `ba-analyse` ·
+7 → `ba-document` · 8–9 → `ba-govern` · 10 → `ba-evaluate`. (The business case that precedes
+planning is `ba-appraise`'s; it's a precursor to this plan, not a checklist step.)
 
 ### Gate 3 — Output
 
@@ -197,8 +211,12 @@ back to `ba-plan`.
 
 ## Completing a task
 
-A task is **complete** when every applicable `## Plan` step is `[x]` or `~~skipped~~`. When the
-step skill that ticks the **final** applicable box sees this is now true, it sets **Next step:
+The requirements effort is **complete** when every applicable `## Plan` step through Step 9 is
+`[x]` or `~~skipped~~`. **Step 10 (Evaluate) is the exception** — it can only run after the
+solution is live, so it normally doesn't block closing the requirements task: mark it
+`deferred → follow-up task (evaluate after go-live)` so it isn't forgotten, and raise it as a new
+task when the solution has been in use long enough to measure. When the step skill that ticks the
+**final** pre-go-live applicable box sees the effort is otherwise done, it sets **Next step:
 complete** and proposes closing the task. Then — **only after the user confirms the task is done**:
 
 1. Set `status: completed` in the task file's frontmatter — the file stays in its task folder,

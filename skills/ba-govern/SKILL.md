@@ -4,10 +4,11 @@ description: >
   Handles Business Analysis steps 8–9 — getting stakeholder review and sign-off, then maintaining
   traceability and managing change through delivery. Invoke when a BA needs to record approval,
   build or update the Requirements Traceability Matrix (RTM), track requirement changes, or when
-  the task's ## Plan marks Step 8 or 9 as next. It records a per-task sign-off, and maintains an
-  RTM and change log in the real project's ba-requirement folder that trace each requirement back
-  to its source and record its status and changes, ticks the checklist boxes, and keeps
-  requirements aligned as they evolve — including continued validation after sign-off.
+  the task's ## Plan marks Step 8 or 9 as next. It confirms user-acceptance (UAT) outcomes before
+  sign-off, records a per-task sign-off, maintains an RTM and change log in the real project's
+  ba-requirement folder that trace each requirement back to its source and record its status and
+  changes, keeps the project RAID log current, ticks the checklist boxes, and keeps requirements
+  aligned as they evolve — including continued validation after sign-off.
 ---
 
 # ba-govern
@@ -19,9 +20,13 @@ requirements are tracked rather than silently absorbed. Sign-off is **not** the 
 keep being validated and adjusted as understanding evolves.
 
 **Scope boundary:** the BA's responsibility ends at the **signed-off, change-managed
-requirement**. What happens next — design, build, test — is owned by the delivery teams and
-tracked in their tools (Bitbucket). This skill does **not** trace delivery status; doing so would
-duplicate Bitbucket and claim work that isn't the BA's.
+requirement**. There is one deliberate exception on the testing side: **user-acceptance testing
+(UAT)** is the BA's concern, because it confirms the requirements were actually met. The BA derives
+the UAT scenarios from the acceptance criteria (in `ba-document`) and confirms their **outcome** as
+part of sign-off here. What stays with the delivery teams (tracked in their tools, e.g. Bitbucket)
+is design, build, and **technical** testing — unit, integration, system; plus UAT *execution*
+mechanics. This skill does **not** trace design/build status; doing so would duplicate Bitbucket
+and claim work that isn't the BA's.
 
 ## Where things live
 
@@ -30,8 +35,10 @@ duplicate Bitbucket and claim work that isn't the BA's.
 - **Sign-off record** (per task/increment) → `ba-assistant-artifacts/tasks/<task-id>/sign-off.md`.
 - **RTM** and **change log** (living, product-wide) → `ba-requirement/RTM.md` and
   `ba-requirement/change-log.md`. They span all tasks and grow as requirements evolve.
+- **RAID log** (living, project-wide) → `ba-assistant-artifacts/raid-log.md`. Seeded by `ba-plan`;
+  this skill keeps it current as risks/issues/dependencies move and assumptions are validated.
 - Tick Steps 8–9 in the task file's `## Plan` checklist when confirmed. Step 9 is ongoing — the
-  RTM and change log are living documents.
+  RTM, change log, and RAID log are living documents.
 
 ---
 
@@ -39,7 +46,10 @@ duplicate Bitbucket and claim work that isn't the BA's.
 
 ### Inputs
 - The `ba-requirement/` backlog from `ba-document` (epics/features/stories with IDs).
+- The `uat-scenarios.md` from `ba-document` and the **UAT outcomes** (which scenarios passed/failed,
+  from the business testers) — what sign-off is conditioned on.
 - The stakeholder register (who holds sign-off authority).
+- The project `raid-log.md` — open risks, assumptions, issues, and dependencies to review.
 - For ongoing work: the existing `RTM.md` and `change-log.md`, plus any proposed or observed
   **changes to requirements**.
 
@@ -48,13 +58,18 @@ duplicate Bitbucket and claim work that isn't the BA's.
   `ba-document` — an RTM is impossible without them.
 - For sign-off: the stakeholders with approval authority are known. If not, hand back to
   `ba-discover`.
+- Where the solution is built and UAT scenarios exist, their **outcomes are available** to inform
+  sign-off. If UAT hasn't happened yet, sign-off can only be conditional — say so; don't record a
+  full approval as if acceptance were proven.
 
 ### Outputs
-- `ba-assistant-artifacts/tasks/<task-id>/sign-off.md` — what was presented, ambiguities resolved,
-  and the formal approval (who approved what, when; full or partial/conditional).
+- `ba-assistant-artifacts/tasks/<task-id>/sign-off.md` — what was presented, UAT outcome,
+  ambiguities resolved, and the formal approval (who approved what, when; full or partial/conditional).
 - `ba-requirement/RTM.md` — each requirement traced **back to its source**, with its requirement
   status and dependencies.
 - `ba-requirement/change-log.md` — requirement changes over time, each with status and impact.
+- `ba-assistant-artifacts/raid-log.md` — kept current: open items reviewed, closed ones resolved,
+  assumptions validated or escalated.
 
 ### Output Quality Criteria
 - The sign-off record shows stories were **presented and ambiguities resolved** before approval,
@@ -67,6 +82,11 @@ duplicate Bitbucket and claim work that isn't the BA's.
   requirement.
 - The change log tracks each requirement change with **status and impact** (on other
   requirements), so the backlog's evolution is reconstructable.
+- **Sign-off is informed by UAT:** where UAT has run, its outcome is recorded and a story that
+  **failed** acceptance is not signed off without an explicit decision (fix, defer, or accept with
+  a noted caveat). Acceptance proves the requirement was met — it isn't a rubber stamp.
+- **The RAID log is current:** open risks/issues/dependencies have been reviewed, resolved items
+  closed, and assumptions either validated or escalated — not left stale.
 - **Continuous engagement is built in:** the record provides for revisiting requirements as needs
   change through delivery — requirements aren't "locked" and forgotten.
 
@@ -89,6 +109,7 @@ update the RTM and change log. Draft:
 ```markdown
 # Sign-Off Record — <task-id>
 **Presented:** <date> to <stakeholders>
+**UAT outcome:** <scenarios passed / failed; failures and the decision on each>
 **Clarifications / corrections:** <what changed during review>
 **Approval:** <name/role> approved <story IDs / scope> on <date>  (full / partial / conditional: <terms>)
 
@@ -101,6 +122,10 @@ update the RTM and change log. Draft:
 # Change Log — <project>
 | Date | Req ID | Change | Reason | Status | Impact (on other requirements) |
 |------|--------|--------|--------|--------|--------------------------------|
+
+# RAID Log — <project>   (raid-log.md — living, project-wide)
+| ID | Type (Risk/Assumption/Issue/Dependency) | Description | Owner | Likelihood/Impact | Status | Action / validation |
+|----|-----------------------------------------|-------------|-------|-------------------|--------|---------------------|
 ```
 
 ### Gate 3 — Output
@@ -121,7 +146,11 @@ You author the records as the BA assistant, on the user's behalf, for the audit 
 ---
 
 ## Closing the loop
-Step 9 is ongoing: as delivery proceeds and understanding changes, return here to update the RTM
-and change log and to re-validate affected stories with stakeholders. If a change is large enough
-to reshape scope, hand back to `ba-plan` to revise the `## Plan` (and likely re-run as a new
-`develop` or `maintain` effort).
+Step 9 is ongoing: as delivery proceeds and understanding changes, return here to update the RTM,
+change log, and RAID log, and to re-validate affected stories with stakeholders. If a change is
+large enough to reshape scope, hand back to `ba-plan` to revise the `## Plan` (and likely re-run as
+a new `develop` or `maintain` effort).
+
+Once the solution is **live**, the loop's final step is `ba-evaluate` — measuring whether the
+objectives and the business case's benefits were actually realised. Raise it as a follow-up task
+when there's been enough time in use to measure.

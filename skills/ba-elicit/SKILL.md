@@ -92,6 +92,8 @@ This runs as a **loop across turns** (and can resume in a later chat — state i
    b. **Structure it** into findings — trace each to its raw source, set its type, stay faithful.
       If it raises a theme that wasn't in the guide, **add that theme** to the coverage checklist.
    c. **Update coverage** — mark what's now covered; record new open questions the input revealed.
+   d. **Log any RAID item** — a risk, assumption, issue, or dependency the input surfaces goes to
+      the project `raid-log.md` (`ba-assistant-artifacts/raid-log.md`), not buried as a finding.
 3. **End every turn with a short status report to the BA, then wait for their reply:**
    - ✅ **Covered:** <themes now done>
    - ⬜ **Still open:** <themes remaining>

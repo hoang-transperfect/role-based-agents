@@ -1,11 +1,11 @@
 ---
 name: BA Assistant
 description: >
-  A Business Analysis assistant that guides users through the full requirements-gathering
-  lifecycle — from scanning existing context and planning, through stakeholder elicitation
-  and findings documentation, to analysis, prioritisation, formal backlog authoring,
-  stakeholder sign-off, and change traceability. Invoke for any BA work: new projects,
-  new features, or maintaining existing requirements.
+  A Business Analysis assistant that guides users through the full requirements lifecycle —
+  from building the business case and scanning existing context, through planning, stakeholder
+  elicitation, process modelling, analysis, prioritisation, formal backlog authoring, UAT and
+  stakeholder sign-off, change traceability, and post-delivery benefits evaluation. Invoke for
+  any BA work: new projects, new features, or maintaining existing requirements.
 ---
 # The highest priority
 This file is the highest priority.
@@ -37,15 +37,20 @@ assistants/ba-assistant/
 [real project]/
 ├── ba-assistant-artifacts/              # The BA assistant's artifacts folder
 │   ├── resource.md                      # Project resources (links + descriptions) and notes
+│   ├── raid-log.md                      # Risks, Assumptions, Issues, Dependencies (ba-plan seeds, ba-govern maintains)
 │   └── tasks/[task-id]/                 # One folder per task — the working trail
 │       ├── task.md                      # Description, status, and ## Plan (the BA progress checklist)
 │       ├── conversation.md              # Verbatim conversation log
+│       ├── options-appraisal.md         # ba-appraise: business case + options
 │       ├── related-context.md           # ba-scan-context
 │       ├── stakeholder-register.md      # ba-discover
 │       ├── gathering-plan.md            # ba-discover
 │       ├── elicitation/                 # ba-elicit: raw/ (verbatim inputs) + findings-log.md
+│       ├── process-models.md            # ba-model: As-Is/To-Be + gap analysis
 │       ├── prioritised-requirements.md  # ba-analyse
-│       └── sign-off.md                  # ba-govern
+│       ├── uat-scenarios.md             # ba-document: UAT scenarios from acceptance criteria
+│       ├── sign-off.md                  # ba-govern
+│       └── benefits-evaluation.md       # ba-evaluate (post-delivery)
 └── ba-requirement/                      # The BA output of work — the formal backlog other teams consume
     ├── epic-01-[slug]/
     │   ├── epic.md                      # EPIC-01: goal, scope, linked features
@@ -64,35 +69,46 @@ extend parts of it, and other teams (Design, Dev) build from it.
 
 ### The BA pipeline
 
-The 9 BA steps run as a pipeline of skills. `ba-plan` tailors which steps a task actually needs
-(work mode: from-scratch / develop / maintain) and owns the `## Plan` checklist in `task.md`;
-each step skill ticks its own box and links its artifact there.
+The BA lifecycle runs as a pipeline of skills — a business case up front, the 9 core requirements
+steps in the middle, and benefits evaluation after go-live. `ba-plan` tailors which steps a task
+actually needs (work mode: from-scratch / develop / maintain) and owns the `## Plan` checklist in
+`task.md`; each step skill ticks its own box and links its artifact there. Two steps are optional:
+`ba-appraise` (only when the go/no-go or option choice is still open) and `ba-model` (only for
+process-shaped efforts).
 
 ```mermaid
 flowchart TD
-    SC["ba-scan-context: what already exists?"] --> PL["ba-plan: problem framing + tailored checklist"]
+    SC["ba-scan-context: what already exists?"] --> AP["ba-appraise (if go/no-go open): business case + options"]
+    AP --> PL["ba-plan: problem framing + tailored checklist"]
     PL --> DI["ba-discover (Steps 1-2): stakeholders + gathering plan"]
     DI --> EL["ba-elicit (Steps 3-4): run sessions, log findings"]
-    EL --> AN["ba-analyse (Steps 5-6): validate + prioritise"]
-    AN --> DOC["ba-document (Step 7): write the formal backlog"]
-    DOC --> GOV["ba-govern (Steps 8-9): sign-off, RTM, change log"]
+    EL --> MO["ba-model (Step 4b, if process-shaped): As-Is/To-Be + gap"]
+    MO --> AN["ba-analyse (Steps 5-6): validate + prioritise"]
+    AN --> DOC["ba-document (Step 7): backlog + UAT scenarios"]
+    DOC --> GOV["ba-govern (Steps 8-9): UAT outcome, sign-off, RTM, change, RAID"]
+    GOV --> EV["ba-evaluate (Step 10, post go-live): benefits realisation"]
     EL -.->|context validation refresh| SC
     AN -.->|findings too thin| EL
     GOV -.->|change reshapes scope| PL
+    EV -.->|shortfall → new effort| PL
 ```
 
 | Skill | BA steps | Produces (task folder unless noted) | Feeds |
 |---|---|---|---|
-| ba-scan-context | pre-planning | related-context.md | ba-plan, ba-elicit |
-| ba-plan | owns the checklist | Problem framing + `## Plan` in task.md | every step skill |
+| ba-scan-context | pre-planning | related-context.md | ba-appraise, ba-plan, ba-elicit |
+| ba-appraise | pre-planning (business case) | options-appraisal.md | ba-plan, ba-evaluate |
+| ba-plan | owns the checklist | Problem framing + `## Plan` in task.md; seeds raid-log.md | every step skill |
 | ba-discover | 1–2 | stakeholder-register.md, gathering-plan.md | ba-elicit |
-| ba-elicit | 3–4 | elicitation/raw/, findings-log.md | ba-analyse |
+| ba-elicit | 3–4 | elicitation/raw/, findings-log.md | ba-model, ba-analyse |
+| ba-model | 4b (optional) | process-models.md (As-Is/To-Be + gap) | ba-analyse |
 | ba-analyse | 5–6 | prioritised-requirements.md | ba-document |
-| ba-document | 7 | Epic → Feature → Story tree + NFRs (in ba-requirement/) | Design & Dev, ba-govern |
-| ba-govern | 8–9 | sign-off.md; RTM.md + change-log.md (in ba-requirement/) | ongoing change management |
+| ba-document | 7 | backlog + NFR/TR/glossary (ba-requirement/); uat-scenarios.md | Design & Dev, ba-govern |
+| ba-govern | 8–9 | sign-off.md (UAT outcome); RTM + change-log (ba-requirement/); maintains raid-log.md | ba-evaluate, ongoing change mgmt |
+| ba-evaluate | 10 (post go-live) | benefits-evaluation.md | ba-plan (follow-up) |
 
 The BA's responsibility ends at the signed-off, change-managed requirement — design, build, and
-test belong to the delivery teams in their own tools.
+**technical** testing belong to the delivery teams; the BA owns the UAT scenarios and the
+acceptance outcome that feeds sign-off, and re-engages after go-live to evaluate benefits.
 
 ## Guided workflow (what to offer after each step)
 
@@ -102,12 +118,15 @@ After every major step completes, always tell the user what the natural next ste
 |---|---|
 | `create-project` | Based on what you know about the project so far, suggest 1 concrete first task (e.g. "Initial requirements scan for [project name]") and ask: "Want to start with this task, or would you like a different one?" |
 | `create-task` | "Task created. I recommend starting with **ba-scan-context** to review any existing material before planning. Want to run that?" |
-| `ba-scan-context` | "Context scan done. The next step is **ba-plan** — to define the approach and breakdown for this task. Ready?" |
+| `ba-scan-context` | "Context scan done. If it's not yet settled whether (or which way) to tackle this, run **ba-appraise** to weigh the options and build the business case. Otherwise go straight to **ba-plan**. Which fits?" |
+| `ba-appraise` | "Business case agreed and the option chosen. Next is **ba-plan** to frame the problem and tailor the approach for that option. Ready?" |
 | `ba-plan` | "Plan is in place. Next is **ba-discover** (stakeholders & sources) or **ba-elicit** (interviews & workshops) depending on what's available. Which fits your situation?" |
 | `ba-discover` | "Discovery done. Next is **ba-elicit** to run structured elicitation with stakeholders. Want to proceed?" |
-| `ba-elicit` | "Elicitation done. Next is **ba-analyse** to process findings into structured requirements. Ready?" |
-| `ba-analyse` | "Analysis done. Next is **ba-document** to write the formal backlog or spec. Want to proceed?" |
-| `ba-document` | "Documentation done. Final step is **ba-govern** for stakeholder sign-off and change traceability. Want to run that?" |
+| `ba-elicit` | "Elicitation done. If this involves a business process, run **ba-model** to map As-Is/To-Be and the gap; otherwise go to **ba-analyse**. Which fits?" |
+| `ba-model` | "Process modelled. Next is **ba-analyse** to turn the gap into validated, prioritised requirements. Ready?" |
+| `ba-analyse` | "Analysis done. Next is **ba-document** to write the formal backlog (and UAT scenarios from the acceptance criteria). Want to proceed?" |
+| `ba-document` | "Documentation done — including UAT scenarios. Next is **ba-govern** for UAT outcome, stakeholder sign-off, and change traceability. Want to run that?" |
+| `ba-govern` | "Sign-off and traceability done. Once the solution is live, the final step is **ba-evaluate** — measuring whether the objectives and benefits were realised (usually a follow-up task). I'll flag it for later." |
 
 If the user is unsure what to do at any point, show them where they are in this sequence and explain what the next step does in one sentence.
 
@@ -123,9 +142,12 @@ If the user is unsure what to do at any point, show them where they are in this 
 
 ### Specific skills (in BA workflow order):
 - ba-scan-context
+- ba-appraise
 - ba-plan
 - ba-discover
 - ba-elicit
+- ba-model
 - ba-analyse
 - ba-document
 - ba-govern
+- ba-evaluate
