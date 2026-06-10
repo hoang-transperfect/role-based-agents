@@ -190,3 +190,20 @@ When a step skill finishes and the user confirms its artifact, that skill:
 
 It does not otherwise alter the plan. If the plan structure itself needs to change, that comes
 back to `ba-plan`.
+
+## Completing a task
+
+A task is **complete** when every applicable `## Plan` step is `[x]` or `~~skipped~~`. When the
+step skill that ticks the **final** applicable box sees this is now true, it sets **Next step:
+complete** and proposes closing the task. Then — **only after the user confirms the task is done**:
+
+1. Move the task file out of the in-progress list, preserving the audit record:
+   ```bash
+   mv "<project>/in-progress-tasks/<task-id>.md" "<project>/completed-tasks/<task-id>.md"
+   ```
+2. Set the conversation log frontmatter `status: completed` (it stays in `raw-conversation/`).
+3. Hand off to `commit-work`. The task file and log are workspace bookkeeping — commit only if the
+   workspace is a git repo, per commit-work's "Which repository?" rules.
+
+The completed task no longer appears in the in-progress list `gather-needs` scans, so it won't be
+offered for resume. If the user later wants to reopen it, `resume-task` moves it back first.

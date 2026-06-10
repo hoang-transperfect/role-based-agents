@@ -48,6 +48,11 @@ Read the user's opening message(s) and infer which of the three scenarios applie
 | **A. Create a new project** | "new project", "start a project", "set up a project", no existing project mentioned |
 | **B. Create a new task** | existing project mentioned or known, "new task", "I want to work on X", specific goal described |
 | **C. Resume an existing task** | task ID or task name mentioned, "continue", "pick up where we left off", "work on [task]" |
+| **D. Out of scope** | request unrelated to BA work — coding, DevOps, writing emails, general Q&A, etc. |
+
+**If Intent D (out of scope):** do **not** continue to Step 2. Refuse per the assistant's scope
+rule in `ba-assistant.md` — politely explain this is a BA assistant and redirect the user to BA
+work. Only A/B/C proceed through the rest of this skill.
 
 ### Check existing tasks before deciding between B and C
 
@@ -68,6 +73,9 @@ done
 ```
 
 (If the specific project is already known, replace `"$PROJECTS_ROOT"/*/` with `"$PROJECTS_ROOT/<slug>"/`.)
+
+This scans `in-progress-tasks/` only. **Completed tasks** are moved to `completed-tasks/` when done,
+so they intentionally don't appear here and won't be offered for resume.
 
 Each line is in the format `[project] id — description`. Compare the user's
 stated need against these descriptions:

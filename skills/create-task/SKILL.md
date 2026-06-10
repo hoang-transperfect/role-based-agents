@@ -89,14 +89,11 @@ This appends `## Chat Session 1 — <today>` and prints the session number.
 
 ## Step 4 — Log Every Turn Verbatim (standing behavior)
 
-From this point on, for the rest of the conversation, **the very last action of every response**
-must be appending that turn to the active log file — before anything else starts for the next
-turn. This fires unconditionally: regardless of which skill is active, whether a skill is handing
-off to another, or whether anything else is happening.
-
-**Timing rule: append first, then do nothing else for this turn.** The log append is the final
-tool call of every response. Do not defer it to the end of a skill block, do not batch multiple
-turns, do not skip it because a handoff is in progress.
+From this point on, the log append is the **final tool call of every response**: after you finish
+replying to the user, your last action that turn is to append the turn to the active log file —
+nothing else follows it. This fires unconditionally, regardless of which skill is active or whether
+one skill is handing off to another. Never defer it to the end of a skill block, never batch
+multiple turns into one append, never skip it because a handoff is in progress.
 
 Append using a bash heredoc with a quoted delimiter (this preserves backticks, quotes, `$`,
 and newlines without escaping):

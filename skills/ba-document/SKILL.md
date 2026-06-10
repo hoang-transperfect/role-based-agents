@@ -34,7 +34,12 @@ ba-requirement/
 
 - IDs: `EPIC-01`, `FEAT-01`, `US-001`, `NFR-01` — unique and never reused. **Read the existing
   tree first** and continue numbering from the highest used, so develop/maintain work never
-  collides with or renumbers what's already there.
+  collides with or renumbers what's already there. To find the next free number per prefix:
+
+  ```bash
+  grep -rhoE 'EPIC-[0-9]+|FEAT-[0-9]+|US-[0-9]+|NFR-[0-9]+' "<real_project_path>/ba-requirement/" 2>/dev/null \
+    | awk -F- '{n=$2+0; if (n>m[$1]) m[$1]=n} END{for (p in m) printf "%s next: %d\n", p, m[p]+1}'
+  ```
 - Tick Step 7 in the task file's `## Plan` checklist when confirmed. (Working notes for this task
   stay in `ba-artifacts/<task-id>/`; only the formal backlog goes in `ba-requirement/`.)
 

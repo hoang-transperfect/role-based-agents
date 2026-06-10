@@ -37,6 +37,7 @@ PROJECTS_ROOT="<assistant-folder>/projects"   # assistant-folder is the director
 PROJECT_DIR="$PROJECTS_ROOT/<project-slug>"
 mkdir -p "$PROJECT_DIR/raw-conversation"
 mkdir -p "$PROJECT_DIR/in-progress-tasks"
+mkdir -p "$PROJECT_DIR/completed-tasks"
 ```
 
 ---
@@ -92,5 +93,6 @@ Tell the user:
 - Brief explanation of each item:
   - `resource.md` — curated resource list + the real project folder path; each resource entry has a link + description so agents know what to retrieve and when
   - `raw-conversation/` — one `.md` log file per chat session (created by `create-task`)
-  - `in-progress-tasks/` — one `.md` file per task (created by `create-task`)
+  - `in-progress-tasks/` — one `.md` file per active task (created by `create-task`)
+  - `completed-tasks/` — finished task files are moved here so they leave the in-progress list while the audit record is preserved
   

@@ -28,6 +28,10 @@ Derived paths:
 - Task file: `$PROJECTS_ROOT/<project>/in-progress-tasks/<task-id>.md`
 - Conversation log: `$PROJECTS_ROOT/<project>/raw-conversation/<task-id>-conv-001.md`
 
+If the task file isn't in `in-progress-tasks/`, it may have been **completed** — check
+`$PROJECTS_ROOT/<project>/completed-tasks/<task-id>.md`. If the user wants to reopen it, move it
+back to `in-progress-tasks/` first (`mv` it), then continue from Step 1.
+
 ---
 
 ## Step 1 — Read the Task and Summarise
@@ -81,14 +85,11 @@ printf '\n## Chat Session %s — %s\n' "$n" "$(date +%Y-%m-%d)" >> "$log_path"
 
 ## Step 4 — Log Every Turn Verbatim (standing behavior)
 
-From this point on, for the rest of the conversation, **the very last action of every response**
-must be appending that turn to the conversation log — before anything else starts for the next
-turn. This fires unconditionally: regardless of which skill is active, whether a skill is handing
-off to another, or whether anything else is happening.
-
-**Timing rule: append first, then do nothing else for this turn.** The log append is the final
-tool call of every response. Do not defer it to the end of a skill block, do not batch multiple
-turns, do not skip it because a handoff is in progress.
+From this point on, the log append is the **final tool call of every response**: after you finish
+replying to the user, your last action that turn is to append the turn to the conversation log —
+nothing else follows it. This fires unconditionally, regardless of which skill is active or whether
+one skill is handing off to another. Never defer it to the end of a skill block, never batch
+multiple turns into one append, never skip it because a handoff is in progress.
 
 Use a bash heredoc with a quoted delimiter (preserves backticks, quotes, `$`, and newlines):
 

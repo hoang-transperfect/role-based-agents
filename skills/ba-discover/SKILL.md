@@ -79,7 +79,9 @@ from the session-start guard.)
 ### Gate 2 — Process
 **If a stakeholder register already exists** (from earlier work / `develop`/`maintain`), don't
 rebuild it — present it, confirm it's still accurate with the BA, and ask whether anyone should be
-added or changed for this effort. Capture only the delta.
+added or changed for this effort. Capture only the delta: update the existing
+`stakeholder-register.md` **in place**, adding or modifying only the changed rows — don't rewrite
+or renumber unchanged entries. (The template below is for building a register from scratch.)
 
 Otherwise, brainstorm with the BA from scratch. Suggest stakeholder groups they may have missed
 (especially operational, support, and governance roles behind the obvious sponsors), and debate
