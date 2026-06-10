@@ -5,10 +5,11 @@ description: >
   work begins, so the team builds on what already exists instead of missing context. Invoke this
   at the start of a BA effort, before ba-plan, and any time a BA asks "what do we already have on
   this?", "is there prior documentation?", or is about to do Document Analysis during elicitation.
-  It scans the real project folder (path from resource.md), the project resources, and the
-  workspace's prior tasks, then records a Related Context summary — what's relevant, what it
-  covers, and the gaps — as a related-context.md artifact in the real project's ba-artifacts
-  folder. Use it whenever starting or re-scoping BA work so existing context is never overlooked.
+  It scans the real project folder (path from the project index file), the project resources, and
+  prior tasks, then records a Related Context summary — what's relevant, what it
+  covers, and the gaps — as a related-context.md artifact in the task folder under the real
+  project's ba-assistant-artifacts. Use it whenever starting or re-scoping BA work so existing
+  context is never overlooked.
 ---
 
 # ba-scan-context
@@ -25,23 +26,27 @@ what's already answered or miss what's already decided.
 ## Where things live
 
 - **Search** the real project folder for existing material: read `real_project_path` from the
-  project's `resource.md` frontmatter and look there.
+  project's index file (`<assistant-folder>/projects/<project-slug>.md`) and look there.
 - **Write** the result as a deliverable artifact at
-  `<real_project_path>/ba-artifacts/<task-id>/related-context.md` (create the folder if needed). It's the
-  first artifact of the effort and the audit record of what was already known, so it lives with
-  the other deliverables in the real project, not in the workspace task file.
+  `<real_project_path>/ba-assistant-artifacts/tasks/<task-id>/related-context.md` (create the
+  folder if needed). It's the first artifact of the effort and the audit record of what was
+  already known, so it lives in the task folder with everything else this task produces.
 
 ## Where to look (search order)
 
 1. The **existing formal backlog** at `<real_project_path>/ba-requirement/` — the Epic → Feature →
-   User Story tree. This is the **primary** source for `develop` and `maintain` work: the new
+   User Story tree, plus `glossary.md` beside it: adopt its terms so the scan (and everything
+   after it) speaks the project's established language. This is the **primary** source for
+   `develop` and `maintain` work: the new
    feature may belong under an existing epic, or the change may target an existing story. Never
    re-specify what already lives here; find it first.
-2. The **real project folder** (`real_project_path`) — existing docs, specs, prior BA artifacts,
-   READMEs, design notes, anything under a `ba-artifacts/` folder from earlier tasks.
-3. The **project resources** listed in `resource.md` (links + descriptions).
-4. The **workspace** — prior task files and conversation logs under `$PROJECTS_ROOT/<project>/`
-   that may hold earlier decisions or requirements.
+2. The **real project folder** (`real_project_path`) — existing docs, specs, READMEs, design
+   notes, anything outside the assistant's own artifacts folder.
+3. The **project resources** listed in `<real_project_path>/ba-assistant-artifacts/resource.md`
+   (links + descriptions).
+4. **Prior tasks** — earlier task folders (task files, conversation logs, working artifacts)
+   under `<real_project_path>/ba-assistant-artifacts/tasks/` that may hold earlier decisions or
+   requirements.
 
 If `real_project_path` is missing or unreadable, that's an input-gate failure — ask the user for
 the location rather than guessing or scanning nothing.
@@ -52,7 +57,7 @@ the location rather than guessing or scanning nothing.
 
 ### Inputs
 - The user's stated need / topic to scan for.
-- `resource.md` (for `real_project_path` and the resource list).
+- The project index file (for `real_project_path`) and `resource.md` (for the resource list).
 
 ### Input Acceptance Criteria
 - There is a stated need or topic specific enough to search against (not just "scan the
@@ -60,7 +65,8 @@ the location rather than guessing or scanning nothing.
 - A readable `real_project_path` exists, or the user supplies a location to search.
 
 ### Outputs
-- `<real_project_path>/ba-artifacts/<task-id>/related-context.md` — the Related Context summary.
+- `<real_project_path>/ba-assistant-artifacts/tasks/<task-id>/related-context.md` — the Related
+  Context summary.
 
 ### Output Quality Criteria
 - Each relevant item lists: where it is (path/link), what it covers, and how it relates to the
@@ -90,7 +96,7 @@ Draft the Related Context artifact:
 ```markdown
 # Related Context — <need / topic>
 
-_Scanned: <date> · Sources: <real_project_path>, resource.md, workspace_
+_Scanned: <date> · Sources: <real_project_path>, resource.md, prior tasks_
 
 ## Relevant existing material
 | Item | Location | Covers | Relation to the need | Current? |
@@ -110,7 +116,8 @@ relevance is honest. Improve if short of the bar (ask the user if you need their
 not assume). When it meets the bar:
 1. Present it and **ask the user to confirm** before writing the file. Never write or update
    `related-context.md` without confirmation.
-2. **If confirmed** → write `<real_project_path>/ba-artifacts/<task-id>/related-context.md`, then hand off
+2. **If confirmed** → write
+   `<real_project_path>/ba-assistant-artifacts/tasks/<task-id>/related-context.md`, then hand off
    to `commit-work` to commit it in the real project repo.
 3. **If not satisfied** → improve with the user until confirmed, commit, then hand off to
    `improve-skill` to fold the lesson back into this skill.

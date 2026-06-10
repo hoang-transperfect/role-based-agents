@@ -96,8 +96,9 @@ Apply this to the skill? (all / specific numbers / none)
 ### 4B — Project-specific preference → propose a resource.md note
 
 Don't touch the skill. Log the preference so future work on *this* project honours it, in the
-`## Notes` section of the project's `resource.md` (create the section if it doesn't exist).
-Present the note and confirm it is correct before writing:
+`## Notes` section of the project's `resource.md` — which lives in the real project at
+`<real_project_path>/<assistant-name>-artifacts/resource.md` (create the section if it doesn't
+exist). Present the note and confirm it is correct before writing:
 
 ```
 This looks project-specific rather than a skill gap — a preference for this project, not

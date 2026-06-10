@@ -5,9 +5,10 @@ description: >
   requirements will be gathered. Invoke when a BA is starting requirements work and needs to map
   who is affected and decide elicitation approach, when the task's ## Plan marks Step 1 or Step 2
   as next, or when the BA asks "who are the stakeholders?" or "how should we gather requirements?"
-  It produces a stakeholder register and a requirements-gathering plan in the project's ba-artifacts
-  folder, then ticks the matching boxes in the task file checklist. Run after ba-scan-context and
-  ba-plan so it builds on existing context and an agreed scope.
+  It produces a stakeholder register and a requirements-gathering plan in the task folder under
+  the real project's ba-assistant-artifacts, then ticks the matching boxes in the task file
+  checklist. Run after ba-scan-context and ba-plan so it builds on existing context and an
+  agreed scope.
 ---
 
 # ba-discover
@@ -19,8 +20,10 @@ elicitation techniques that actually fit those people and the problem.
 
 ## Where things live
 
-- Read `real_project_path` from the project's `resource.md` frontmatter.
-- Write deliverables to `<real_project_path>/ba-artifacts/<task-id>/` (create it if needed):
+- Read `real_project_path` from the project's index file
+  (`<assistant-folder>/projects/<project-slug>.md`).
+- Write deliverables to the task folder
+  `<real_project_path>/ba-assistant-artifacts/tasks/<task-id>/` (create it if needed):
   `stakeholder-register.md` and `gathering-plan.md`.
 - Tick Steps 1–2 in the task file's `## Plan` checklist when each is confirmed.
 
@@ -62,7 +65,8 @@ elicitation techniques that actually fit those people and the problem.
 - **Each session is prepared, not just named** — it lists the actual opening questions (or, by
   technique: the focus points to observe, the agenda/decisions for a workshop, the items to
   extract from a document), the **themes it must cover**, plus explicit probes for easily-missed
-  areas (NFRs, edge cases and exceptions, the end-to-end journey). The guide's job is **coverage
+  areas (NFRs, edge cases and exceptions, the end-to-end journey, transition needs such as
+  migration/training/cutover). The guide's job is **coverage
   assurance**: it's an opening set the BA adapts live, not a fixed script — the multi-turn
   follow-up digging happens in `ba-elicit`, which tracks the session against these themes.
 - Scope and objectives are explicit, so elicitation doesn't sprawl.
@@ -110,7 +114,8 @@ reach for workshop · what to extract for document analysis -->
 1. <question / focus point>
 2. <…>
 **Probe — don't forget:** NFRs (performance, usability, accessibility, security) · edge cases &
-exceptions · the end-to-end journey, not just the happy path.
+exceptions · the end-to-end journey, not just the happy path · transition needs (data migration,
+training, cutover, parallel running).
 **Notes:** <pre-session context>
 
 ## <next stakeholder group> — <technique>
@@ -122,7 +127,8 @@ Check both artifacts against the Output Quality Criteria — especially stakehol
 technique justification. Improve if short of the bar (ask the user where you need their knowledge,
 never assume). When they meet the bar:
 1. Present and ask the user to confirm.
-2. **If confirmed** → write the files to `ba-artifacts/<task-id>/`, tick Steps 1–2 in the `## Plan`
+2. **If confirmed** → write the files to the task folder
+   (`ba-assistant-artifacts/tasks/<task-id>/`), tick Steps 1–2 in the `## Plan`
    checklist (fill the artifact links, update **Next step**), then hand off to `commit-work`.
 3. **If not satisfied** → improve with the user until confirmed, commit, then hand off to
    `improve-skill` to fold the lesson back into this skill.

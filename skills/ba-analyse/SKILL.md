@@ -5,7 +5,8 @@ description: >
   them. Invoke when a BA has elicitation findings to organise, validate, and rank, or when the
   task's ## Plan marks Step 5 or 6 as next. It interprets and confirms requirements with the user,
   applies prioritisation techniques (MoSCoW, Kano, and others as they fit), and produces a
-  validated, prioritised requirements list in the project's ba-artifacts folder, then ticks the
+  validated, prioritised requirements list in the task folder under the real project's
+  ba-assistant-artifacts, then ticks the
   matching checklist boxes. Run after ba-elicit so it works from documented findings.
 ---
 
@@ -19,8 +20,10 @@ work is collaborative and often involves healthy debate with the BA.
 
 ## Where things live
 
-- Read `real_project_path` from the project's `resource.md` frontmatter.
-- Write the deliverable to `<real_project_path>/ba-artifacts/<task-id>/prioritised-requirements.md`.
+- Read `real_project_path` from the project's index file
+  (`<assistant-folder>/projects/<project-slug>.md`).
+- Write the deliverable to
+  `<real_project_path>/ba-assistant-artifacts/tasks/<task-id>/prioritised-requirements.md`.
 - Tick Steps 5–6 in the task file's `## Plan` checklist when confirmed.
 
 ---
@@ -49,6 +52,9 @@ work is collaborative and often involves healthy debate with the BA.
   between stakeholders **or with the existing backlog** — are surfaced and resolved; any that can't
   be settled from the requirements are **escalated to the user for a decision**, never averaged
   away or silently chosen. (`ba-elicit` catches most backlog conflicts live; this is the final net.)
+- **Terminology is reconciled:** different words for one concept (or one word for two) across
+  stakeholders is a conflict like any other — resolve it by picking one term, and note the
+  decision so `ba-document` records it in the glossary.
 - Each requirement is **validated** — confirmed accurate with the user/stakeholders, not just
   inferred — and the record names **who validated it** (e.g. "yes (PM)"), for the audit trail.
   Mark anything still unconfirmed as provisional.
@@ -57,7 +63,8 @@ work is collaborative and often involves healthy debate with the BA.
 - Priority rationale references **value, urgency, feasibility, and alignment with the objectives /
   success criteria** in the Plan's Problem framing — so the ranking can be defended, not just
   asserted. A Must that advances no stated objective is a flag to re-examine.
-- Non-functional requirements are analysed and prioritised alongside functional ones, not parked.
+- Non-functional and transition requirements are analysed and prioritised alongside functional
+  ones, not parked.
 
 ## Techniques available
 MoSCoW and Kano for prioritisation; SWOT and Root-Cause Analysis when you need to interrogate
@@ -89,8 +96,8 @@ requirement's accuracy (recording who) and rank. Draft:
 ```markdown
 # Prioritised Requirements — <project>
 _Prioritisation method: MoSCoW (and Kano where noted)_
-| # | Requirement | Type (functional / NFR / service) | Validated? (by whom) | Priority | Rationale (value · urgency · feasibility · goal-fit) |
-|---|-------------|-----------------------------------|----------------------|----------|------|
+| # | Requirement | Type (functional / NFR / service / transition) | Validated? (by whom) | Priority | Rationale (value · urgency · feasibility · goal-fit) |
+|---|-------------|------------------------------------------------|----------------------|----------|------|
 ```
 
 ### Gate 3 — Output
@@ -98,8 +105,8 @@ Check against the Output Quality Criteria — especially that requirements are v
 assumed) and priorities are justified. Improve if short of the bar (ask the user to confirm where
 needed; never assume). When it meets the bar:
 1. Present and ask the user to confirm.
-2. **If confirmed** → write to the `ba-artifacts/<task-id>/` folder, tick Steps 5–6 in `## Plan` (links + **Next
-   step**), then hand off to `commit-work`.
+2. **If confirmed** → write to the task folder (`ba-assistant-artifacts/tasks/<task-id>/`), tick
+   Steps 5–6 in `## Plan` (links + **Next step**), then hand off to `commit-work`.
 3. **If not satisfied** → improve with the user until confirmed, commit, then hand off to
    `improve-skill`.
 

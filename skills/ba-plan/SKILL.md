@@ -25,17 +25,19 @@ artifact; they never restructure the plan.
 ## Where the work lives
 
 The checklist lives in the task file's `## Plan` section:
-`<project>/in-progress-tasks/<task-id>.md` (created by `create-task`). Read `real_project_path`
-from the project's `resource.md` frontmatter; under it the real project holds two BA areas:
+`<real_project_path>/ba-assistant-artifacts/tasks/<task-id>/task.md` (created by `create-task`).
+Read `real_project_path` from the project's index file
+(`<assistant-folder>/projects/<project-slug>.md`); under it the real project holds two BA areas:
 
-- `<real_project_path>/ba-artifacts/<task-id>/` — the **working trail** for this task (per-task
-  folder): related-context, stakeholder register, findings, prioritised requirements, sign-off.
+- `<real_project_path>/ba-assistant-artifacts/tasks/<task-id>/` — the **task folder**: the task
+  file, the conversation log, and the **working trail** for this task: related-context,
+  stakeholder register, findings, prioritised requirements, sign-off.
 - `<real_project_path>/ba-requirement/` — the **formal backlog** other teams consume, an agile
   Epic → Feature → User Story tree in markdown. This persists across tasks; tasks create or
   extend parts of it.
 
-(The task file is the assistant's bookkeeping; both BA areas are real deliverables, so they live
-with the real project.)
+(Everything lives with the real project; the assistant folder keeps only the project index
+file — the pointer plus the in-progress task list.)
 
 ---
 
@@ -45,10 +47,10 @@ Every BA skill — including this one — declares what it consumes and produces
 must meet. This makes the gates below objective rather than vibes.
 
 ### Inputs
-- The task file (`<project>/in-progress-tasks/<task-id>.md`).
-- The business context / problem the task is meant to solve (from the task description, project
-  `resource.md`, or the user).
-- The **`related-context.md` artifact** (in `<real_project_path>/ba-artifacts/<task-id>/`) from
+- The task file (`<real_project_path>/ba-assistant-artifacts/tasks/<task-id>/task.md`).
+- The business context / problem the task is meant to solve (from the task description, the
+  project's `resource.md` in `ba-assistant-artifacts/`, or the user).
+- The **`related-context.md` artifact** (in the task folder) from
   `ba-scan-context`, if present — so the plan reflects what's already known and targets the gaps.
 
 ### Input Acceptance Criteria
@@ -78,8 +80,8 @@ must meet. This makes the gates below objective rather than vibes.
   that were consciously skipped remain listed but are marked `~~skipped~~ (reason)` — never
   silently dropped, so the audit trail shows the scope decision and its rationale.
 - The plan notes the cross-cutting concerns so later steps don't forget them: non-functional
-  requirements, service-level/end-to-end perspective, and continuous stakeholder engagement
-  beyond sign-off.
+  requirements, transition needs (migration, training, cutover), service-level/end-to-end
+  perspective, and continuous stakeholder engagement beyond sign-off.
 - It is unambiguous which step is next.
 
 ---
@@ -155,6 +157,8 @@ for the audit trail — applicable ones as open boxes, skipped ones struck throu
 
 **Cross-cutting (apply throughout, don't defer):**
 - Non-functional requirements — performance, usability, accessibility, security.
+- Transition needs — data migration, training, cutover, parallel running: temporary requirements
+  for reaching the future state.
 - Service-level perspective — end-to-end journeys, governance, support models, not only features.
 - Continuous stakeholder engagement — keep validating after sign-off; requirements evolve.
 
@@ -197,13 +201,15 @@ A task is **complete** when every applicable `## Plan` step is `[x]` or `~~skipp
 step skill that ticks the **final** applicable box sees this is now true, it sets **Next step:
 complete** and proposes closing the task. Then — **only after the user confirms the task is done**:
 
-1. Move the task file out of the in-progress list, preserving the audit record:
-   ```bash
-   mv "<project>/in-progress-tasks/<task-id>.md" "<project>/completed-tasks/<task-id>.md"
-   ```
-2. Set the conversation log frontmatter `status: completed` (it stays in `raw-conversation/`).
-3. Hand off to `commit-work`. The task file and log are workspace bookkeeping — commit only if the
-   workspace is a git repo, per commit-work's "Which repository?" rules.
+1. Set `status: completed` in the task file's frontmatter — the file stays in its task folder,
+   preserving the audit record.
+2. Set the conversation log frontmatter `status: completed` (it stays in the task folder too).
+3. Remove the task's line from the project index file
+   (`<assistant-folder>/projects/<project-slug>.md`, under `## In-Progress Tasks`).
+4. Hand off to `commit-work`: the task file and log live in the real project repo — commit the
+   completion there; the index edit is bookkeeping committed in the skills repo, per commit-work's
+   "Which repository?" rules.
 
-The completed task no longer appears in the in-progress list `gather-needs` scans, so it won't be
-offered for resume. If the user later wants to reopen it, `resume-task` moves it back first.
+The completed task no longer appears in the index `gather-needs` scans, so it won't be offered
+for resume. If the user later wants to reopen it, `resume-task` flips the status back to
+`in-progress` and re-adds the index line first.

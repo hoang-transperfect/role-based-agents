@@ -25,8 +25,9 @@ session reads the stored raw inputs, findings, and coverage and picks up where i
 
 ## Where things live
 
-- Read `real_project_path` from the project's `resource.md` frontmatter.
-- `<real_project_path>/ba-artifacts/<task-id>/elicitation/`
+- Read `real_project_path` from the project's index file
+  (`<assistant-folder>/projects/<project-slug>.md`).
+- `<real_project_path>/ba-assistant-artifacts/tasks/<task-id>/elicitation/`
   - `raw/` — the stakeholder's **actual inputs, stored verbatim** as they arrive (pasted answers,
     replies, transcripts, attached docs). This is the audit source; never paraphrase it away.
   - `findings-log.md` — the structured findings derived from the raw inputs, plus a coverage view.
@@ -54,7 +55,8 @@ session reads the stored raw inputs, findings, and coverage and picks up where i
 
 ### Output Quality Criteria
 - **Raw inputs are stored faithfully and verbatim** — they are the audit source for every finding.
-- Every finding **traces to its raw source** and carries a **type** (functional / NFR / service).
+- Every finding **traces to its raw source** and carries a **type** (functional / NFR / service /
+  transition).
 - **Coverage is explicit and current:** each theme is marked `covered`, `open`, or `deferred`
   (a TODO for a future task, when the BA stops without it). Open items are never silently dropped —
   they're pursued or explicitly deferred.
@@ -129,8 +131,8 @@ with the outstanding question recorded, so it's carried forward rather than lost
 | <theme from guide> | covered / open / deferred (TODO → future task) | <what still to ask> |
 
 ## Findings
-| # | Finding | Raw source | Type (functional / NFR / service) | Open? |
-|---|---------|------------|-----------------------------------|-------|
+| # | Finding | Raw source | Type (functional / NFR / service / transition) | Open? |
+|---|---------|------------|------------------------------------------------|-------|
 ```
 
 ### Gate 3 — Output

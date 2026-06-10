@@ -25,8 +25,9 @@ duplicate Bitbucket and claim work that isn't the BA's.
 
 ## Where things live
 
-- Read `real_project_path` from the project's `resource.md` frontmatter.
-- **Sign-off record** (per task/increment) → `ba-artifacts/<task-id>/sign-off.md`.
+- Read `real_project_path` from the project's index file
+  (`<assistant-folder>/projects/<project-slug>.md`).
+- **Sign-off record** (per task/increment) → `ba-assistant-artifacts/tasks/<task-id>/sign-off.md`.
 - **RTM** and **change log** (living, product-wide) → `ba-requirement/RTM.md` and
   `ba-requirement/change-log.md`. They span all tasks and grow as requirements evolve.
 - Tick Steps 8–9 in the task file's `## Plan` checklist when confirmed. Step 9 is ongoing — the
@@ -49,8 +50,8 @@ duplicate Bitbucket and claim work that isn't the BA's.
   `ba-discover`.
 
 ### Outputs
-- `ba-artifacts/<task-id>/sign-off.md` — what was presented, ambiguities resolved, and the formal
-  approval (who approved what, when; full or partial/conditional).
+- `ba-assistant-artifacts/tasks/<task-id>/sign-off.md` — what was presented, ambiguities resolved,
+  and the formal approval (who approved what, when; full or partial/conditional).
 - `ba-requirement/RTM.md` — each requirement traced **back to its source**, with its requirement
   status and dependencies.
 - `ba-requirement/change-log.md` — requirement changes over time, each with status and impact.
@@ -108,7 +109,8 @@ its source**, approval is attributed and dated, and continued validation is prov
 Improve if short of the bar (ask the user where you need their input; never assume). When it meets
 the bar:
 1. Present and ask the user to confirm.
-2. **If confirmed** → write `sign-off.md` to `ba-artifacts/<task-id>/` and update `RTM.md` /
+2. **If confirmed** → write `sign-off.md` to the task folder
+   (`ba-assistant-artifacts/tasks/<task-id>/`) and update `RTM.md` /
    `change-log.md` under `ba-requirement/`, tick Steps 8–9 in `## Plan` (links + **Next step**),
    then hand off to `commit-work` (real project repo).
 3. **If not satisfied** → improve with the user until confirmed, commit, then hand off to

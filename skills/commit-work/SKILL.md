@@ -21,13 +21,15 @@ has two responsibilities that fire at different moments.
 Commit each confirmed thing in the git repository that **contains it** — because that's where its
 audit trail belongs:
 
-- **Confirmed deliverables/artifacts** (the produced work) live in the **real project** — the
-  folder recorded as `real_project_path` in the project's `resource.md`. Commit them there. This
-  is the primary target.
+- **Everything project-specific** — confirmed deliverables/artifacts, task files (`task.md`),
+  conversation logs (`conversation.md`), and `resource.md` notes — lives in the **real project**:
+  the folder recorded as `real_project_path` in the project's index file
+  (`<assistant-folder>/projects/<project-slug>.md`), under `<assistant-name>-artifacts/`. Commit
+  them there. This is the primary target.
 - **Accepted skill improvements** edit a `SKILL.md`, which lives in the **skills repository**
   (the current working directory). Commit those there.
-- **Bookkeeping** (a task file, a `resource.md` note) lives in the workspace; commit it there if
-  that location is a git repo, otherwise it's just bookkeeping and there's nothing to commit.
+- **The project index file** (the only per-project record in the assistant folder) also lives in
+  the skills repository — commit index updates there as bookkeeping.
 
 Run git against the right repo explicitly, e.g. `git -C "<repo path>" …`, so a commit never lands
 in the wrong history.
@@ -41,10 +43,11 @@ invoked by the session-entry skill (`gather-needs`, Step 0), not from inside oth
 gates. A dirty tree mixes unrelated changes into the audit trail, so we never start on top of one.
 Because the session starts clean, downstream skills don't need to re-check the tree.
 
-Guard the **real project repo** — the `real_project_path` from `resource.md`, where deliverables
-land — as soon as the project (and thus that path) is known. For an existing project that's
-immediately; for a brand-new project, once the path has been supplied. If `real_project_path`
-isn't a git repo yet, Step 0 will offer to initialise one before the guard runs.
+Guard the **real project repo** — the `real_project_path` from the project's index file, where
+deliverables land — as soon as the project (and thus that path) is known. For an existing project
+that's immediately; for a brand-new project, once the path has been supplied. If
+`real_project_path` isn't a git repo yet, Step 0 will offer to initialise one before the guard
+runs.
 
 ### Step 0 — Ensure the real project folder is a git repo
 
@@ -72,7 +75,7 @@ If the user agrees, initialise the repo:
 ```bash
 git -C "<real_project_path>" init
 git -C "<real_project_path>" add -A
-git -C "<real_project_path>" commit -m "chore: initial commit before BA work begins" --allow-empty
+git -C "<real_project_path>" commit -m "chore: initial commit before assistant work begins" --allow-empty
 ```
 
 After initialisation, proceed to Step 1. If the user declines, note that commit-related steps will be skipped for this session and continue.

@@ -92,8 +92,20 @@ This folder follows the following structure:
 ├── ai.json                          # AI settings: rules, skills, mcp, ...
 ├── AGENT.md                         # Agent definition
 ├── CLAUDE.md, ...                   # Link to AGENT.md
-└── [project folders]/               # Individual projects
-    ├── resource.md                # Project-specific resources such as name, working directory, knowledge
-    ├── raw-conversation/    # Logs and transcripts of chat sessions
-    └── in-progress-tasks/   # Manage in-progress tasks (Markdown files per task)
+└── projects/                        # One index file per project
+    └── [project-slug].md            # Pointer to the real project (real_project_path) + in-progress task list
+```
+
+Everything else lives in the **real project**: the assistant's artifacts folder plus the
+assistant's output of work:
+```text
+[real project]/
+├── [assistant-name]-artifacts/      # All the assistant's project content, named after the assistant
+│   ├── resource.md                  # Project resources (links + descriptions) and notes
+│   └── tasks/
+│       └── [task-id]/               # One folder per task
+│           ├── task.md              # Task description, status, and plan
+│           ├── conversation.md      # Verbatim conversation log
+│           └── ...                  # The task's working artifacts
+└── [output of work]                 # The assistant's deliverable to other teams — role-specific:
 ```

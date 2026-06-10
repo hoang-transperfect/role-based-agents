@@ -1,54 +1,53 @@
 ---
 name: create-project
 description: >
-  Creates a new project workspace under the fixed projects root, with a standard folder
-  structure. Expects inputs to be passed in directly — typically from gather-needs.
-  Do NOT re-ask the user for information already collected. Trigger when gather-needs has
-  detected "create new project" intent and confirmed inputs with the user.
+  Registers a new project: a project index file in the assistant folder plus the assistant's
+  artifacts folder inside the real project. Expects inputs to be passed in directly — typically
+  from gather-needs. Do NOT re-ask the user for information already collected. Trigger when
+  gather-needs has detected "create new project" intent and confirmed inputs with the user.
 ---
 
 # create-project
 
-Creates a structured project folder under the projects root. All inputs are assumed to already
-be confirmed by the user (via gather-needs).
+Registers a new project with the assistant. All inputs are assumed to already be confirmed by
+the user (via gather-needs). Two things get created:
+
+1. A **project index file** in the assistant folder — the assistant's only record of the
+   project: the pointer to the real project plus the searchable list of in-progress tasks.
+2. The **assistant artifacts folder** inside the real project — where everything the assistant
+   produces for this project lives (resources, task files, conversation logs, working artifacts).
+
+(The real project also gains the assistant's **output of work** — the deliverable other teams
+consume — but not from this skill: the role's own skills create it where the role dictates,
+e.g. BA → `ba-requirement/`, design → `design-requirement/`, dev → the source code itself.)
 
 ## Projects root
 
-All projects live under a single fixed root. There is **no per-project working directory**.
+All project index files live under a single fixed root. There is **no per-project folder** in
+the assistant workspace — one index file per project.
 
 ```bash
-PROJECTS_ROOT="<assistant-folder>/projects"   # assistant-folder is the directory containing this assistant's definition file (e.g. assistants/ba-assistant)
+PROJECTS_ROOT="<assistant-folder>/projects"   # assistant-folder is the directory containing this assistant's definition file (e.g. assistants/<assistant-name>)
 ```
 
 ## Inputs (provided by gather-needs)
 
-- `project-name` — slugified folder name (lowercase, spaces → hyphens)
+- `project-name` — slugified name (lowercase, spaces → hyphens)
 - `real-project-path` — absolute path to the **real project folder**: where the actual work and
-  deliverables live (the codebase, project docs, existing documentation). This is distinct from
-  the workspace folder this skill creates under `$PROJECTS_ROOT`, which holds only the
-  assistant's bookkeeping (tasks, conversation logs, resource.md). Ask for it if not provided.
+  deliverables live (the codebase, project docs, existing documentation). Everything the
+  assistant produces for this project is stored under here too, inside
+  `<assistant-name>-artifacts/`. Ask for it if not provided.
 - `resources` — list of `{ url, description }` entries (may be empty)
 
 ---
 
-## Step 1 — Create the Folder Structure
+## Step 1 — Create the Project Index File
 
-```bash
-PROJECT_DIR="$PROJECTS_ROOT/<project-slug>"
-mkdir -p "$PROJECT_DIR/raw-conversation"
-mkdir -p "$PROJECT_DIR/in-progress-tasks"
-mkdir -p "$PROJECT_DIR/completed-tasks"
-```
+Path: `$PROJECTS_ROOT/<project-slug>.md`
 
----
-
-## Step 2 — Create resource.md
-
-Path: `$PROJECT_DIR/resource.md`
-
-The frontmatter records the **real project folder** so any skill can locate where deliverables
-and existing documentation live. This is the single source of truth for that path — skills read
-`real_project_path` from here rather than assuming a location.
+The frontmatter is the **single source of truth** for where the real project lives — skills read
+`real_project_path` from here rather than assuming a location. The body lists the in-progress
+tasks so `gather-needs` can search them without leaving the assistant folder.
 
 ```markdown
 ---
@@ -56,13 +55,47 @@ project_name: <Project Name>
 real_project_path: <absolute path to the real project folder>
 ---
 
+# <Project Name>
+
+All project content (resources, task files, conversation logs, artifacts) lives in the real
+project under `<assistant-name>-artifacts/`. This file only points there and lists what is
+in progress.
+
+## In-Progress Tasks
+
+<!-- One line per task, added by create-task and removed on completion: `- <task-id> — <description>` -->
+```
+
+---
+
+## Step 2 — Create the Artifacts Folder in the Real Project
+
+The folder is named after the assistant, so several assistants can share one real project
+without colliding:
+
+```bash
+ARTIFACTS_DIR="<real-project-path>/<assistant-name>-artifacts"   # named after this assistant
+mkdir -p "$ARTIFACTS_DIR/tasks"
+```
+
+- `tasks/` — one folder per task (created by `create-task`), holding the task file
+  (`task.md`), its conversation log (`conversation.md`), and the task's working artifacts.
+
+---
+
+## Step 3 — Create resource.md
+
+Path: `$ARTIFACTS_DIR/resource.md`
+
+```markdown
+---
+project_name: <Project Name>
+---
+
 # <Project Name> – Resources
 
 A curated list of resources for this project. Each entry has a link and a description
 so that agents can detect which resource is relevant and retrieve it when needed.
-
-**Real project folder:** `<absolute path>` — where the actual work, deliverables, and existing
-documentation live. Project artifacts are written under here.
 
 ## Resources
 
@@ -85,14 +118,17 @@ Populate from the confirmed resources list. If empty, leave one placeholder line
 
 ---
 
-## Step 3 — Confirm Success
+## Step 4 — Confirm Success
 
 Tell the user:
-- Full path to the new workspace folder (under the projects root)
-- The recorded real project folder path (from `real_project_path`)
+- Path of the project index file (in the assistant folder) and the recorded real project path
+- Path of the artifacts folder created inside the real project
 - Brief explanation of each item:
-  - `resource.md` — curated resource list + the real project folder path; each resource entry has a link + description so agents know what to retrieve and when
-  - `raw-conversation/` — one `.md` log file per chat session (created by `create-task`)
-  - `in-progress-tasks/` — one `.md` file per active task (created by `create-task`)
-  - `completed-tasks/` — finished task files are moved here so they leave the in-progress list while the audit record is preserved
-  
+  - the index file — the pointer to the real project plus the in-progress task list that
+    `gather-needs` searches
+  - `<assistant-name>-artifacts/resource.md` — curated resource list + project notes; each
+    resource entry has a link + description so agents know what to retrieve and when
+  - `<assistant-name>-artifacts/tasks/` — one folder per task: `task.md`, `conversation.md`,
+    and the task's working artifacts. A finished task keeps its folder (the audit record);
+    completion is recorded by `status: completed` in `task.md` and by removing the task's
+    line from the index file

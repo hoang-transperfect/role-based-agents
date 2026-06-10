@@ -1,36 +1,51 @@
 ---
 name: create-task
 description: >
-  Creates a new task file and a linked conversation log inside an existing project,
-  then begins logging the current conversation verbatim. Expects inputs to be passed in
-  directly — typically from gather-needs. Do NOT re-ask the user for information already
-  collected. Trigger when gather-needs has detected "create new task" intent and confirmed inputs.
+  Creates a new task folder (task file + conversation log) inside the real project, registers
+  the task in the project index file, then begins logging the current conversation verbatim.
+  Expects inputs to be passed in directly — typically from gather-needs. Do NOT re-ask the user
+  for information already collected. Trigger when gather-needs has detected "create new task"
+  intent and confirmed inputs.
 ---
 
 # create-task
 
-Creates two linked files inside an existing project, then starts live conversation logging.
-All inputs are assumed to already be confirmed by the user (via gather-needs).
+Creates the task's folder in the real project, registers it in the project index, then starts
+live conversation logging. All inputs are assumed to already be confirmed by the user
+(via gather-needs).
 
 ## Inputs (provided by gather-needs)
 
-- `project-directory` — full path to the project folder
+- `project` — project slug; its index file is `<assistant-folder>/projects/<project>.md`
 - `task-slug` — short kebab-case label (e.g. `build-login`)
 - `task-description` — one sentence describing the task
 
 The **task ID** is `<slug>-<YYYY-MM-DD>` using today's date.
-The **conversation ID** is `<task-id>-conv-001`.
+
+## Where the task lives
+
+Read `real_project_path` from the index file's frontmatter, then create the task folder inside
+the real project:
+
+```bash
+TASK_DIR="<real_project_path>/<assistant-name>-artifacts/tasks/<task-id>"   # e.g. …/tasks/build-login-2026-06-10
+mkdir -p "$TASK_DIR"
+```
+
+It holds the task file, the conversation log, and (added later by other skills) the task's
+working artifacts.
 
 ---
 
 ## Step 1 — Create the Task File
 
-Path: `<project>/in-progress-tasks/<task-id>.md`
+Path: `$TASK_DIR/task.md`
 
 ```markdown
 ---
 id: <task-id>
 description: <task description>
+status: in-progress
 ---
 
 # Task: <task-id>
@@ -45,22 +60,21 @@ description: <task description>
 
 ## Step 2 — Create the Conversation Log (header only)
 
-Path: `<project>/raw-conversation/<task-id>-conv-001.md`
+Path: `$TASK_DIR/conversation.md` — each task has exactly one conversation log.
 
 Create the file with frontmatter and header **only** — do NOT reconstruct or backfill any
 prior turns. The current conversation is the first session, and it will be logged live going
-forward (see Step 4).
+forward (see Step 5).
 
 ```markdown
 ---
-id: <task-id>-conv-001
-description: <short description of this conversation>
 task: <task-id>
+description: <short description of this conversation>
 status: in-progress
 updated: <YYYY-MM-DD>
 ---
 
-# Conversation Log: <task-id>-conv-001
+# Conversation Log: <task-id>
 
 **Description:** <short description of this conversation>
 **Started:** <YYYY-MM-DD HH:MM>
@@ -70,12 +84,26 @@ updated: <YYYY-MM-DD>
 
 ---
 
-## Step 3 — Open Session 1
+## Step 3 — Register the Task in the Project Index
+
+Append one line under `## In-Progress Tasks` in `<assistant-folder>/projects/<project>.md`.
+That section is the last thing in the file, so appending to the file is enough:
+
+```bash
+printf -- '- %s — %s\n' "<task-id>" "<task description>" >> "<assistant-folder>/projects/<project>.md"
+```
+
+This line is what `gather-needs` searches when checking for existing tasks; it is removed when
+the task completes.
+
+---
+
+## Step 4 — Open Session 1
 
 Append the first session heading to the conversation log:
 
 ```bash
-log_path="<project>/raw-conversation/<task-id>-conv-001.md"
+log_path="$TASK_DIR/conversation.md"
 n=$(grep -E '^## Chat Session [0-9]+' "$log_path" | grep -oE '[0-9]+' | sort -n | tail -1 || true)
 n=$(( ${n:-0} + 1 ))
 [[ -s "$log_path" ]] && [[ "$(tail -c1 "$log_path" | wc -l)" -eq 0 ]] && printf '\n' >> "$log_path"
@@ -87,7 +115,7 @@ This appends `## Chat Session 1 — <today>` and prints the session number.
 
 ---
 
-## Step 4 — Log Every Turn Verbatim (standing behavior)
+## Step 5 — Log Every Turn Verbatim (standing behavior)
 
 From this point on, the log append is the **final tool call of every response**: after you finish
 replying to the user, your last action that turn is to append the turn to the active log file —
@@ -99,7 +127,7 @@ Append using a bash heredoc with a quoted delimiter (this preserves backticks, q
 and newlines without escaping):
 
 ```bash
-cat >> <project>/raw-conversation/<task-id>-conv-001.md << 'CLAUDE_LOG_EOF'
+cat >> "$TASK_DIR/conversation.md" << 'CLAUDE_LOG_EOF'
 
 **Human (<name>):**
 <the user's exact message>
@@ -119,10 +147,9 @@ Rules for logging:
 
 ---
 
-## Step 5 — Confirm Success (first turn only)
+## Step 6 — Confirm Success (first turn only)
 
 On the turn where the task is created, tell the user:
-- Task ID created and paths to both files
+- Task ID created, the task folder path inside the real project, and the index line added
 - That this conversation is now being logged verbatim to the conversation log
 - That `## Plan` will be filled in by the planning skill later
-

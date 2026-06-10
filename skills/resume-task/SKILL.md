@@ -21,16 +21,19 @@ PROJECTS_ROOT="<assistant-folder>/projects"   # must match the value used by cre
 
 ## Inputs (provided by gather-needs)
 
-- `project` — project folder name under `$PROJECTS_ROOT`
-- `task-id` — the existing task's ID (e.g. `build-login-20260604`)
+- `project` — project slug; its index file is `$PROJECTS_ROOT/<project>.md`
+- `task-id` — the existing task's ID (e.g. `build-login-2026-06-04`)
 
-Derived paths:
-- Task file: `$PROJECTS_ROOT/<project>/in-progress-tasks/<task-id>.md`
-- Conversation log: `$PROJECTS_ROOT/<project>/raw-conversation/<task-id>-conv-001.md`
+Derived paths — read `real_project_path` from the index file's frontmatter, then:
 
-If the task file isn't in `in-progress-tasks/`, it may have been **completed** — check
-`$PROJECTS_ROOT/<project>/completed-tasks/<task-id>.md`. If the user wants to reopen it, move it
-back to `in-progress-tasks/` first (`mv` it), then continue from Step 1.
+- Task folder: `<real_project_path>/<assistant-name>-artifacts/tasks/<task-id>/`
+- Task file: `<task folder>/task.md`
+- Conversation log: `<task folder>/conversation.md`
+
+If the task file's frontmatter says `status: completed`, the task was closed — that's why it no
+longer appears in the index's in-progress list. If the user wants to reopen it: set
+`status: in-progress` in `task.md` and re-add its line under `## In-Progress Tasks` in the index
+file (`- <task-id> — <description>`), then continue from Step 1.
 
 ---
 
@@ -48,17 +51,16 @@ exist (e.g. it was deleted), recreate the header so logging can continue:
 
 ```markdown
 ---
-id: <task-id>-conv-001
-description: <short description of this conversation>
 task: <task-id>
+description: <short description of this conversation>
 status: in-progress
 updated: <YYYY-MM-DD>
 ---
 
-# Conversation Log: <task-id>-conv-001
+# Conversation Log: <task-id>
 
 **Description:** <short description of this conversation>
-**Started:** <original date if known, else today> 
+**Started:** <original date if known, else today>
 **Participants:** <Human name>
 **Agent:** <platform>/<model>
 ```
@@ -74,7 +76,7 @@ Append the next session heading. Auto-increments based on the highest existing
 `## Chat Session N`, so a resumed task continues at Session 2, 3, and so on:
 
 ```bash
-log_path="$PROJECTS_ROOT/<project>/raw-conversation/<task-id>-conv-001.md"
+log_path="<real_project_path>/<assistant-name>-artifacts/tasks/<task-id>/conversation.md"
 n=$(grep -E '^## Chat Session [0-9]+' "$log_path" | grep -oE '[0-9]+' | sort -n | tail -1 || true)
 n=$(( ${n:-0} + 1 ))
 [[ -s "$log_path" ]] && [[ "$(tail -c1 "$log_path" | wc -l)" -eq 0 ]] && printf '\n' >> "$log_path"
@@ -94,7 +96,7 @@ multiple turns into one append, never skip it because a handoff is in progress.
 Use a bash heredoc with a quoted delimiter (preserves backticks, quotes, `$`, and newlines):
 
 ```bash
-cat >> "$PROJECTS_ROOT/<project>/raw-conversation/<task-id>-conv-001.md" << 'CLAUDE_LOG_EOF'
+cat >> "$log_path" << 'CLAUDE_LOG_EOF'
 
 **Human (<name>):**
 <the user's exact message>

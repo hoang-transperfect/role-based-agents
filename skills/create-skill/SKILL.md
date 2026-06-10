@@ -65,8 +65,10 @@ description: > <what it does + when to invoke it; the trigger>
 <one short paragraph: what it's for and why it matters>
 
 ## Where things live
-- Read `real_project_path` from `resource.md`. Working artifacts →
-  `<real_project_path>/ba-artifacts/<task-id>/`; formal deliverables → their home. Tick `## Plan`.
+- Read `real_project_path` from the project's index file
+  (`<assistant-folder>/projects/<project-slug>.md`). Working artifacts → the task folder
+  `<real_project_path>/<assistant-name>-artifacts/tasks/<task-id>/`; formal deliverables →
+  their home. Tick `## Plan`.
 
 ## The skill contract
 ### Inputs            — what it consumes (artifacts, prior skills' output, the user)

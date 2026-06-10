@@ -5,8 +5,9 @@ description: >
   agile backlog other teams build from. Invoke when a BA needs to write or update epics, features,
   and user stories, or when the task's ## Plan marks Step 7 as next. It authors the Epic → Feature
   → User Story tree as markdown in the real project's ba-requirement folder — each story clear,
-  uniquely ID'd, and testable (Given/When/Then acceptance criteria), with non-functional and
-  service-level needs explicitly captured — then ticks the checklist box. Behaviour adapts to the
+  uniquely ID'd, and testable (Given/When/Then acceptance criteria), with non-functional,
+  service-level, and transition needs explicitly captured and terminology kept consistent via a
+  shared glossary — then ticks the checklist box. Behaviour adapts to the
   work mode (build the tree from scratch, extend it, or update a story in place).
 ---
 
@@ -20,7 +21,8 @@ requirements and the end-to-end service view — must be captured, not dropped.
 
 ## Where things live
 
-- Read `real_project_path` from the project's `resource.md` frontmatter.
+- Read `real_project_path` from the project's index file
+  (`<assistant-folder>/projects/<project-slug>.md`).
 - Write the formal backlog under `<real_project_path>/ba-requirement/` as markdown:
 
 ```
@@ -30,25 +32,28 @@ ba-requirement/
     feature-01-<slug>/
       feature.md                 # FEAT-01: description + its user stories (US-001…) with AC
   non-functional.md              # NFR-01…: cross-cutting NFRs, linked to the features they constrain
+  transition.md                  # TR-01…: transition requirements (migration, training, cutover) — temporary by nature
+  glossary.md                    # Shared terms (ubiquitous language) — one meaning per term; all items use these terms
 ```
 
-- IDs: `EPIC-01`, `FEAT-01`, `US-001`, `NFR-01` — unique and never reused. **Read the existing
-  tree first** and continue numbering from the highest used, so develop/maintain work never
+- IDs: `EPIC-01`, `FEAT-01`, `US-001`, `NFR-01`, `TR-01` — unique and never reused. **Read the
+  existing tree first** and continue numbering from the highest used, so develop/maintain work never
   collides with or renumbers what's already there. To find the next free number per prefix:
 
   ```bash
-  grep -rhoE 'EPIC-[0-9]+|FEAT-[0-9]+|US-[0-9]+|NFR-[0-9]+' "<real_project_path>/ba-requirement/" 2>/dev/null \
+  grep -rhoE 'EPIC-[0-9]+|FEAT-[0-9]+|US-[0-9]+|NFR-[0-9]+|TR-[0-9]+' "<real_project_path>/ba-requirement/" 2>/dev/null \
     | awk -F- '{n=$2+0; if (n>m[$1]) m[$1]=n} END{for (p in m) printf "%s next: %d\n", p, m[p]+1}'
   ```
 - Tick Step 7 in the task file's `## Plan` checklist when confirmed. (Working notes for this task
-  stay in `ba-artifacts/<task-id>/`; only the formal backlog goes in `ba-requirement/`.)
+  stay in the task folder `ba-assistant-artifacts/tasks/<task-id>/`; only the formal backlog goes
+  in `ba-requirement/`.)
 
 ---
 
 ## The skill contract
 
 ### Inputs
-- `ba-artifacts/<task-id>/prioritised-requirements.md` from `ba-analyse`.
+- `ba-assistant-artifacts/tasks/<task-id>/prioritised-requirements.md` from `ba-analyse`.
 - The existing `ba-requirement/` tree (for develop/maintain — what to extend or change).
 - The stakeholder register (who each item serves) and the business problem.
 
@@ -61,7 +66,8 @@ ba-requirement/
   duplicate.
 
 ### Outputs
-- New or updated `epic.md` / `feature.md` files (and `non-functional.md`) under `ba-requirement/`.
+- New or updated `epic.md` / `feature.md` files (and `non-functional.md`, `transition.md`,
+  `glossary.md`) under `ba-requirement/`.
 
 ### Output Quality Criteria
 - **Hierarchy is sound:** every story sits under a feature, every feature under an epic. A story
@@ -93,6 +99,14 @@ ba-requirement/
 - **Non-functional requirements are explicit** — performance, usability, accessibility, security —
   captured as their own `NFR-*` items and linked to the features/stories they constrain, not
   buried or assumed.
+- **Transition requirements are explicit** — data migration, training, cutover, parallel running,
+  decommissioning — captured as their own `TR-*` items linked to the features they enable, each
+  marked with when it retires: they describe **getting to** the future state, not the future state
+  itself, so they must not linger as permanent requirements.
+- **Terminology is consistent (glossary):** every domain term means one thing, defined in
+  `glossary.md`. New terms are added with a definition; synonyms for an existing concept are
+  replaced with the glossary term. Two names for one concept — or one name for two — is a defect
+  in the backlog.
 - **The functional user flow is documented** — main flow plus **alternate/exception paths** — at
   the feature level (epic level for a cross-feature journey; story level only when a single story's
   sequence is non-trivial). This is the end-to-end journey, not the UI (Design's). Exception
@@ -141,7 +155,7 @@ manufacturing plausible ones.
 # FEAT-01 — <name>   (epic: EPIC-01)
 **Intent / user value:** <what this feature enables and for whom>
 **Scope:** In — <…> · Out — <…>
-**Stories:** US-001, US-002       **Applies NFRs:** NFR-01
+**Stories:** US-001, US-002       **Applies NFRs / TRs:** NFR-01, TR-01
 **Dependencies:** <APIs, other features>     **Open questions:** <…>
 **User flow (functional — not UI):**
   _Main flow:_ 1. <step> → 2. <step> → 3. <step>
@@ -169,6 +183,17 @@ manufacturing plausible ones.
 **Requirement (measurable):** <target>   **Applies to:** FEAT-01, US-001
 **Acceptance criteria:** <how verified>
 **Priority:** Must   **Source:** <ref>   **Rationale:** <why it matters>
+
+# TR-01 — <category: data-migration / training / cutover / parallel-run / decommissioning>
+**Requirement:** <what must happen to move from the current state to the future state>
+**Applies to:** FEAT-01   **Needed until:** <when it retires — transition requirements are temporary>
+**Acceptance criteria:** <how verified>
+**Priority:** Must   **Source:** <ref>   **Rationale:** <why the transition fails without it>
+
+# Glossary — <project>   (glossary.md)
+| Term | Definition | Avoid (synonyms) | Source |
+|------|------------|------------------|--------|
+| <term> | <one meaning, in business language> | <words people use that mean this> | <ref> |
 ```
 
 **Conditional fields — add to a story only when they apply:**
