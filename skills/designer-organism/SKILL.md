@@ -1,15 +1,15 @@
 ---
 name: designer-organism
 description: >
-  Creates or updates a product-specific organism spec — a complex UI component tightly coupled
-  to the product's information architecture or data model, which therefore does not belong in the
-  design system. Built exclusively from DS atoms and molecules by name — never from raw token
-  values. Invoke when a story spec (designer-ui) lists a product-specific organism that needs a
-  spec or an update (e.g. AppNavigationBar, UserProfileCard, OrderSummaryPanel). If the organism
-  already has a spec, reads it first then rewrites it in full. Produces a dedicated
-  organism-spec.md under design-spec/product-organisms/. Run before designer-template and
-  designer-page so they can reference the organism by name. Spec once per organism; all
-  subsequent stories that change it update the same file.
+  Creates or updates a product-specific organism spec using the designer-ds-organism spec template
+  format. Product-specific organisms are tightly coupled to the product's IA or data model and do
+  not belong in the design system — but are built exclusively from DS atoms and molecules by name.
+  Invoke when a story spec (designer-ui) lists a product-specific organism that needs a spec or an
+  update (e.g. AppNavigationBar, UserProfileCard, OrderSummaryPanel). If the organism already has
+  a spec, reads it first then rewrites it in full. Produces a dedicated organism-spec.md under
+  design-spec/product-organisms/. Run before designer-template and designer-page so they can
+  reference the organism by name. Spec once per organism; all subsequent stories that change it
+  update the same file.
 ---
 
 # designer-organism
@@ -63,15 +63,15 @@ story references it by name and links to this file — do not re-spec it.
 - `<real_project_path>/design-spec/product-organisms/<organism-name>/organism-spec.md`
 
 ### Output Quality Criteria
+Follows the `designer-ds-organism` Output Quality Criteria, with these product-specific
+distinctions:
 - **Built from DS components only** — every sub-component is a named DS atom or molecule. No raw
-  token values; no invented components. If a needed sub-component is missing from the DS, flag
-  it as a DS gap (⚠) rather than defining it here.
-- **Variants and states are defined** — all meaningful variants (if any) and the states this
-  organism can be in on a screen (default, loading, empty, error).
-- **Content rules are explicit** — what data this organism displays and any content rules
-  (character limits, truncation, required vs. optional fields).
-- **Context is documented** — which screens/stories use this organism, so a developer knows its
-  scope without reading every story spec.
+  token values; no invented components. DS gaps flagged with ⚠ in the relevant section.
+- **Product-specific data and context documented** — data labels, routes, and business logic
+  specific to this product are permitted and should be named explicitly. This is the key
+  distinction from DS organisms, which must be fully generic.
+- **Used-in metadata present** — the `_Type: product-specific · Used in: …_` line lists all
+  stories so a developer knows the organism's scope without reading every story spec.
 
 ---
 
@@ -88,55 +88,20 @@ If updating an existing spec: start from the current spec, apply the changes des
 story spec, then write the complete updated spec. Do not carry forward anything that is no longer
 correct after this story's changes.
 
-Work through the organism structure with the designer. Identify:
-- The DS atoms/molecules it is composed of
-- Its variants (if it appears in meaningfully different forms)
-- Its states and what triggers each
-- The content rules for each sub-component
-
-Write the organism spec:
-
-```markdown
-# <OrganismName> — product-specific organism
-
-_Type: product-specific · Used in: <US-01>, <US-03>, …_
-
-## Purpose
-<1 sentence: what this organism does and why it is product-specific>
-
-## Composition
-| Sub-component | Level | Role |
-|---|---|---|
-| Avatar | DS atom | Displays the user's profile image |
-| Heading / H3 | DS atom | User's display name |
-| Button / Ghost | DS atom | "Edit profile" action |
-| Badge / Status | DS atom | Online / offline indicator |
-
-## Variants
-| Variant | When to use |
-|---|---|
-| Default | Standard view |
-| Compact | Used inside a list or sidebar |
-
-## States
-| State | Description |
-|---|---|
-| Default | All data loaded |
-| Loading | Avatar and name replaced by SkeletonAtom |
-| Empty | No user data — shows placeholder content |
-
-## Content rules
-- **Display name:** max 40 chars; truncate with ellipsis if longer
-- **Status badge:** shown only when real-time status is available
-- **Edit action:** visible only when viewing own profile
-
-## DS gaps
-- ⚠ <ComponentName>: needed as a sub-component but not yet in the DS — add to DS before build.
-```
+Write the organism spec following the `designer-ds-organism` spec template format exactly
+(Anatomy, Appearance, Content, Accessibility, Checklist). The only differences from a DS
+organism spec:
+- Output path: `design-spec/product-organisms/<organism-name>/organism-spec.md` (not in
+  `design-system/organisms/`).
+- Product-specific data labels, routes, and business logic are permitted — do not strip them
+  to make the organism look generic.
+- Add `_Type: product-specific · Used in: <US-01>, …_` as the first line after the `#` heading.
+- DS gaps are flagged inline with ⚠ in the relevant section, not in a separate section.
 
 ### Gate 3 — Output
-Check against the Output Quality Criteria — especially that all sub-components are DS components
-(never raw values), and that DS gaps are explicitly flagged. When the bar is met:
+Check against the `designer-ds-organism` Output Quality Criteria — especially that all
+sub-components are named DS components (never raw values), DS gaps are flagged with ⚠, and the
+used-in metadata line is present. When the bar is met:
 1. Present and ask the user to confirm.
 2. **If confirmed** → write the file, tick Step 3a in `## Plan` (or note the organism in a list
    if multiple organisms are being specced), update **Next step**, then hand off to `commit-work`.
