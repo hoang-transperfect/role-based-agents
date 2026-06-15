@@ -1,28 +1,36 @@
 ---
 name: designer-ds-foundation
 description: >
-  Defines the design token layer of the design system — color palette and semantic aliases,
-  typography scale, spacing scale, elevation, border radius, and animation tokens — as written
-  specs that components reference by token name. Invoke as the second step of a design-system
-  mode task, after designer-ds-audit, when the designer is ready to define tokens before
-  speccing components. Foundations must exist before designer-ds-component can reference token
-  names. Produces one markdown file per token category under design-system/foundations/.
+  Defines the foundation layer of the design system — design principles, color palette and
+  semantic aliases, typography scale, spacing scale, elevation, border radius, and animation
+  tokens — as written specs that components reference by token name. Invoke as the second step
+  of a design-system mode task, after designer-ds-audit, when the designer is ready to define
+  principles and tokens before speccing components. Foundations must exist before
+  designer-ds-component can reference token names. Produces principles.md and one markdown file
+  per token category under design-system/foundations/.
 ---
 
 # designer-ds-foundation
 
-Foundations are the token layer that everything else in the design system references. A button's
-colour is not `#1D4ED8` — it is `color.action.primary`. A heading's size is not `24px` — it is
+Foundations have two layers. The first is **principles**: the high-level statements that govern
+every design decision in the system — what the DS stands for, and how to make calls when trade-offs
+arise. The second is **tokens**: the named values everything else references. A button's colour is
+not `#1D4ED8` — it is `color.action.primary`. A heading's size is not `24px` — it is
 `typography.heading.lg`. This indirection is what makes a design system maintainable: change a
 token, and every component that references it updates.
 
-This skill defines each token category from the audit scope as a written spec. Components built
-in `designer-ds-component` reference these token names — never raw values.
+Principles come first because they inform token decisions. If accessibility is a principle,
+that sets the minimum contrast floor for the color palette. If spatial clarity is a principle,
+that shapes the spacing scale.
+
+This skill defines principles and each token category from the audit scope as written specs.
+Components built in `designer-ds-component` reference these token names — never raw values.
 
 ## Where things live
 
 - **Read** `ds-audit.md` (foundation scope: which categories are needed, what sources exist).
 - **Read** brand guidelines from `resource.md` (the authoritative colour, type, and brand values).
+- **Write** `<real_project_path>/design-system/foundations/principles.md` — always first.
 - **Write** one file per token category to
   `<real_project_path>/design-system/foundations/<category>.md`
   (create the folder if needed).
@@ -34,17 +42,32 @@ in `designer-ds-component` reference these token names — never raw values.
 ### Inputs
 - `ds-audit.md` (foundation scope and any inconsistencies to resolve).
 - Brand guidelines or existing token sources from `resource.md`.
+- Product/brand values, strategy docs, or stakeholder input for principles (if available).
 
 ### Input Acceptance Criteria
 - `ds-audit.md` exists and lists which foundation categories are in scope.
-- For each in-scope category, the source (brand guide, existing CSS variables, design file) is
-  known or the designer can define it. If a category is in scope but has no source, ask the
+- For each in-scope token category, the source (brand guide, existing CSS variables, design file)
+  is known or the designer can define it. If a category is in scope but has no source, ask the
   designer before defining tokens — do not invent values.
+- For principles: at least one source exists (brand values, product vision, workshop output,
+  existing principles doc). If none exist, the designer defines them collaboratively in Gate 2.
 
 ### Outputs
-- `<real_project_path>/design-system/foundations/<category>.md` for each in-scope category.
+- `<real_project_path>/design-system/foundations/principles.md` — always produced.
+- `<real_project_path>/design-system/foundations/<category>.md` for each in-scope token category.
 
 ### Output Quality Criteria
+
+**Principles:**
+- 3–7 principles: enough to be meaningful, few enough to be memorable.
+- Each principle is actionable — "Be accessible" is too vague; "Design for extremes first: if it
+  works for the edge case, it works for the common case" is actionable.
+- Each has a rationale tied to the product or brand context — not generic DS wisdom.
+- Each has "in practice" guidance specific enough to resolve a real design decision.
+- No principle contradicts another.
+- Principles came from the designer/brand/stakeholders — never invented.
+
+**Tokens:**
 - **Two layers for color**: primitive palette (the raw values, e.g. `blue-500: #3B82F6`) and
   semantic aliases (the intent, e.g. `color.action.primary: blue-500`). UI components reference
   semantic aliases, not primitives. This separation means rebranding only touches primitives.
@@ -67,12 +90,48 @@ Read the foundation scope from `ds-audit.md`. For any in-scope category without 
 **ask the designer** for the values before proceeding. Do not invent token values.
 
 ### Gate 2 — Process
-Work through each in-scope foundation category with the designer. For each, follow the template
-below. Start with color (other categories often reference it) and typography, then spacing and
-the rest.
+Work through foundations in order: **principles first**, then token categories. Start with color
+(other token categories often reference it) and typography, then spacing and the rest.
 
-For categories already partially defined (from brand guidelines or existing CSS), map them to the
-token structure — don't replace working values, structure them correctly.
+For token categories already partially defined (from brand guidelines or existing CSS), map them
+to the token structure — don't replace working values, structure them correctly.
+
+**Principles** — probe:
+- What are the core values or beliefs this design system should embody?
+- If sources exist (brand guide, product vision, workshop output): extract and structure them.
+- If no sources exist: ask the designer — "What are 3–5 things you always want this system to
+  stand for when someone faces a hard trade-off?"
+- For each candidate principle: Is it actionable? Can it help resolve a real design decision?
+  Does it have a clear in-practice meaning for this product?
+- Confirm: do any principles conflict with each other? If yes, resolve before proceeding.
+
+Principles file template:
+
+```markdown
+# Principles — Design System Foundations
+
+_Source: <brand guide / stakeholder workshop / designer-defined> · Last updated: <date>_
+
+## Purpose
+{One sentence: what these principles are for and who they guide.}
+
+---
+
+## {Principle name}
+**Statement:** {One sentence — the rule.}
+
+**Rationale:** {Why this matters for this design system specifically.}
+
+**In practice:**
+- {Do: specific, actionable guidance}
+- {Do: specific, actionable guidance}
+- {Avoid: the anti-pattern this principle guards against}
+
+---
+
+## {Principle name}
+…
+```
 
 Token file template:
 
@@ -131,16 +190,18 @@ For **spacing**, additionally include:
 ```
 
 ### Gate 3 — Output
-Check against the Output Quality Criteria — especially that color has two layers (primitives +
-semantic aliases), and that every value came from the designer or brand guidelines, not invented.
-When the bar is met:
+Check against the Output Quality Criteria — principles are actionable and sourced from the
+designer/brand (not invented); color has two layers (primitives + semantic aliases); every token
+value came from the designer or brand guidelines, not invented. When the bar is met:
 1. Present and ask the user to confirm.
-2. **If confirmed** → write the foundation files, tick Step 2 in `## Plan`, update **Next step**,
-   then hand off to `commit-work`.
+2. **If confirmed** → write `principles.md` first, then the token files; tick Step 2 in `## Plan`,
+   update **Next step**, then hand off to `commit-work`.
 3. **If not satisfied** → improve with the user, commit, then hand off to `improve-skill`.
 
 ---
 
 ## Handoff
-The foundation files feed `designer-ds-component`. Every component spec references token names
-from these files — never raw values. Remind the designer of this when starting component work.
+`principles.md` guides all component decisions downstream — designers and engineers should read
+it before speccing or building any component. The token files feed `designer-ds-component`;
+every component spec references token names from these files — never raw values. Remind the
+designer of both when starting component work.

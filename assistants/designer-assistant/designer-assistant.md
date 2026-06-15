@@ -48,7 +48,6 @@ assistants/designer-assistant/
 │       ├── conversation.md              # Verbatim conversation log
 │       ├── related-context.md           # designer-scan-context output
 │       ├── user-insights.md             # designer-research output (PS mode)
-│       ├── test-plan.md                 # designer-test output (PS mode, from-scratch/develop)
 │       ├── ds-audit.md                  # designer-ds-audit output (DS mode)
 │       └── ds-validation.md             # designer-ds-validate output (DS add/update, if breaking changes)
 ├── design-spec/                         # PS output
@@ -65,6 +64,7 @@ assistants/designer-assistant/
 │   └── traceability.md                  # story-spec ↔ business spec (US-…) map
 └── design-system/                       # DS output — atomic hierarchy
     ├── foundations/
+    │   ├── principles.md
     │   ├── color.md
     │   ├── typography.md
     │   ├── spacing.md
@@ -91,14 +91,12 @@ flowchart TD
     UI --> PG["designer-page: page spec per affected page"]
     OR --> PG
     TM --> PG
-    PG --> TS["designer-test: test plan + scenarios"]
-    TS --> RV["designer-review: validate all specs + test plan; finalize for Dev"]
+    PG --> RV["designer-review: validate all specs; finalize for Dev"]
     PL -.->|no DS in resource.md| W["Flag: switch to DS mode or proceed flows+wireframe only"]
     RV -.->|gaps found| UI
     RV -.->|gaps found| OR
     RV -.->|gaps found| TM
     RV -.->|gaps found| PG
-    RV -.->|test plan missing| TS
 ```
 
 | Skill | Covers | Produces | Feeds |
@@ -109,9 +107,8 @@ flowchart TD
 | designer-ui | IA + navigation changes, UX flows (all cases), wireframe (lo-fi, confirmed), affected artifact map, AC alignment | story-spec.md per US | designer-organism / designer-template / designer-page |
 | designer-organism | Product-specific organism spec; built from DS components only | product-organisms/[name]/organism-spec.md | designer-template / designer-page |
 | designer-template | Reusable layout template spec: zones + organisms + layout rules | templates/[name]/template-spec.md | designer-page |
-| designer-page | Page spec: template ref + organism assignments + states (full current state) | pages/[name]/page-spec.md | designer-test |
-| designer-test | Usability test plan: objectives, participant segments, task scenarios, success criteria | test-plan.md | designer-review |
-| designer-review | Validate story specs (IA + wireframe + flows + AC) + all artifact specs + test plan; DS gaps; finalize | traceability.md updated | Dev team |
+| designer-page | Page spec: template ref + organism assignments + states (full current state) | pages/[name]/page-spec.md | designer-review |
+| designer-review | Validate story specs (IA + wireframe + flows + AC) + all artifact specs; DS gaps; finalize | traceability.md updated | Dev team |
 
 ### DS pipeline
 
@@ -147,10 +144,10 @@ flowchart TD
 | designer-scan-context | Existing foundations, component inventory, brand guidelines | related-context.md | designer-plan |
 | designer-plan | Work type + sub-mode, scope framing, DS checklist | `## Plan` in task.md | every step |
 | designer-ds-audit | Inventory existing UI, define foundation + component scope per atomic level | ds-audit.md | designer-ds-foundation / component skills |
-| designer-ds-foundation | Token definitions: color, typography, spacing, elevation, radius, animation | design-system/foundations/*.md | designer-ds-atom |
-| designer-ds-atom | Atom spec: variants, states, anatomy (token refs only), behaviour, usage | design-system/atoms/[name]/component-spec.md | designer-ds-molecule |
-| designer-ds-molecule | Molecule spec: variants, states, contains (atoms by name), behaviour, usage | design-system/molecules/[name]/component-spec.md | designer-ds-organism |
-| designer-ds-organism | DS organism spec: generic/reusable, contains (molecules+atoms by name) | design-system/organisms/[name]/component-spec.md | designer-ds-validate |
+| designer-ds-foundation | Design principles + token definitions: color, typography, spacing, elevation, radius, animation | design-system/foundations/principles.md + *.md | designer-ds-atom |
+| designer-ds-atom | Atom spec: Anatomy (Structure + Details) · Appearance (Props + Variants + State + Tokens) · Content (Copy + Empty state + Overflow + Case + Chars + Placeholder + Number/date + Text expansion) · Accessibility (ARIA + Focus + Keyboard + Mouse + Touch + Screen reader + i18n) · Checklist | design-system/atoms/[name]/component-spec.md | designer-ds-molecule |
+| designer-ds-molecule | Molecule spec: Anatomy (Composition table + Layout + Spacing) · Appearance (molecule-level Variants + State with atoms-affected + Tokens) · Content (Copy + Label + Helper text + Validation messages + Overflow + Text expansion) · Accessibility (ARIA relationships + Keyboard flow + Focus + Mouse + Touch + Screen reader + i18n) · Checklist | design-system/molecules/[name]/component-spec.md | designer-ds-organism |
+| designer-ds-organism | DS organism spec — generic/reusable: Anatomy (Composition + Layout + Spacing) · Appearance (Variants + Lifecycle/Interactive states + Tokens) · Responsive (Breakpoints + Reflow + Mobile patterns) · Content (Copy + Empty state + Error state + Notifications + Text expansion) · Examples (Happy path + Edge cases + Worst-case) · Accessibility (Landmark + Heading hierarchy + ARIA + Keyboard + Focus management + Live regions + Screen reader + Skip links + i18n) · Checklist | design-system/organisms/[name]/component-spec.md | designer-ds-validate |
 | designer-ds-validate | Dependency check after add/update: downstream impact, breaking changes, routing | ds-validation.md (if breaking changes) | designer-ds-document |
 | designer-ds-document | Usage guidelines, accessibility notes, system index | design-system/README.md | Dev team |
 
@@ -168,14 +165,13 @@ After every major step completes, always tell the user what the natural next ste
 | `designer-plan` (DS add-component) | "Plan is in place. Next is **designer-ds-<atom/molecule/organism>** — spec the new component at the correct atomic level. Ready?" |
 | `designer-plan` (DS update) | "Plan is in place. Next is **designer-ds-audit** scoped to the affected components. Ready?" |
 | `designer-research` | "Research done. Next is **designer-ui** — IA + wireframe + story spec. Ready?" |
-| `designer-ui` | "Story spec done (IA, wireframe confirmed, visual spec complete). Next: for each affected artifact — **designer-organism** for product-specific organisms, **designer-template** for templates, **designer-page** for pages. Which artifact is first?" |
+| `designer-ui` | "Story spec done. Next: for each affected artifact — **designer-organism** for product-specific organisms, **designer-template** for templates, **designer-page** for pages. Which artifact is first?" _(In maintain mode with no structural change: IA and wireframe were skipped — confirm this was correct before proceeding.)_ |
 | `designer-organism` | "Organism spec done. Any more organisms needed, or ready for **designer-template** / **designer-page**?" |
 | `designer-template` | "Template spec done. Ready for **designer-page** — page specs?" |
-| `designer-page` | "Page spec done. All affected artifacts specced? If yes, next is **designer-test** — test plan + scenarios. Ready?" |
-| `designer-test` | "Test plan done. Final step is **designer-review**. Ready?" |
+| `designer-page` | "Page spec done. All affected artifacts specced? If yes, final step is **designer-review**. Ready?" |
 | `designer-ds-audit` | "Audit done. Next is **designer-ds-foundation** (from-scratch) or the component skill at the correct level (add/update). Ready?" |
-| `designer-ds-foundation` | "Foundations done. Next is **designer-ds-atom** — starting with atoms. Ready?" |
-| `designer-ds-atom` | "Atom spec done. Next atom (if any remain), or **designer-ds-molecule** once all atoms are complete. After any add/update: run **designer-ds-validate** before documenting." |
+| `designer-ds-foundation` | "Foundations done (principles + tokens). Next is **designer-ds-atom** — start with **Icon** first, then **Text**, then all remaining atoms. Ready?" |
+| `designer-ds-atom` | "Atom spec done. Next atom — if Icon or Text isn't done yet, spec that next. Once both Icon and Text exist, remaining atoms can proceed in any order. Move to **designer-ds-molecule** only when all atoms are complete. After any add/update: run **designer-ds-validate** before documenting." |
 | `designer-ds-molecule` | "Molecule spec done. Next molecule (if any remain), or **designer-ds-organism** once all molecules are complete. After any add/update: run **designer-ds-validate**." |
 | `designer-ds-organism` | "DS organism spec done. Run **designer-ds-validate** next (for add/update), or next organism if more remain (from-scratch). Once all organisms done: **designer-ds-document**." |
 | `designer-ds-validate` | "Validation done. No breaking changes — ready for **designer-ds-document**. OR: breaking changes found — routing back to the affected component skill first." |
@@ -200,7 +196,6 @@ After every major step completes, always tell the user what the natural next ste
 - designer-organism
 - designer-template
 - designer-page
-- designer-test
 - designer-review
 
 ### Specific skills — DS (design-system):

@@ -5,10 +5,9 @@ description: >
   spec — every user story in scope has a story-spec.md with IA section, wireframe section, and
   AC alignment; every affected artifact (organism/template/page) listed in the story spec has a
   current, complete spec file; every BA acceptance criterion is covered in the UX flows; every
-  organism referenced is named from the DS or product-organisms; no DS gaps are left unresolved;
-  and a test plan exists covering all stories in scope (for from-scratch and develop modes). Invoke
-  as the final step of a PS task, after designer-ui, designer-organism (if any),
-  designer-template (if any), designer-page, and designer-test have run for all stories in scope.
+  organism referenced is named from the DS or product-organisms; no DS gaps are left unresolved.
+  Invoke as the final step of a PS task, after designer-ui, designer-organism (if any),
+  designer-template (if any), and designer-page have run for all stories in scope.
   If gaps are found, routes back to the responsible skill. When all specs pass, confirms with
   the user and finalizes for Dev.
 ---
@@ -16,7 +15,7 @@ description: >
 # designer-review
 
 A design spec that's almost right is still wrong — a missing error state, an undefined organism,
-an unconfirmed wireframe, or a missing test plan becomes a developer's undocumented assumption.
+or an unconfirmed wireframe becomes a developer's undocumented assumption.
 This skill runs a structured check across all design artifacts produced in this task before they
 are handed to Dev.
 
@@ -32,7 +31,6 @@ them to the right skill to fix, and finalizes only when everything passes.
 - **Read** `design-spec/pages/` — all page specs referenced.
 - **Read** `designer-artifacts/resource.md` — the design system source.
 - **Read** `ba-requirement/` — the BA user stories for acceptance criteria coverage.
-- **Read** `designer-artifacts/tasks/<task-id>/test-plan.md` — the usability test plan.
 - **Update** `design-spec/traceability.md` to set each story's status to `reviewed`.
 - **No new specs created** — this skill only validates and updates existing outputs.
 
@@ -48,8 +46,6 @@ them to the right skill to fix, and finalizes only when everything passes.
 - Page specs (Step 3c — should exist for every page listed in any story spec).
 - The BA user stories from `ba-requirement/` (for acceptance criteria coverage).
 - `design-spec/traceability.md`, `designer-artifacts/resource.md`.
-- `designer-artifacts/tasks/<task-id>/test-plan.md` (Step 4 — required for from-scratch and
-  develop modes; skipped in maintain mode unless the change is structural or high-risk).
 
 ### Input Acceptance Criteria
 - Steps 2, 3c (and 3a/3b if in scope) are ticked in the `## Plan` for all stories. If any
@@ -94,12 +90,7 @@ The review passes when all of the following hold for every story in scope:
 9. **DS gaps are flagged, not hidden** — any ⚠ DS gaps in any spec are acknowledged by the
    user (either resolved or explicitly deferred with a reason).
 
-10. **Test plan exists and covers all stories** — `test-plan.md` exists and includes at least
-    one scenario for every happy-path UX flow across all stories in scope. Required for
-    from-scratch and develop modes. In maintain mode: required only when the change is
-    structural or high-risk; otherwise mark as `~~skipped~~ (maintain mode — non-structural)`.
-
-11. **Traceability** — `traceability.md` has a row for every story with the correct spec path
+10. **Traceability** — `traceability.md` has a row for every story with the correct spec path
     and the BA story link.
 
 ---
@@ -124,7 +115,6 @@ Route findings to the responsible skill:
 - Missing organism spec → `designer-organism`
 - Missing template spec → `designer-template`
 - Missing page spec → `designer-page`
-- Missing or incomplete test plan → `designer-test`
 
 For DS gaps (⚠): present each one to the user and confirm whether to resolve now (hand off to
 `designer-ds-atom`, `designer-ds-molecule`, or `designer-ds-organism` in DS mode depending on
@@ -156,6 +146,6 @@ When Step 5 is the last applicable step and it has passed:
 4. Hand off to `commit-work`.
 
 ## Handoff
-The reviewed design artifacts — story specs per story, organism specs, template specs, page specs,
-and test plan — are the designer's deliverable to the Dev team. `traceability.md` is the index
-linking each story spec back to the BA business requirement.
+The reviewed design artifacts — story specs per story, organism specs, template specs, and page
+specs — are the designer's deliverable to the Dev team. `traceability.md` is the index linking
+each story spec back to the BA business requirement.

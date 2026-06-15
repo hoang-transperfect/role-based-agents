@@ -229,5 +229,4 @@ The story spec feeds the artifact-level skills. For each affected artifact liste
 - Template changes → `designer-template`
 - Page changes → `designer-page`
 
-Run one artifact skill per affected artifact, then `designer-test` for the test plan, then
-`designer-review` to validate the full set.
+Run one artifact skill per affected artifact, then `designer-review` to validate the full set.
