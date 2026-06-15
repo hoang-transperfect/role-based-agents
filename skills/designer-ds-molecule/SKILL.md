@@ -92,6 +92,7 @@ ARIA relationships between atoms, and keyboard flow order.
 - Internationalization specifies RTL mirroring and `dir` strategy.
 
 **Checklist:**
+- Spec section is present and all four items (Anatomy, Appearance, Content, Accessibility) are checked or explicitly waived with justification.
 - All three sections (Design, Engineering, QA) are present with molecule-specific items filled
   in. No `{component-specific item}` placeholder left unfilled.
 
@@ -144,7 +145,9 @@ Work through each section of the spec with the designer.
 - For every molecule-level state change a screen reader must announce: what text and how?
 - RTL: does the layout mirror? Which atoms or elements do not mirror? `dir` strategy?
 
-**Checklist** — fill in component-specific items before presenting.
+**Checklist** — verify each spec section in the Spec checklist (Anatomy, Appearance, Content,
+Accessibility), then fill in component-specific items for Design, Engineering, and QA. Do not
+leave `{component-specific item}` as a placeholder.
 
 Write the spec using the project molecule template:
 
@@ -339,6 +342,12 @@ Atom-level announcements are owned by atom specs.
 
 All items must pass or be explicitly waived with justification before status moves to
 **Approved**.
+
+### Spec
+- [ ] Anatomy: composition, layout, and spacing documented
+- [ ] Appearance: molecule-level variants, states, and tokens complete; "atoms affected" columns filled
+- [ ] Content: all sections present or explicitly marked N/A with justification
+- [ ] Accessibility: ARIA relationships, keyboard flow, focus management, screen reader, and i18n documented
 
 ### Design
 - [ ] All variants and states are designed, or marked N/A with justification

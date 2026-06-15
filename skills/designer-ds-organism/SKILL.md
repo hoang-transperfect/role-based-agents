@@ -115,6 +115,7 @@ its structure, it belongs in `designer-organism`, not here.
 - Internationalization specifies RTL mirroring and `dir` strategy.
 
 **Checklist:**
+- Spec section is present and all six items (Anatomy, Appearance, Responsive, Content, Examples, Accessibility) are checked or explicitly waived with justification.
 - All three sections (Design, Engineering, QA) are present with organism-specific items filled
   in. No `{component-specific item}` placeholder left unfilled.
 
@@ -180,8 +181,9 @@ Work through each section of the spec with the designer.
 - Does this organism need a skip link? If yes: link text and target ID.
 - RTL: which elements mirror, which do not? `dir` strategy?
 
-**Checklist** — fill in component-specific items for Design, Engineering, and QA before
-presenting.
+**Checklist** — verify each spec section in the Spec checklist (Anatomy, Appearance, Responsive,
+Content, Examples, Accessibility), then fill in component-specific items for Design, Engineering,
+and QA. Do not leave `{component-specific item}` as a placeholder.
 
 Write the spec using the project organism template:
 
@@ -441,6 +443,14 @@ Document organism-level state changes a screen reader user needs to be aware of.
 
 All items must pass or be explicitly waived with justification before status moves to
 **Approved**.
+
+### Spec
+- [ ] Anatomy: composition, layout, and spacing documented
+- [ ] Appearance: variants, lifecycle/interactive states, and tokens complete; "components affected" columns filled
+- [ ] Responsive: all four breakpoints defined; reflow strategy described
+- [ ] Content: all sections present or explicitly marked N/A with justification
+- [ ] Examples: happy path uses real data; all five edge cases covered; worst-case defined
+- [ ] Accessibility: landmark, heading hierarchy, ARIA, keyboard, focus management, live regions, screen reader, skip links, and i18n documented
 
 ### Design
 - [ ] All variants and lifecycle states are designed, or marked N/A with justification

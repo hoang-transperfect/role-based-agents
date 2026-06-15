@@ -92,6 +92,7 @@ cascades through every higher-level component.
 - Internationalization specifies RTL mirroring and the `dir` attribute strategy.
 
 **Checklist:**
+- Spec section is present and all four items (Anatomy, Appearance, Content, Accessibility) are checked or explicitly waived with justification.
 - All checklist items are present for Design, Engineering, and QA sections.
 - Component-specific items are filled in; generic placeholders are not left as `{component-specific item}`.
 - Status is not set to Approved until all items are checked or explicitly waived with justification.
@@ -149,8 +150,9 @@ moving to the next.
 - Does the layout mirror in RTL? Which icons or elements do not mirror? Does `dir` inherit or
   is it forced?
 
-**Checklist** — fill in component-specific items for each section (Design, Engineering, QA)
-before presenting. Do not leave `{component-specific item}` as a placeholder.
+**Checklist** — verify each spec section in the Spec checklist (Anatomy, Appearance, Content,
+Accessibility), then fill in component-specific items for Design, Engineering, and QA. Do not
+leave `{component-specific item}` as a placeholder.
 
 Write the spec using the project atom template:
 
@@ -349,6 +351,12 @@ announced and how (native semantics, `aria-describedby`, `aria-live`, etc.).
 
 All items must pass or be explicitly waived with justification before status moves to
 **Approved**.
+
+### Spec
+- [ ] Anatomy: structure and details documented; no raw values
+- [ ] Appearance: all props, variants, states, and tokens complete
+- [ ] Content: all sections present or explicitly marked N/A with justification
+- [ ] Accessibility: ARIA, focus, keyboard, mouse, touch, screen reader, and i18n documented
 
 ### Design
 - [ ] All variants and states are designed, or marked N/A with justification
