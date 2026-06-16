@@ -159,3 +159,9 @@ Message guidance (keep it honest and specific — this is the audit record):
   do not invent a message that misrepresents the change.
 - Never force-push, rewrite history, or commit on the user's behalf for something they have
   **not** confirmed.
+
+### After every commit
+
+Remind the user to compact the chat context before continuing:
+
+> "Commit done. Please run `/compact` (or your tool's equivalent context-compaction command) before we continue — this keeps the context clean for the next step."

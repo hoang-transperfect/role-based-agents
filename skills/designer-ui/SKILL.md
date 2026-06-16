@@ -215,7 +215,15 @@ _Lo-fi layout of affected screens — zones and structure only, no DS component 
 ### Gate 3 — Output
 Check against the Output Quality Criteria — all three phases. Ensure every AC is mapped, every
 decision/branch in the flows is explicit, every affected screen has a confirmed wireframe, and
-all DS component references are absent from the wireframe section. When the bar is met:
+all DS component references are absent from the wireframe section.
+
+Also verify:
+- **Business spec field** — `story-spec.md` must have the BA story link filled in (not blank or
+  placeholder). If it is missing, do not proceed — ask the user for the story ID.
+- **Affected artifacts are named** — every organism in the Affected artifacts table is either a
+  named DS organism or flagged for `designer-organism`. No invented or unnamed components.
+
+When the bar is met:
 1. Present the full story spec and ask the user to confirm.
 2. **If confirmed** → write `story-spec.md`, update `traceability.md`, tick Step 2 in `## Plan`,
    update **Next step**, then hand off to `commit-work`.
