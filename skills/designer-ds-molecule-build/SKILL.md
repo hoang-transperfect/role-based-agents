@@ -4,7 +4,7 @@ description: >
   Builds one design system molecule into a design file as a Component that composes atom
   instances. Reads Anatomy (Composition, Layout, Spacing), Appearance (variants, states, tokens),
   and Accessibility from the component-spec.md, then delegates the implementation to the configured
-  adapter (default: figma:figma-generate-library). Run after all atom dependencies for this
+  adapter (determined by the `design-tool` field in `resource.md`). Run after all atom dependencies for this
   molecule are built (via designer-ds-atom-build), and after this molecule's component-spec.md is
   complete. Invoke once per molecule; all molecules must be built before organisms.
 ---
@@ -17,8 +17,7 @@ only defines molecule-level rules: layout, spacing, state propagation, and ARIA 
 Visual token values come from the constituent atoms via their Variable references.
 
 This skill reads the spec, prepares the build brief, and delegates to the design tool adapter
-(`figma:figma-generate-library` by default). Every atom dependency must be built before this
-skill runs.
+declared in `resource.md`. Every atom dependency must be built before this skill runs.
 
 ## Where things live
 
@@ -79,6 +78,9 @@ link is in `resource.md`. For every dependency in `dependencies.atoms` and
 If any dependency is not yet built, stop: "The dependency {name} has not been built yet. Let's
 build that first." Do not proceed with any molecule before all its dependencies are built.
 
+Check `resource.md` for the `design-tool` field. If missing or empty, stop:
+> "No `design-tool` declared in `resource.md`. Add it before running this build skill. Supported values: `figma`."
+
 ### Gate 2 — Process
 Read `component-spec.md` and extract:
 - **Frontmatter > dependencies**: the list of atom (and molecule) component names and their URLs.
@@ -99,14 +101,22 @@ relationship annotations, keyboard flow order.
 If any dependency component URL is invalid or a token name does not match a published Variable,
 flag it with the user before proceeding.
 
-Invoke the adapter:
-> Load `figma:figma-generate-library` and pass the build brief. Instruct the adapter to:
-> 1. Create or update the molecule Component in the target design file.
-> 2. Place atom (or molecule) Component instances for each slot — not raw shapes.
-> 3. Apply layout rules (auto-layout direction, alignment, gap) and spacing Variables.
-> 4. Set up molecule-level variant properties and state propagation to sub-components.
-> 5. Add ARIA relationship annotations and keyboard flow order.
-> 6. Return the component URL.
+Determine the adapter from the `design-tool` field in `resource.md`:
+
+| `design-tool` | Adapter |
+|---|---|
+| `figma` | `figma-ds-molecule` |
+
+If `design-tool` is not in the table above, stop:
+> "No build adapter exists for `{tool}`. Supported: `figma`. Update `resource.md` or build manually."
+
+Load the adapter and pass the build brief. Instruct the adapter to:
+1. Create or update the molecule Component in the target design file.
+2. Place atom (or molecule) Component instances for each slot — not raw shapes.
+3. Apply layout rules (auto-layout direction, alignment, gap) and spacing Variables.
+4. Set up molecule-level variant properties and state propagation to sub-components.
+5. Add ARIA relationship annotations and keyboard flow order.
+6. Return the component URL.
 
 ### Gate 3 — Output
 Run a full appearance verification pass against the spec before confirming completion:

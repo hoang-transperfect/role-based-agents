@@ -4,7 +4,7 @@ description: >
   Builds the foundation layer of the design system into a design file — design tokens published
   as Variables (color, spacing, radius, elevation) and Text Styles (typography). Reads the token
   spec files from design-system/foundations/ and delegates the implementation to the configured
-  adapter (default: figma:figma-generate-library). Run after designer-ds-foundation has produced
+  adapter (determined by the `design-tool` field in `resource.md`). Run after designer-ds-foundation has produced
   all foundation spec files, and before any component build skill. Foundation Variables must exist
   in the design file before atoms, molecules, or organisms can reference them by token name.
 ---
@@ -17,9 +17,8 @@ component build skill that follows depends on these Variables being present — 
 before foundations produces hardcoded values instead of token references.
 
 This skill reads the spec, prepares the build brief, and delegates to the design tool adapter
-(`figma:figma-generate-library` by default). The adapter pattern keeps this skill decoupled from
-the tool: a different adapter can be substituted in the future without changing the spec or this
-skill.
+declared in `resource.md`. The adapter pattern keeps this skill decoupled from the tool: a
+different adapter can be substituted without changing the spec or this skill.
 
 ## Where things live
 
@@ -72,6 +71,9 @@ If no link is present, ask the user:
 
 Do not proceed without a confirmed target.
 
+Check `resource.md` for the `design-tool` field. If missing or empty, stop:
+> "No `design-tool` declared in `resource.md`. Add it before running this build skill. Supported values: `figma`."
+
 ### Gate 2 — Process
 Read each in-scope foundation spec file and extract:
 - **Color:** token names, values, and semantic grouping hierarchy (from `color.md`).
@@ -85,12 +87,20 @@ Prepare the build brief: token names, values, grouping hierarchy, Variable colle
 If any token name is ambiguous or a value is missing from the spec, flag it with the user before
 proceeding — do not invent values.
 
-Invoke the adapter:
-> Load `figma:figma-generate-library` and pass the build brief. Instruct the adapter to:
-> 1. Create or update Variables in the target file, grouped by token category.
-> 2. Create or update Text Styles for all typography entries.
-> 3. Create or update Effect Styles for elevation/shadow tokens.
-> 4. Return the design file URL and confirm which Variables/Styles were created.
+Determine the adapter from the `design-tool` field in `resource.md`:
+
+| `design-tool` | Adapter |
+|---|---|
+| `figma` | `figma-ds-foundation` |
+
+If `design-tool` is not in the table above, stop:
+> "No build adapter exists for `{tool}`. Supported: `figma`. Update `resource.md` or build manually."
+
+Load the adapter and pass the build brief. Instruct the adapter to:
+1. Create or update Variables in the target file, grouped by token category.
+2. Create or update Text Styles for all typography entries.
+3. Create or update Effect Styles for elevation/shadow tokens.
+4. Return the design file URL and confirm which Variables/Styles were created.
 
 ### Gate 3 — Output
 Verify the Output Quality Criteria — confirm that Variable names in the design file match spec

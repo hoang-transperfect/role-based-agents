@@ -4,7 +4,7 @@ description: >
   Builds one design system atom into a design file as a Component with the full set of variants
   and states defined in its component-spec.md. Reads Anatomy, Appearance (props, variants, states,
   tokens), and Accessibility from the spec, then delegates the implementation to the configured
-  adapter (default: figma:figma-generate-library). Run after designer-ds-foundation-build has
+  adapter (determined by the `design-tool` field in `resource.md`). Run after designer-ds-foundation-build has
   published foundation Variables, and after this atom's component-spec.md is complete. Icon and
   Text must be built before any other atom. Invoke once per atom; all atoms must be built before
   molecules.
@@ -17,8 +17,8 @@ exactly: correct variant properties, all states, token references (not hardcoded
 layers named to match the spec, and accessibility annotations.
 
 This skill reads the spec, prepares the build brief, and delegates to the design tool adapter
-(`figma:figma-generate-library` by default). Icon and Text must be built first — every other atom
-embeds an icon slot, a text label, or both, and must reference those components by instance.
+declared in `resource.md`. Icon and Text must be built first — every other atom embeds an icon
+slot, a text label, or both, and must reference those components by instance.
 
 ## Where things live
 
@@ -79,6 +79,9 @@ link is in `resource.md` and foundation Variables are present.
 file. If either is missing, stop: "Icon and Text must be built before any other atom. Let's build
 {missing one} first." Do not proceed with any other atom until both exist.
 
+Check `resource.md` for the `design-tool` field. If missing or empty, stop:
+> "No `design-tool` declared in `resource.md`. Add it before running this build skill. Supported values: `figma`."
+
 ### Gate 2 — Process
 Read `component-spec.md` and extract:
 - **Anatomy > Structure**: layer hierarchy and part names for the component layer tree.
@@ -95,14 +98,22 @@ state definitions, token-to-layer mapping, accessibility annotations.
 If any token name in the spec does not match a published Variable name in the design file, flag
 it with the user before proceeding — do not substitute a different token or hardcode a value.
 
-Invoke the adapter:
-> Load `figma:figma-generate-library` and pass the build brief. Instruct the adapter to:
-> 1. Create or update the Component in the target design file.
-> 2. Set up variant properties matching the Props and Variants from the spec.
-> 3. Name all layers to match the Anatomy > Structure part names.
-> 4. Apply Variable references to all token-mapped properties (no hardcoded values).
-> 5. Add accessibility annotations (ARIA, keyboard, focus management, touch target).
-> 6. Return the component URL.
+Determine the adapter from the `design-tool` field in `resource.md`:
+
+| `design-tool` | Adapter |
+|---|---|
+| `figma` | `figma-ds-atom` |
+
+If `design-tool` is not in the table above, stop:
+> "No build adapter exists for `{tool}`. Supported: `figma`. Update `resource.md` or build manually."
+
+Load the adapter and pass the build brief. Instruct the adapter to:
+1. Create or update the Component in the target design file.
+2. Set up variant properties matching the Props and Variants from the spec.
+3. Name all layers to match the Anatomy > Structure part names.
+4. Apply Variable references to all token-mapped properties (no hardcoded values).
+5. Add accessibility annotations (ARIA, keyboard, focus management, touch target).
+6. Return the component URL.
 
 ### Gate 3 — Output
 Run a full appearance verification pass against the spec before confirming completion:

@@ -5,7 +5,7 @@ description: >
   atom instances. Reads Anatomy (Composition, Layout, Spacing), Appearance (variants,
   lifecycle/interactive states, tokens), Responsive (breakpoints, reflow), and Accessibility from
   the component-spec.md, then delegates the implementation to the configured adapter (default:
-  figma:figma-generate-library). Run after all molecule and atom dependencies for this organism
+  determined by the `design-tool` field in `resource.md`). Run after all molecule and atom dependencies for this organism
   are built. Invoke once per DS organism; organisms are the last component level before
   designer-ds-document.
 ---
@@ -18,8 +18,7 @@ lifecycle states (loading, empty, error), and complex accessibility structures a
 in the design file.
 
 This skill reads the spec, prepares the build brief, and delegates to the design tool adapter
-(`figma:figma-generate-library` by default). All molecule and atom dependencies must be built
-before this skill runs.
+declared in `resource.md`. All molecule and atom dependencies must be built before this skill runs.
 
 ## Where things live
 
@@ -83,6 +82,9 @@ link is in `resource.md`. For every dependency in `dependencies.molecules` and
 If any dependency is not yet built, stop: "The dependency {name} has not been built yet. Let's
 build that first." Do not proceed until all dependencies have component URLs.
 
+Check `resource.md` for the `design-tool` field. If missing or empty, stop:
+> "No `design-tool` declared in `resource.md`. Add it before running this build skill. Supported values: `figma`."
+
 ### Gate 2 — Process
 Read `component-spec.md` and extract:
 - **Frontmatter > dependencies**: molecule and atom component names and their URLs.
@@ -113,16 +115,24 @@ frames, state/variant structure, token references, accessibility annotations.
 If any dependency component URL is invalid or a token name does not match a published Variable,
 flag it with the user before proceeding.
 
-Invoke the adapter:
-> Load `figma:figma-generate-library` and pass the build brief. Instruct the adapter to:
-> 1. Create or update the organism Component in the target design file.
-> 2. Place molecule and atom Component instances for each slot — not raw shapes.
-> 3. Apply auto-layout with spacing Variables per the spec.
-> 4. Set up variant properties and lifecycle/interactive states.
-> 5. Create breakpoint frames demonstrating the reflow strategy for each defined breakpoint.
-> 6. Add accessibility annotations (landmark, headings, ARIA, focus management, live regions,
->    skip links).
-> 7. Return the component URL.
+Determine the adapter from the `design-tool` field in `resource.md`:
+
+| `design-tool` | Adapter |
+|---|---|
+| `figma` | `figma-ds-organism` |
+
+If `design-tool` is not in the table above, stop:
+> "No build adapter exists for `{tool}`. Supported: `figma`. Update `resource.md` or build manually."
+
+Load the adapter and pass the build brief. Instruct the adapter to:
+1. Create or update the organism Component in the target design file.
+2. Place molecule and atom Component instances for each slot — not raw shapes.
+3. Apply auto-layout with spacing Variables per the spec.
+4. Set up variant properties and lifecycle/interactive states.
+5. Create breakpoint frames demonstrating the reflow strategy for each defined breakpoint.
+6. Add accessibility annotations (landmark, headings, ARIA, focus management, live regions,
+   skip links).
+7. Return the component URL.
 
 ### Gate 3 — Output
 Run a full appearance verification pass against the spec before confirming completion:

@@ -40,8 +40,9 @@ assistants/designer-assistant/
 
 [real project]/
 ├── designer-artifacts/                  # The designer assistant's artifacts folder
-│   ├── resource.md                      # Project resources + design system source (Figma link,
-│   │                                    # npm package, etc.) — the design system pointer lives here
+│   ├── resource.md                      # Project resources + design system source + build tool.
+│   │                                    # Must include: design-tool (e.g. figma), design file link,
+│   │                                    # and DS source (npm package, Figma library link, etc.)
 │   └── tasks/[task-id]/                 # One folder per task — the working trail
 │       ├── task.md                      # Description, status, and ## Plan
 │       ├── conversation.md              # Verbatim conversation log
@@ -227,3 +228,9 @@ After every major step completes, always tell the user what the natural next ste
 - designer-ds-organism-build
 - designer-ds-validate
 - designer-ds-document
+
+### Figma adapter skills (invoked by build skills when design-tool is figma):
+- figma-ds-foundation
+- figma-ds-atom
+- figma-ds-molecule
+- figma-ds-organism
