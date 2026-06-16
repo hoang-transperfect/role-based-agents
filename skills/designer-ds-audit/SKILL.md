@@ -18,11 +18,13 @@ with what the product actually needs. This skill answers two questions: **what a
 and **what needs to exist?** The audit output defines the scope that every subsequent ds step
 executes against.
 
-Following atomic design, scope is defined at two levels:
+Following atomic design, scope is defined at three levels:
 - **Foundations** — the token layer: color, typography, spacing, elevation, radius, animation.
-- **Components** — atoms (indivisible UI elements), molecules (simple atom combinations),
-  organisms (complex, composed components). Templates and pages are product-design deliverables,
-  not design-system components.
+- **Foundation components** — primitive display elements with no component dependencies: Text
+  and Icon. Must exist before any atom can be specced.
+- **Components** — atoms (indivisible UI elements that may use foundation components), molecules
+  (simple atom combinations), organisms (complex, composed components). Templates and pages are
+  product-design deliverables, not design-system components.
 
 ## Where things live
 
@@ -53,9 +55,10 @@ Following atomic design, scope is defined at two levels:
 ### Output Quality Criteria
 - **Foundation scope is explicit**: each token category is listed as needed / already exists /
   out of scope for this task, with a brief reason.
-- **Component scope is explicit**: each component is listed with its atomic level (atom /
-  molecule / organism), its status (new / extend / already done), and the priority order in
-  which it should be built — atoms before molecules, molecules before organisms.
+- **Component scope is explicit**: each component is listed with its level (foundation component
+  / atom / molecule / organism), its status (new / extend / already done), and the priority
+  order in which it should be built — foundation components before atoms, atoms before
+  molecules, molecules before organisms.
 - **Inconsistencies are documented**: where the existing UI uses the same element differently
   in different places (different spacing, different colours for the same intent), these are noted
   so the design system can resolve them.
@@ -79,8 +82,12 @@ Work through the existing UI with the designer. For each atomic level:
 **Foundations** — ask: which token categories does this system need? For each: does anything
 already define it (brand guide, existing CSS variables, design file)? Note gaps.
 
+**Foundation components** — Text and Icon. These are always in scope if any atom depends on
+them (which nearly all do). Confirm both are needed; note any inconsistencies in how text styles
+or icon sets are currently applied.
+
 **Atoms** — the indivisible building blocks: button, input, checkbox, radio, toggle, badge,
-tag, icon, avatar, spinner, tooltip, etc. For each candidate, note: does it exist consistently?
+tag, avatar, spinner, tooltip, etc. For each candidate, note: does it exist consistently?
 Any variants or states that are used but undefined?
 
 **Molecules** — simple combinations: form field (label + input + hint + error), search bar
@@ -111,7 +118,13 @@ _Audit date: <date> · Scope from: designer-plan_
 - <Element>: <how it varies across the existing UI> → <what the system should resolve>
 
 ## Component scope — build order
-_(Atoms before molecules, molecules before organisms)_
+_(Foundation components before atoms, atoms before molecules, molecules before organisms)_
+
+### Foundation components
+| Component | Status | Notes / inconsistencies |
+|---|---|---|
+| Text | new / extend / done | … |
+| Icon | new / extend / done | … |
 
 ### Atoms
 | Component | Status | Notes / inconsistencies |
@@ -136,8 +149,9 @@ _(Atoms before molecules, molecules before organisms)_
 ```
 
 ### Gate 3 — Output
-Check against the Output Quality Criteria — especially that the build order is correct (no
-molecule listed before its atom dependencies) and that out-of-scope items are explicit. When
+Check against the Output Quality Criteria — especially that the build order is correct (no atom
+listed before foundation components, no molecule listed before its atom dependencies) and that
+out-of-scope items are explicit. When
 the bar is met:
 1. Present and ask the user to confirm.
 2. **If confirmed** → write `ds-audit.md`, tick Step 1 in `## Plan`, update **Next step**,
@@ -147,6 +161,6 @@ the bar is met:
 ---
 
 ## Handoff
-`ds-audit.md` feeds `designer-ds-foundation` (the token scope), `designer-ds-atom`,
-`designer-ds-molecule`, and `designer-ds-organism` (the component build order). All four skills
-read the audit before starting any work.
+`ds-audit.md` feeds `designer-ds-foundation` (the token scope), `designer-ds-foundation-component`
+(Text and Icon), `designer-ds-atom`, `designer-ds-molecule`, and `designer-ds-organism` (the
+component build order). All five skills read the audit before starting any work.

@@ -21,14 +21,17 @@ A molecule is a simple, purposeful combination of atoms that works as a unit. A 
 molecules. The molecule adds meaning by combining atoms; it does not introduce new visual
 primitives of its own.
 
-The key constraint: **every sub-component in a molecule is a named DS atom** (or another named
-DS molecule). Visual tokens (color, typography, radius, shadow) are inherited from constituent
-atoms — the molecule spec specifies only molecule-level rules: layout, spacing, state propagation,
-ARIA relationships between atoms, and keyboard flow order.
+The key constraint: **every sub-component in a molecule is a named DS atom, foundation
+component (Text, Icon), or another named DS molecule**. Visual tokens (color, typography,
+radius, shadow) are inherited from constituent components — the molecule spec specifies only
+molecule-level rules: layout, spacing, state propagation, ARIA relationships between
+sub-components, and keyboard flow order.
 
 ## Where things live
 
 - **Read** `ds-audit.md` for the molecule's scope, dependencies, and notes.
+- **Read** foundation component specs at `<real_project_path>/design-system/foundation-components/`
+  for any foundation components (Text, Icon) this molecule uses directly.
 - **Read** atom specs at `<real_project_path>/design-system/atoms/` for every atom this molecule
   composes.
 - **Read** molecule specs at `<real_project_path>/design-system/molecules/` for any molecules
@@ -51,8 +54,8 @@ ARIA relationships between atoms, and keyboard flow order.
 
 ### Input Acceptance Criteria
 - `ds-audit.md` lists this molecule as in scope.
-- All atom (and molecule) dependencies are already specced. Never reference an undefined
-  component.
+- All foundation component, atom, and molecule dependencies are already specced. Never reference
+  an undefined component.
 
 ### Outputs
 - `<real_project_path>/design-system/molecules/<component-name>/component-spec.md`
@@ -60,7 +63,8 @@ ARIA relationships between atoms, and keyboard flow order.
 ### Output Quality Criteria
 
 **Frontmatter:**
-- `dependencies` uses separate `atoms` and `molecules` keys. List every named dependency.
+- `dependencies` uses separate `foundation-components`, `atoms`, and `molecules` keys. List every
+  named dependency; use `N/A` for keys with no direct dependency.
 
 **Anatomy:**
 - Composition table lists every atom used with the props it receives and its purpose.
@@ -102,8 +106,9 @@ ARIA relationships between atoms, and keyboard flow order.
 ## The 3-gate flow
 
 ### Gate 1 — Input
-Verify all atom (and molecule) dependencies are specced. If any are missing, hand off first.
-Confirm spacing tokens are defined in foundations.
+Verify all foundation component, atom, and molecule dependencies are specced. If any are
+missing, hand off to the appropriate skill first. Confirm spacing tokens are defined in
+foundations.
 
 ### Gate 2 — Process
 Work through each section of the spec with the designer.
@@ -160,6 +165,7 @@ description: {one sentence — what this molecule does and why these atoms are c
 link:
   - {tool-name}: {tool-link}
 dependencies:
+  - foundation-components: N/A  # list Text and/or Icon if used directly
   - atoms: {atom-a}, {atom-b}
   - molecules: {molecule-a}
 ---

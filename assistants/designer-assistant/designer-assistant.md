@@ -6,7 +6,7 @@ description: >
   IA + wireframe + UX flows + visual story spec (all in designer-ui), organism/template/page
   specs, usability test plan, to design review and developer handoff — every spec traces to a BA
   user story. Design-system (DS) mode: building or extending a design system following the atomic
-  approach (foundations → atoms → molecules → organisms), with three sub-modes — from-scratch,
+  approach (foundations → foundation components → atoms → molecules → organisms), with three sub-modes — from-scratch,
   add-component, and update — and dependency validation after any component change. Invoke for any
   product design work (new features, iterations, maintenance) or for any design-system project.
 ---
@@ -71,6 +71,7 @@ assistants/designer-assistant/
     │   ├── typography.md
     │   ├── spacing.md
     │   └── ...
+    ├── foundation-components/[name]/component-spec.md
     ├── atoms/[name]/component-spec.md
     ├── molecules/[name]/component-spec.md
     ├── organisms/[name]/component-spec.md
@@ -114,7 +115,7 @@ flowchart TD
 
 ### DS pipeline
 
-Follows the atomic approach: foundations first, then atoms, molecules, and organisms.
+Follows the atomic approach: foundations first, then foundation components (Text, Icon), then atoms, molecules, and organisms.
 Three sub-modes: **from-scratch** (full pipeline), **add-component** (spec + validate + document),
 **update** (audit scope + update spec + validate downstream + document).
 
@@ -123,7 +124,8 @@ flowchart TD
     SC["designer-scan-context"] --> PL["designer-plan (DS mode — from-scratch / add-component / update)"]
     PL -->|from-scratch| AU["designer-ds-audit: inventory + define scope"]
     AU --> FN["designer-ds-foundation: color, type, spacing, etc."]
-    FN --> AT["designer-ds-atom: one atom at a time"]
+    FN --> FC["designer-ds-foundation-component: Text + Icon"]
+    FC --> AT["designer-ds-atom: one atom at a time"]
     AT --> MO["designer-ds-molecule: one molecule (references atoms)"]
     MO --> OR["designer-ds-organism: one DS organism (references molecules + atoms)"]
     OR --> DO["designer-ds-document: usage guidelines + README index"]
@@ -146,7 +148,8 @@ flowchart TD
 | designer-scan-context | Existing foundations, component inventory, brand guidelines | related-context.md | designer-plan |
 | designer-plan | Work type + sub-mode, scope framing, DS checklist | `## Plan` in task.md | every step |
 | designer-ds-audit | Inventory existing UI, define foundation + component scope per atomic level | ds-audit.md | designer-ds-foundation / component skills |
-| designer-ds-foundation | Design principles + token definitions: color, typography, spacing, elevation, radius, animation | design-system/foundations/principles.md + *.md | designer-ds-atom |
+| designer-ds-foundation | Design principles + token definitions: color, typography, spacing, elevation, radius, animation | design-system/foundations/principles.md + *.md | designer-ds-foundation-component |
+| designer-ds-foundation-component | Foundation component specs for Text and Icon — no component dependencies, only token references | design-system/foundation-components/[name]/component-spec.md | designer-ds-atom |
 | designer-ds-atom | Atom spec: Anatomy (Structure + Details) · Appearance (Props + Variants + State + Tokens) · Content (Copy + Empty state + Overflow + Case + Chars + Placeholder + Number/date + Text expansion) · Accessibility (ARIA + Focus + Keyboard + Mouse + Touch + Screen reader + i18n) · Checklist | design-system/atoms/[name]/component-spec.md | designer-ds-molecule |
 | designer-ds-molecule | Molecule spec: Anatomy (Composition table + Layout + Spacing) · Appearance (molecule-level Variants + State with atoms-affected + Tokens) · Content (Copy + Label + Helper text + Validation messages + Overflow + Text expansion) · Accessibility (ARIA relationships + Keyboard flow + Focus + Mouse + Touch + Screen reader + i18n) · Checklist | design-system/molecules/[name]/component-spec.md | designer-ds-organism |
 | designer-ds-organism | DS organism spec — generic/reusable: Anatomy (Composition + Layout + Spacing) · Appearance (Variants + Lifecycle/Interactive states + Tokens) · Responsive (Breakpoints + Reflow + Mobile patterns) · Content (Copy + Empty state + Error state + Notifications + Text expansion) · Examples (Happy path + Edge cases + Worst-case) · Accessibility (Landmark + Heading hierarchy + ARIA + Keyboard + Focus management + Live regions + Screen reader + Skip links + i18n) · Checklist | design-system/organisms/[name]/component-spec.md | designer-ds-validate |
@@ -172,8 +175,9 @@ After every major step completes, always tell the user what the natural next ste
 | `designer-template` | "Template spec done. Ready for **designer-page** — page specs?" |
 | `designer-page` | "Page spec done. All affected artifacts specced? If yes, final step is **designer-review**. Ready?" |
 | `designer-ds-audit` | "Audit done. Next is **designer-ds-foundation** (from-scratch) or the component skill at the correct level (add/update). Ready?" |
-| `designer-ds-foundation` | "Foundations done (principles + tokens). Next is **designer-ds-atom** — start with **Icon** first, then **Text**, then all remaining atoms. Ready?" |
-| `designer-ds-atom` | "Atom spec done. Next atom — if Icon or Text isn't done yet, spec that next. Once both Icon and Text exist, remaining atoms can proceed in any order. Move to **designer-ds-molecule** only when all atoms are complete. After any add/update: run **designer-ds-validate** before documenting." |
+| `designer-ds-foundation` | "Foundations done (principles + tokens). Next is **designer-ds-foundation-component** — spec Text first, then Icon. Ready?" |
+| `designer-ds-foundation-component` | "Foundation component spec done. Once both Text and Icon exist, move to **designer-ds-atom** — spec remaining atoms in any order. Ready?" |
+| `designer-ds-atom` | "Atom spec done. Next atom if any remain, then move to **designer-ds-molecule** only when all atoms are complete. After any add/update: run **designer-ds-validate** before documenting." |
 | `designer-ds-molecule` | "Molecule spec done. Next molecule (if any remain), or **designer-ds-organism** once all molecules are complete. After any add/update: run **designer-ds-validate**." |
 | `designer-ds-organism` | "DS organism spec done. Run **designer-ds-validate** next (for add/update), or next organism if more remain (from-scratch). Once all organisms done: **designer-ds-document**." |
 | `designer-ds-validate` | "Validation done. No breaking changes — ready for **designer-ds-document**. OR: breaking changes found — routing back to the affected component skill first." |
@@ -203,6 +207,7 @@ After every major step completes, always tell the user what the natural next ste
 ### Specific skills — DS (design-system):
 - designer-ds-audit
 - designer-ds-foundation
+- designer-ds-foundation-component
 - designer-ds-atom
 - designer-ds-molecule
 - designer-ds-organism

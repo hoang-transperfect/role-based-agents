@@ -36,6 +36,8 @@ its structure, it belongs in `designer-organism`, not here.
 ## Where things live
 
 - **Read** `ds-audit.md` for the organism's scope, dependencies, and notes.
+- **Read** foundation component specs at `<real_project_path>/design-system/foundation-components/`
+  for any foundation components (Text, Icon) this organism uses directly.
 - **Read** molecule specs at `<real_project_path>/design-system/molecules/` and atom specs at
   `<real_project_path>/design-system/atoms/` for the sub-components this organism uses.
 - **Read** foundation files at `<real_project_path>/design-system/foundations/` for any
@@ -48,14 +50,15 @@ its structure, it belongs in `designer-organism`, not here.
 ## The skill contract
 
 ### Inputs
-- `ds-audit.md` — confirms this organism is in scope and lists its molecule/atom dependencies.
-- Molecule specs and atom specs for all sub-components (must be written before this organism).
+- `ds-audit.md` — confirms this organism is in scope and lists its dependencies.
+- Foundation component, molecule, and atom specs for all sub-components (must be written before
+  this organism).
 - Foundation files — for organism-level layout and spacing tokens.
 
 ### Input Acceptance Criteria
 - `ds-audit.md` lists this organism as in scope.
-- All molecule and atom dependencies are already specced. If any are missing, hand off to
-  `designer-ds-molecule` or `designer-ds-atom` first.
+- All foundation component, molecule, and atom dependencies are already specced. If any are
+  missing, hand off to the appropriate skill first.
 - The organism is confirmed as generic and reusable, not product-specific. If it references
   product-specific data or IA, redirect to `designer-organism`.
 
@@ -65,10 +68,12 @@ its structure, it belongs in `designer-organism`, not here.
 ### Output Quality Criteria
 
 **Frontmatter:**
-- `dependencies` uses separate `molecules` and `atoms` keys (molecules listed first).
+- `dependencies` uses separate `foundation-components`, `molecules`, and `atoms` keys. List every
+  named dependency; use `N/A` for keys with no direct dependency.
 
 **Anatomy:**
-- Composition table lists every molecule and atom with its type and purpose.
+- Composition table lists every foundation component, molecule, and atom with its type and
+  purpose.
 - Layout names each region by function and includes an ASCII or prose diagram showing the
   region structure. Layout system (CSS Grid / Flexbox / combination) is specified.
 - Spacing table lists the gap token between each pair of adjacent regions or sub-components.
@@ -125,15 +130,16 @@ its structure, it belongs in `designer-organism`, not here.
 ## The 3-gate flow
 
 ### Gate 1 — Input
-Verify all molecule and atom dependencies are specced. Confirm the organism is generic (DS
-candidate), not product-specific. If it references product-specific IA, redirect to
-`designer-organism`.
+Verify all foundation component, molecule, and atom dependencies are specced. Confirm the
+organism is generic (DS candidate), not product-specific. If it references product-specific IA,
+redirect to `designer-organism`.
 
 ### Gate 2 — Process
 Work through each section of the spec with the designer.
 
 **Anatomy** — probe:
-- Which molecules and atoms compose this organism? What is each one's purpose?
+- Which foundation components, molecules, and atoms compose this organism? What is each one's
+  purpose?
 - What are the named regions? (header, body, footer, sidebar, overlay, toolbar…)
 - What is the layout system? (CSS Grid for two-dimensional; Flexbox for one-dimensional)
 - Can you sketch the region structure as ASCII or prose?
@@ -196,6 +202,7 @@ description: {one sentence — what this organism does and why it belongs in the
 link:
   - {tool-name}: {tool-link}
 dependencies:
+  - foundation-components: N/A  # list Text and/or Icon if used directly
   - molecules: {molecule-a}, {molecule-b}
   - atoms: {atom-a}
 ---
@@ -203,16 +210,17 @@ dependencies:
 
 ## Anatomy
 
-Define which molecules and atoms compose this organism, how regions are structured, and the
-spacing between them. Visual tokens are inherited from constituent components — specify only
-organism-level rules here.
+Define which foundation components, molecules, and atoms compose this organism, how regions are
+structured, and the spacing between them. Visual tokens are inherited from constituent
+components — specify only organism-level rules here.
 
 ### Composition
-List every molecule and atom used. For each, describe its purpose within the organism.
+List every foundation component, molecule, and atom used. For each, describe its purpose within
+the organism.
 
 | Component | Type | Purpose |
 |-----------|------|---------|
-| `{name}` | Molecule / Atom | {purpose} |
+| `{name}` | Foundation component / Molecule / Atom | {purpose} |
 
 ### Layout
 Describe the region structure and layout strategy. Name each region by its function.
