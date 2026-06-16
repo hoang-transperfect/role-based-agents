@@ -27,6 +27,12 @@ resulting state.
 **Pages are the only level where content is real, not placeholder.** Every string in the Content
 section must be exact, approved copy — no `{placeholder}` text ships without sign-off.
 
+**No raw HTML elements for content slots** — every slot must be filled by a named DS or
+product-specific organism. Raw HTML elements are not permitted as slot content. Layout
+wrappers that are part of the template's own structure are the only exception, and those
+belong in the template spec, not here. Any content need that cannot be satisfied by an existing
+organism is a DS/PS gap — flag it with ⚠ and hand off to `designer-organism` first.
+
 ## Where things live
 
 - **Read** the story spec (`design-spec/<epic>/<feature>/<story>/story-spec.md`) — to understand

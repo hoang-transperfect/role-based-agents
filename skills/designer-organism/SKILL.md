@@ -24,6 +24,13 @@ molecules from the design system. It never introduces new visual primitives. Tok
 from the design system foundations; sub-components come from the DS component library. Only the
 composition and the product-specific content rules are defined here.
 
+**No raw HTML elements for content** — every content-rendering slot in the Composition table
+must reference a named DS molecule, atom, or foundation component, not a raw HTML element
+(e.g. not `<span>`, `<img>`, `<p>`). Layout wrappers (`<div>`, `<section>`, `<ul>`, `<nav>`,
+etc.) used purely to structure layout regions are the only exception. Any content slot that
+cannot be satisfied by an existing DS component is a DS gap — flag it with ⚠ and recommend
+adding it to the DS first.
+
 **If the same organism is needed in multiple stories:** spec it once here, then every subsequent
 story references it by name and links to this file — do not re-spec it.
 

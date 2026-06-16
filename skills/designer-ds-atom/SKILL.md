@@ -21,6 +21,11 @@ Badge, Avatar, Spinner, Tooltip, etc. It may reference **foundation tokens** and
 components** (Text and Icon) in its anatomy, but never other atoms. Any other component
 reference indicates a molecule; reclassify before proceeding.
 
+**No raw HTML content elements in anatomy** — text-bearing layers must reference `Text / {variant}`,
+icon-bearing layers must reference `Icon / {size}`. Structural containers (the root element,
+layout wrappers) are the only HTML elements that appear in the anatomy without a foundation
+component reference.
+
 Getting atoms right is critical because every molecule and DS organism is built from them. A
 missing variant, state, content rule, or accessibility behaviour here creates a gap that
 cascades through every higher-level component.

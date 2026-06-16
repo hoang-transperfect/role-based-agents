@@ -27,6 +27,11 @@ radius, shadow) are inherited from constituent components — the molecule spec 
 molecule-level rules: layout, spacing, state propagation, ARIA relationships between
 sub-components, and keyboard flow order.
 
+**No raw HTML elements for content** — every content-rendering slot in the Composition table
+must reference a named DS atom or foundation component, not a raw HTML element (e.g. not `<span>`,
+`<img>`, `<p>`). Layout wrappers (`<div>`, `<ul>`, `<nav>`, etc.) used purely to structure
+layout are the only exception.
+
 ## Where things live
 
 - **Read** `ds-audit.md` for the molecule's scope, dependencies, and notes.

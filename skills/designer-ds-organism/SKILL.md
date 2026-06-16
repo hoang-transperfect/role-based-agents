@@ -26,6 +26,11 @@ Organisms are the primary level where responsive reflow decisions are made, wher
 states (loading, empty, error) are fully defined, where content rules become complex, and where
 accessibility requirements span multiple sub-components.
 
+**No raw HTML elements for content** — every content-rendering slot in the Composition table
+must reference a named DS molecule, atom, or foundation component, not a raw HTML element
+(e.g. not `<span>`, `<img>`, `<p>`). Layout wrappers (`<div>`, `<section>`, `<ul>`, `<nav>`,
+etc.) used purely to structure layout regions are the only exception.
+
 The boundary with product-specific organisms (specced by `designer-organism`) is intent:
 - **DS organism**: generic structure, could be dropped into a different product unchanged.
 - **Product organism**: tightly coupled to this product's IA, data model, or feature context.

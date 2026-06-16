@@ -23,6 +23,11 @@ Templates reference organisms by name only (DS organisms or product-specific org
 `design-spec/product-organisms/`). They do not spec content, states, or behaviour — those belong
 in the page spec (`designer-ui`).
 
+**No raw HTML elements in slot definitions** — every named slot must be filled by a DS or
+product-specific organism. Raw HTML elements (`<div>`, `<section>`, `<header>`, etc.) may only
+appear as structural containers that form the template's own layout regions, never as the
+content of a slot.
+
 **When NOT to create a dedicated template:** if a layout is unique to a single user story, define
 it inline in that story's page spec section rather than creating a template file that is never
 reused.
