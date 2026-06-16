@@ -68,6 +68,7 @@ cascades through every higher-level component.
 - Details covers any constraint, rule, or slot behaviour not obvious from the structure.
 
 **Appearance:**
+- Every visual style the component can exhibit is documented — no property may be omitted or left to inference. Full coverage ensures consistent, unambiguous implementation.
 - Every prop that affects visual output is listed with all accepted values and the default marked.
 - Every variant has a table mapping each value to its token-based style. `N/A` is explicit where
   a variant has no style change.
@@ -192,7 +193,7 @@ Note which layers receive a child component.
 
 ## Appearance
 
-Define all visual properties — props, variants, states, and the tokens that drive them.
+Define all visual properties — props, variants, states, and the tokens that drive them. This section must be exhaustive: every style the component can exhibit must be documented here. No visual property may be left to inference — gaps create inconsistent, ambiguous implementations.
 
 ### Props
 List every prop that affects visual output. Format: prop name, all accepted values with the

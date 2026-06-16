@@ -69,6 +69,7 @@ ARIA relationships between atoms, and keyboard flow order.
 - Spacing table lists the gap token between each pair of adjacent atoms.
 
 **Appearance:**
+- Every molecule-level style the component can exhibit is documented — no property may be omitted or left to inference. Full coverage ensures consistent, unambiguous implementation.
 - Variants table includes an "Atoms affected" column — which atoms change and how.
 - State tables (appearance + interaction) include "Atoms affected" and "Visual changes" columns
   — state propagation is explicit, never implied.
@@ -201,7 +202,9 @@ List the gap between each pair of adjacent atoms.
 ## Appearance
 
 Specify only molecule-level variants, states, and token overrides. Atom-level styles are owned
-by their respective atom specs.
+by their respective atom specs. This section must be exhaustive for all molecule-level styles:
+every variant, state, and token the molecule introduces must be documented. Leave nothing to
+inference — gaps create inconsistent, ambiguous implementations.
 
 ### Variants
 List each molecule-level variant. For each, describe which atoms are affected and how.
