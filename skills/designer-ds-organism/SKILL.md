@@ -74,6 +74,9 @@ its structure, it belongs in `designer-organism`, not here.
 **Anatomy:**
 - Composition table lists every foundation component, molecule, and atom with its type and
   purpose.
+- Any direct Text or Icon foundation component reference in the Composition table names the
+  specific style variant used (e.g. `Text / heading-2`, `Text / body-medium`). A generic
+  "Text" entry with no variant is incomplete.
 - Layout names each region by function and includes an ASCII or prose diagram showing the
   region structure. Layout system (CSS Grid / Flexbox / combination) is specified.
 - Spacing table lists the gap token between each pair of adjacent regions or sub-components.

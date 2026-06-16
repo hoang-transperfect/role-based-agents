@@ -60,6 +60,9 @@ cascades through every higher-level component.
 - Anatomy references only foundation tokens and foundation components (Text, Icon) — never other
   atoms. Any other sub-component reference means this is a molecule; reclassify before
   proceeding.
+- Every text-bearing layer in Details references the Text foundation component at the specific
+  style variant it uses (e.g. `Text / label-medium`, `Text / body-small`). A raw text layer is
+  never specified — the only exception is the Text foundation component spec itself.
 - Structure captures every visual part, correctly nested, with layout role described.
 - Details covers any constraint, rule, or slot behaviour not obvious from the structure.
 
@@ -114,6 +117,8 @@ moving to the next.
 **Anatomy** — probe:
 - What visual parts compose this atom? (container, label, icon slot, indicator, overlay…)
 - How are they nested? What is the layout role of each? (horizontal stack, icon slot, label)
+- For each text-bearing layer: which Text component style variant does it use?
+  (e.g. `Text / label-medium` for a button label, `Text / caption` for a helper hint)
 - Any constraints or slot behaviours not obvious from the structure?
 
 **Appearance** — probe:
@@ -179,9 +184,12 @@ role (e.g. horizontal stack, icon slot, label).
 
 ### Details
 Describe constraints, rules, or slot behavior that are not obvious from the structure alone.
-Note which layers receive a child component.
+Note which layers receive a child component. Every text-bearing layer must reference the Text
+component at the exact style variant it uses — never specify a raw text layer.
 
 - {layer name}: {detail}
+- {text layer}: `Text / {style-variant}` (e.g. `Text / label-medium`)
+- {icon layer}: `Icon / {size}` (e.g. `Icon / sm`)
 - {child layer}: receive a `{component-name}` component
 
 ---

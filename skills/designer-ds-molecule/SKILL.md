@@ -68,6 +68,9 @@ sub-components, and keyboard flow order.
 
 **Anatomy:**
 - Composition table lists every atom used with the props it receives and its purpose.
+- Any direct Text or Icon foundation component reference in the Composition table names the
+  specific style variant used (e.g. `Text / label-medium`). A generic "Text" entry with no
+  variant is incomplete.
 - Layout section specifies direction, cross-axis alignment, wrapping, and includes an ASCII or
   prose diagram.
 - Spacing table lists the gap token between each pair of adjacent atoms.
