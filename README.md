@@ -6,12 +6,56 @@ description: This file is readme for this project. Read by user only. Agent shou
 Role-based Assistants (RBA) is a framework to create, configure, and manage personalized AI assistants across different projects.
 
 ## Set up
-In the `assistant/[user-assistant]` folder, copy the ai.json to your local folder
-Run the following command to initialize the assistant:
+
+### Prerequisites
+Install the ASM CLI:
 ```bash
-npx asm install -t [your AI platform]
+npm install -g agent-setting-manager
 ```
-For example, if you want to use "claude", run ```npx asm init install -t claude```
+
+### Install an assistant
+1. Create a folder for your assistant (e.g. `ba-assistant/`) and copy the `agent.json` from the relevant assistant in this repo into it:
+
+   | Assistant | Source |
+   |---|---|
+   | BA Assistant | `assistants/ba-assistant/agent.json` |
+   | Designer Assistant | `assistants/designer-assistant/agent.json` |
+   | FE Assistant | `assistants/fe-assistant/agent.json` |
+
+2. From that folder, run:
+   ```bash
+   asm install --target claude
+   ```
+   Replace `claude` with `cursor` or both (`claude cursor`) depending on your platform.
+
+   ASM will fetch all skills and the agent file from GitHub and install them into the correct platform paths.
+
+3. To update all artifacts to the latest version at any time:
+   ```bash
+   asm update
+   ```
+   
+### Install via AI Agent
+
+Copy one of the prompts below and send it directly to your AI agent (e.g. Claude). The agent will handle the installation for you.
+
+**BA Assistant**
+```
+Install the BA Assistant into this folder using the ASM CLI.
+1. If `asm` is not available, install it first: npm install -g agent-setting-manager
+2. Download https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/assistants/ba-assistant/agent.json and save it as agent.json in the current directory.
+3. Run: asm install --target claude
+```
+
+**Designer Assistant**
+```
+Install the Designer Assistant into this folder using the ASM CLI.
+1. If `asm` is not available, install it first: npm install -g agent-setting-manager
+2. Download https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/assistants/designer-assistant/agent.json and save it as agent.json in the current directory.
+3. Run: asm install --target claude
+```
+
+Replace `claude` with `cursor` or both (`claude cursor`) if you use a different platform.
 
 ### How to use
 1. Ask the assistant to create a new project (if it doesn't exist)
@@ -89,7 +133,7 @@ This folder follows the following structure:
 ```text
 .
 ├── .agent/, .cursor/, .claude/, ... # Configuration folder for IDE or platform
-├── ai.json                          # AI settings: rules, skills, mcp, ...
+├── agent.json                       # AI settings: rules, skills, mcp, ...
 ├── AGENT.md                         # Agent definition
 ├── CLAUDE.md, ...                   # Link to AGENT.md
 └── projects/                        # One index file per project
