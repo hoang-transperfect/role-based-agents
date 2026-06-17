@@ -130,6 +130,10 @@ ba-requirement/
 - **Priority carries through:** each story keeps the MoSCoW/Kano priority agreed in `ba-analyse`.
 - **Goals trace down:** the epic's goal and success metrics align with the Plan's Problem framing
   (objectives + success criteria) — the backlog serves the stated problem, not a drifted one.
+- **Signed-off items are immutable:** an Epic, Feature, or US with Status `signed-off` is never
+  edited in place. To change it, create a new item with a new ID that supersedes the old one
+  (`Supersedes: <old-ID>`), and flag the old item for `ba-govern` to mark as `superseded` in the
+  RTM. `ba-govern` sets Status to `signed-off` when stakeholder approval is recorded.
 
 ---
 
@@ -147,8 +151,11 @@ Author the backlog, adapting to the **work mode** recorded in `## Plan`:
   stories. Build the whole tree.
 - **develop** — slot new stories under the right existing feature/epic, or add a new feature/epic;
   assign the next free IDs; keep existing items intact.
-- **maintain** — edit the affected story/feature in place; keep its ID; note what changed (the
-  change record itself is `ba-govern`'s job).
+- **maintain** — check the Status of the item to change. If it is **not** `signed-off`: edit it in
+  place, keep its ID, note what changed (the change record itself is `ba-govern`'s job). If it is
+  `signed-off`: **do not edit it** — create a new item with a new ID that supersedes it, add
+  `**Supersedes:** <old-ID>` to the new item, and flag the old item's Status for `ba-govern` to
+  mark as `superseded` in the RTM.
 
 Write items in these shapes. Fill every field a consuming team would need **from what was actually
 gathered** — a thin field forces a round-trip back to the BA. But **never invent content to fill a
@@ -162,13 +169,14 @@ manufacturing plausible ones.
 **Business value / why:** <the problem it solves>
 **Success metrics:** <how we'll know it worked>
 **Scope:** In — <…> · Out — <…>
-**Owner / sponsor:** <who>   **Priority:** Must
+**Owner / sponsor:** <who>   **Priority:** Must   **Status:** active / signed-off
 **Features:** FEAT-01, FEAT-02
 **Dependencies / constraints:** <other epics, systems, regulatory>
 
 # FEAT-01 — <name>   (epic: EPIC-01)
 **Intent / user value:** <what this feature enables and for whom>
 **Scope:** In — <…> · Out — <…>
+**Status:** active / signed-off
 **Stories:** US-001, US-002       **Applies NFRs / TRs:** NFR-01, TR-01
 **Dependencies:** <APIs, other features>     **Open questions:** <…>
 **User flow (functional — not UI):**   <!-- numbered steps, or a mermaid flowchart where clearer -->
@@ -176,7 +184,7 @@ manufacturing plausible ones.
   _Alternate / exception flows:_ 2a. <branch>; 3a. <exception → which story handles it>
 
 ## US-001 — <title>   (feature: FEAT-01)
-**Priority:** Must   **Source:** <req/finding ref>   **Status:** ready / provisional
+**Priority:** Must   **Source:** <req/finding ref>   **Status:** ready / provisional / signed-off
 **Story:** As a <role>, I want <capability> so that <benefit>.
 **Roles / permissions:** <who may perform this>
 **Preconditions / trigger:** <entry state; what starts the flow>

@@ -135,8 +135,9 @@ Improve if short of the bar (ask the user where you need their input; never assu
 the bar:
 1. Present and ask the user to confirm.
 2. **If confirmed** → write `sign-off.md` to the task folder
-   (`ba-assistant-artifacts/tasks/<task-id>/`) and update `RTM.md` /
-   `change-log.md` under `ba-requirement/`, tick Steps 8–9 in `## Plan` (links + **Next step**),
+   (`ba-assistant-artifacts/tasks/<task-id>/`); update `RTM.md` / `change-log.md` under
+   `ba-requirement/`; **set `Status: signed-off`** on each approved Epic, Feature, and US in their
+   respective files under `ba-requirement/`; tick Steps 8–9 in `## Plan` (links + **Next step**),
    then hand off to `commit-work` (real project repo).
 3. **If not satisfied** → improve with the user until confirmed, commit, then hand off to
    `improve-skill`.
