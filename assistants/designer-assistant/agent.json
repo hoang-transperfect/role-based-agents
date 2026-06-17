@@ -4,38 +4,137 @@
     "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/assistants/designer-assistant/designer-assistant.md"
   },
   "skills": [
-    { "name": "create-project", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/create-project/SKILL.md" },
-    { "name": "gather-needs", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/gather-needs/SKILL.md" },
-    { "name": "create-task", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/create-task/SKILL.md" },
-    { "name": "resume-task", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/resume-task/SKILL.md" },
-    { "name": "improve-skill", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/improve-skill/SKILL.md" },
-    { "name": "create-skill", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/create-skill/SKILL.md" },
-    { "name": "commit-work", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/commit-work/SKILL.md" },
-    { "name": "designer-scan-context", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-scan-context/SKILL.md" },
-    { "name": "designer-plan", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-plan/SKILL.md" },
-    { "name": "designer-research", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-research/SKILL.md" },
-    { "name": "designer-ui", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ui/SKILL.md" },
-    { "name": "designer-organism", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-organism/SKILL.md" },
-    { "name": "designer-template", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-template/SKILL.md" },
-    { "name": "designer-page", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-page/SKILL.md" },
-    { "name": "designer-review", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-review/SKILL.md" },
-    { "name": "designer-ds-audit", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-audit/SKILL.md" },
-    { "name": "designer-ds-foundation", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-foundation/SKILL.md" },
-    { "name": "designer-ds-foundation-build", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-foundation-build/SKILL.md" },
-    { "name": "designer-ds-foundation-component", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-foundation-component/SKILL.md" },
-    { "name": "figma-ds-foundation", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/figma-ds-foundation/SKILL.md" },
-    { "name": "designer-ds-atom", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-atom/SKILL.md" },
-    { "name": "designer-ds-atom-build", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-atom-build/SKILL.md" },
-    { "name": "figma-ds-atom", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/figma-ds-atom/SKILL.md" },
-    { "name": "designer-ds-molecule", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-molecule/SKILL.md" },
-    { "name": "designer-ds-molecule-build", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-molecule-build/SKILL.md" },
-    { "name": "figma-ds-molecule", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/figma-ds-molecule/SKILL.md" },
-    { "name": "designer-ds-organism", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-organism/SKILL.md" },
-    { "name": "designer-ds-organism-build", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-organism-build/SKILL.md" },
-    { "name": "figma-ds-organism", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/figma-ds-organism/SKILL.md" },
-    { "name": "designer-ds-validate", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-validate/SKILL.md" },
-    { "name": "designer-ds-document", "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-document/SKILL.md" }
+    {
+      "name": "create-project",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/create-project/SKILL.md"
+    },
+    {
+      "name": "gather-needs",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/gather-needs/SKILL.md"
+    },
+    {
+      "name": "create-task",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/create-task/SKILL.md"
+    },
+    {
+      "name": "resume-task",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/resume-task/SKILL.md"
+    },
+    {
+      "name": "improve-skill",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/improve-skill/SKILL.md"
+    },
+    {
+      "name": "create-skill",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/create-skill/SKILL.md"
+    },
+    {
+      "name": "commit-work",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/commit-work/SKILL.md"
+    },
+    {
+      "name": "designer-scan-context",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-scan-context/SKILL.md"
+    },
+    {
+      "name": "designer-plan",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-plan/SKILL.md"
+    },
+    {
+      "name": "designer-research",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-research/SKILL.md"
+    },
+    {
+      "name": "designer-ui",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ui/SKILL.md"
+    },
+    {
+      "name": "designer-organism",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-organism/SKILL.md"
+    },
+    {
+      "name": "designer-template",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-template/SKILL.md"
+    },
+    {
+      "name": "designer-page",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-page/SKILL.md"
+    },
+    {
+      "name": "designer-review",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-review/SKILL.md"
+    },
+    {
+      "name": "designer-ds-audit",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-audit/SKILL.md"
+    },
+    {
+      "name": "designer-ds-foundation",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-foundation/SKILL.md"
+    },
+    {
+      "name": "designer-ds-foundation-build",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-foundation-build/SKILL.md"
+    },
+    {
+      "name": "designer-ds-foundation-component",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-foundation-component/SKILL.md"
+    },
+    {
+      "name": "figma-ds-foundation",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/figma-ds-foundation/SKILL.md"
+    },
+    {
+      "name": "designer-ds-atom",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-atom/SKILL.md"
+    },
+    {
+      "name": "designer-ds-atom-build",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-atom-build/SKILL.md"
+    },
+    {
+      "name": "figma-ds-atom",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/figma-ds-atom/SKILL.md"
+    },
+    {
+      "name": "designer-ds-molecule",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-molecule/SKILL.md"
+    },
+    {
+      "name": "designer-ds-molecule-build",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-molecule-build/SKILL.md"
+    },
+    {
+      "name": "figma-ds-molecule",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/figma-ds-molecule/SKILL.md"
+    },
+    {
+      "name": "designer-ds-organism",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-organism/SKILL.md"
+    },
+    {
+      "name": "designer-ds-organism-build",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-organism-build/SKILL.md"
+    },
+    {
+      "name": "figma-ds-organism",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/figma-ds-organism/SKILL.md"
+    },
+    {
+      "name": "designer-ds-validate",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-validate/SKILL.md"
+    },
+    {
+      "name": "designer-ds-document",
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/designer-ds-document/SKILL.md"
+    }
   ],
   "rules": [],
-  "mcps": []
+  "mcps": [
+    {
+      "name": "figma",
+      "source": "https://mcp.figma.com/sse",
+      "transport": "http"
+    }
+  ]
 }
