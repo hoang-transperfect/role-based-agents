@@ -72,7 +72,7 @@ cascades through every higher-level component.
 - Details covers any constraint, rule, or slot behaviour not obvious from the structure.
 
 **Appearance:**
-- Every visual style the component can exhibit is documented — no property may be omitted or left to inference. Full coverage ensures consistent, unambiguous implementation.
+- Every visual style the component can exhibit is documented — no property may be omitted or left to inference. Full coverage ensures consistent, unambiguous implementation. At minimum, the Appearance section must cover: dimensions (width or min/max-width, and height), color (fill, border, text, icon), typography (font size, weight, line-height), spacing (padding, gap), border (width, style, radius), shadow/elevation, and opacity — for every variant and state where they differ. Fixed, fluid, and content-driven sizing must be explicitly distinguished.
 - Every prop that affects visual output is listed with all accepted values and the default marked.
 - Every variant has a table mapping each value to its token-based style. `N/A` is explicit where
   a variant has no style change.
@@ -128,6 +128,7 @@ moving to the next.
 
 **Appearance** — probe:
 - What props affect visual output? What are all accepted values and the default for each?
+- What are the exact dimensions for each size variant? Document both width (or min-width / max-width) and height — neither axis may be left implicit. Is sizing fixed, fluid, or content-driven?
 - Are there visual variants beyond the obvious? (icon-only, ghost, destructive, full-width…)
 - Which states produce a visual change? Separate system-driven (loading, error, success) from
   user-driven (hover, focus, active, disabled).

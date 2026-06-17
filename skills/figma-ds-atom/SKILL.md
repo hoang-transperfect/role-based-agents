@@ -69,7 +69,7 @@ page already exists:
 - If it exists, navigate to it.
 All subsequent steps place content on this page only.
 
-> **Step 1 ACs — verify before continuing to Step 2:**
+> **Step 1 ACs — all must pass before Step 2. Fix any failure before proceeding:**
 > - ✓ A page named `{Component Name}` (PascalCase with spaces) exists in the Figma file.
 > - ✓ The page is the currently active page.
 
@@ -80,7 +80,7 @@ Name it using PascalCase with spaces (e.g. `Button`, `Icon Button`).
 Write the full content of `component-spec.md` into the Component's **description** field
 in Figma. This makes the spec readable directly from Figma without leaving the file.
 
-> **Step 2 ACs — verify before continuing to Step 3:**
+> **Step 2 ACs — all must pass before Step 3. Fix any failure before proceeding:**
 > - ✓ A Component named `{Component Name}` (PascalCase with spaces) exists on the current page.
 > - ✓ The Component's description field contains the full `component-spec.md` content, not a summary.
 
@@ -100,7 +100,7 @@ From Anatomy > Structure, build the layer tree inside the Component:
   - Annotate the placeholder instance with a note: "⚠ Dependency not yet built — Icon V2 / not_interested used as sample."
 - Never create a raw shape or group in place of a referenced component.
 
-> **Step 3 ACs — verify before continuing to Step 4:**
+> **Step 3 ACs — all must pass before Step 4. Fix any failure before proceeding:**
 > - ✓ Every part from Anatomy > Structure exists as a named layer in PascalCase with spaces.
 > - ✓ Layer nesting matches the hierarchy in the spec.
 > - ✓ Every child component reference from Anatomy > Details has a Component Instance or an annotated placeholder — no raw shapes.
@@ -111,7 +111,7 @@ From Appearance > Props, add a Variant property for each prop:
 - Property name = prop name from the spec, exactly.
 - Values = all accepted values from the spec, in the same order listed.
 
-> **Step 4 ACs — verify before continuing to Step 5:**
+> **Step 4 ACs — all must pass before Step 5. Fix any failure before proceeding:**
 > - ✓ A Variant property exists for every prop in Appearance > Props.
 > - ✓ Each property name matches the spec exactly.
 > - ✓ Each property includes all values from the spec in the same order.
@@ -132,7 +132,7 @@ or stacking:
 - Every cell position in the grid must correspond to exactly one variant combination — no cell
   is left empty or duplicated.
 
-> **Step 5 ACs — verify before continuing to Step 6:**
+> **Step 5 ACs — all must pass before Step 6. Fix any failure before proceeding:**
 > - ✓ A variant frame exists for every row in Appearance > Variants.
 > - ✓ Every style rule on every variant frame is applied as a Variable reference — no hardcoded hex, px, or font value.
 > - ✓ Variant frames form a grid table: columns = first property values, rows = second property values.
@@ -146,7 +146,7 @@ From Appearance > Tokens, for each row (token name → layer → property):
 - If the token name does not match a published Variable in the file, stop:
   "Token `{name}` not found in Figma Variables. Resolve before continuing."
 
-> **Step 6 ACs — verify before continuing to Step 7:**
+> **Step 6 ACs — all must pass before Step 7. Fix any failure before proceeding:**
 > - ✓ Every token in Appearance > Tokens is applied as a Variable reference on the correct layer and the correct CSS property.
 > - ✓ No hardcoded hex, px, or font value exists on any layer that Appearance > Tokens maps.
 
@@ -161,7 +161,7 @@ From Appearance > State (both appearance states and interaction states):
   additional Variant property values.
 - Every state in the spec must have a representation. No state may be silently omitted.
 
-> **Step 7 ACs — verify before continuing to Step 8:**
+> **Step 7 ACs — all must pass before Step 8. Fix any failure before proceeding:**
 > - ✓ Every appearance state (disabled, error, loading, read-only) is represented as a Variant property value.
 > - ✓ Every interaction state (hover, focus, pressed, active) is represented as a Figma interactive state or Variant value.
 > - ✓ The `loading` state uses the Icon V2 / loader SVG as the spinner visual.
@@ -176,7 +176,7 @@ From Accessibility, add annotation layers (or use Figma's built-in annotation sy
 - **Touch target** — annotate that the interactive hit area must be ≥ 44×44px, even if the
   visual component is smaller.
 
-> **Step 8 ACs — verify before Gate 3:**
+> **Step 8 ACs — all must pass before Gate 3. Fix any failure before proceeding:**
 > - ✓ The ARIA role is annotated on the outermost Component frame.
 > - ✓ Every aria-* attribute from the ARIA table is annotated with its value and the condition under which it applies.
 > - ✓ Every keyboard interaction from the Keyboard table is annotated.

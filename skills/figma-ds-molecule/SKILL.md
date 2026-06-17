@@ -69,7 +69,7 @@ Convert the component name to PascalCase with spaces — this is the page name
 - If it exists, navigate to it.
 All subsequent steps place content on this page only.
 
-> **Step 1 ACs — verify before continuing to Step 2:**
+> **Step 1 ACs — all must pass before Step 2. Fix any failure before proceeding:**
 > - ✓ A page named `{Component Name}` (PascalCase with spaces) exists in the Figma file.
 > - ✓ The page is the currently active page.
 
@@ -80,7 +80,7 @@ spaces (e.g. `Form Field`, `Search Bar`).
 Write the full content of `component-spec.md` into the Component's **description** field
 in Figma. This makes the spec readable directly from Figma without leaving the file.
 
-> **Step 2 ACs — verify before continuing to Step 3:**
+> **Step 2 ACs — all must pass before Step 3. Fix any failure before proceeding:**
 > - ✓ A Component named `{Component Name}` (PascalCase with spaces) exists on the current page.
 > - ✓ The Component's description field contains the full `component-spec.md` content, not a summary.
 
@@ -98,7 +98,7 @@ From Anatomy > Composition, for each slot in the listed order:
   - Annotate the instance with a note: "⚠ Dependency not yet built."
 - Never create a raw shape, group, or local frame in place of a component instance.
 
-> **Step 3 ACs — verify before continuing to Step 4:**
+> **Step 3 ACs — all must pass before Step 4. Fix any failure before proceeding:**
 > - ✓ Every slot in Anatomy > Composition has a Component Instance (or annotated placeholder).
 > - ✓ Every instance layer name matches the slot name in PascalCase with spaces.
 > - ✓ No raw shape, group, or local frame stands in for a component instance.
@@ -115,7 +115,7 @@ From Anatomy > Spacing:
 - Set padding on each side (top, right, bottom, left) using the spacing Variable references
   named in the spec.
 
-> **Step 4 ACs — verify before continuing to Step 5:**
+> **Step 4 ACs — all must pass before Step 5. Fix any failure before proceeding:**
 > - ✓ Auto-layout direction and alignment match Anatomy > Layout.
 > - ✓ Gap uses a spacing Variable reference — no hardcoded px value.
 > - ✓ Wrap behaviour is set as specified (or confirmed not applicable).
@@ -137,7 +137,7 @@ or stacking:
 - Every cell position in the grid must correspond to exactly one variant combination — no cell
   is left empty or duplicated.
 
-> **Step 5 ACs — verify before continuing to Step 6:**
+> **Step 5 ACs — all must pass before Step 6. Fix any failure before proceeding:**
 > - ✓ A Variant property exists for every property in Appearance > Variants.
 > - ✓ A variant frame exists for every combination in Appearance > Variants.
 > - ✓ Every style rule is applied as a Variable reference — no hardcoded value.
@@ -152,7 +152,7 @@ From Appearance > State, for each molecule state:
   property to the value named in the spec.
 - Every atom-state pairing in the spec must be reflected in the corresponding variant frame.
 
-> **Step 6 ACs — verify before continuing to Step 7:**
+> **Step 6 ACs — all must pass before Step 7. Fix any failure before proceeding:**
 > - ✓ Every molecule state in Appearance > State has a representation (Variant property value or Figma interactive state).
 > - ✓ For every state's variant frame, every atom listed in the atoms-affected column has its Component Instance switched to the specified state.
 > - ✓ No atom-state pairing from the spec is absent.
@@ -163,7 +163,7 @@ From Appearance > Tokens:
   at molecule scope, etc.).
 - No hardcoded values where the spec names a token.
 
-> **Step 7 ACs — verify before continuing to Step 8:**
+> **Step 7 ACs — all must pass before Step 8. Fix any failure before proceeding:**
 > - ✓ Every token in Appearance > Tokens is applied as a Variable reference on the correct layer.
 > - ✓ No hardcoded hex, px, or font value on any layer that Appearance > Tokens maps.
 
@@ -175,7 +175,7 @@ From Accessibility > ARIA:
 From Accessibility > Keyboard flow:
 - Annotate the tab order across atom instances, numbered in the sequence specified in the spec.
 
-> **Step 8 ACs — verify before Gate 3:**
+> **Step 8 ACs — all must pass before Gate 3. Fix any failure before proceeding:**
 > - ✓ Every ARIA relationship in the Accessibility > ARIA table is annotated with its target instance and the condition under which it applies.
 > - ✓ Tab order annotations are numbered and match the sequence from Accessibility > Keyboard flow.
 > - ✓ Entry and exit keyboard behaviour are annotated.

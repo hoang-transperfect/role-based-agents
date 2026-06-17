@@ -87,7 +87,7 @@ its structure, it belongs in `designer-organism`, not here.
 - Spacing table lists the gap token between each pair of adjacent regions or sub-components.
 
 **Appearance:**
-- Every organism-level style the component can exhibit is documented — no property may be omitted or left to inference. Full coverage ensures consistent, unambiguous implementation.
+- Every organism-level style the component can exhibit is documented — no property may be omitted or left to inference. Full coverage ensures consistent, unambiguous implementation. At minimum, the Appearance section must cover: dimensions (width or min/max-width, and height), color (fill, border, text, icon), typography (font size, weight, line-height), spacing (padding, gap), border (width, style, radius), shadow/elevation, and opacity — for every variant and state where they differ. Fixed, fluid, and content-driven sizing must be explicitly distinguished.
 - Variants table includes a "Components affected" column.
 - State is split into lifecycle states (data/system status: loading, empty, error, success)
   and interactive states (in-progress user actions). Both include "Components affected" and
@@ -155,6 +155,7 @@ Work through each section of the spec with the designer.
 
 **Appearance** — probe:
 - Any organism-level variants? Which components or regions are affected and how?
+- What are the organism's dimensions? Specify both width (or min-width / max-width) and height for each size variant or breakpoint. Fixed, fluid, or content-driven?
 - Which lifecycle states apply? (loading, empty, error, success — which are relevant?)
   For each, which components are affected and what is the visual treatment?
 - Which interactive states apply at the organism level? (e.g. drag-in-progress, selected)

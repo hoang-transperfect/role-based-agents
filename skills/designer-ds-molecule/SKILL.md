@@ -81,7 +81,7 @@ layout are the only exception.
 - Spacing table lists the gap token between each pair of adjacent atoms.
 
 **Appearance:**
-- Every molecule-level style the component can exhibit is documented — no property may be omitted or left to inference. Full coverage ensures consistent, unambiguous implementation.
+- Every molecule-level style the component can exhibit is documented — no property may be omitted or left to inference. Full coverage ensures consistent, unambiguous implementation. At minimum, the Appearance section must cover: dimensions (width or min/max-width, and height), color (fill, border, text, icon), typography (font size, weight, line-height), spacing (padding, gap), border (width, style, radius), shadow/elevation, and opacity — for every variant and state where they differ. Fixed, fluid, and content-driven sizing must be explicitly distinguished.
 - Variants table includes an "Atoms affected" column — which atoms change and how.
 - State tables (appearance + interaction) include "Atoms affected" and "Visual changes" columns
   — state propagation is explicit, never implied.
@@ -131,6 +131,7 @@ Work through each section of the spec with the designer.
 **Appearance** — probe:
 - Are there molecule-level variants beyond what the individual atoms expose? Which atoms are
   affected by each variant value?
+- What are the molecule's overall dimensions at each size variant? Document both width (or min-width / max-width) and height. Fixed, fluid, or content-driven?
 - Which system states apply (loading, error, success, disabled)? For each, which atoms are
   affected and what visual change occurs?
 - Which user-driven interaction states apply at the molecule level (hover, focus, active)?
