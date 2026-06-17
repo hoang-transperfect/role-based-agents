@@ -57,7 +57,7 @@ Verify:
 - Component name and design file link are present.
 - Anatomy, Props, Variants, State, and Tokens sections are all in the brief.
 - For any child component reference in Anatomy > Details, the dependency URL is present.
-  If missing, stop: "Cannot build — dependency component URL missing for `{name}`."
+  If missing, a placeholder component will be created in Step 3 — do not stop.
 
 ### Gate 2 — Process
 
@@ -77,23 +77,34 @@ Apply this conversion whenever a name comes from the spec or brief. Token names 
 references are the only exception — they must match the published Variable name exactly.
 
 **Step 1 — Create or navigate to the component page**
-Convert the component name from the brief to lowercase kebab-case — this is the page name
-(e.g. `Button` → `button`, `InputField` → `input-field`). Check whether the page already exists:
-- If it does not exist, create it with the kebab-case name, then navigate to it.
+Convert the component name to PascalCase with spaces (per the naming convention above) — this
+is the page name (e.g. `button` → `Button`, `icon-button` → `Icon Button`). Check whether the
+page already exists:
+- If it does not exist, create it with that name, then navigate to it.
 - If it exists, navigate to it.
 All subsequent steps place content on this page only.
 
-**Step 2 — Create the Component frame**
-Create a new Component (or locate the existing one to update by name) on the current page. Name
-it using the same lowercase kebab-case form (e.g. `button`, `input-field`).
+**Step 2 — Create the Component frame and write the spec**
+Create a new Component (or locate the existing one to update by name) on the current page.
+Name it using PascalCase with spaces (e.g. `Button`, `Icon Button`).
+
+Write the full component spec from the build brief into the Component's **description** field
+in Figma. Include all sections: Anatomy, Appearance (Props, Variants, State, Tokens), Content,
+and Accessibility. This makes the spec readable directly from Figma without leaving the file.
 
 **Step 3 — Build the layer hierarchy**
 From Anatomy > Structure, build the layer tree inside the Component:
-- Each part name in the hierarchy becomes a named frame or layer.
-- Layer names must match the part names **exactly** — no renaming, no abbreviation.
+- Convert each part name to PascalCase with spaces before using it as the layer name
+  (e.g. `icon-slot` → `Icon Slot`, `labelText` → `Label Text`).
 - Where Anatomy > Details specifies a child component reference (e.g. an Icon instance or a
-  Text instance): place a Component Instance using the dependency URL. Never create a raw
-  shape or group in place of a referenced component.
+  Text instance): place a Component Instance using the dependency URL.
+- If a dependency URL is missing, create a **placeholder component** on the current page:
+  - Name it using PascalCase with spaces (e.g. `Icon`, `Text`).
+  - Fill it with a solid `#FF00FF` (magenta) rectangle and add a text layer reading
+    `Placeholder — replace with {component name}`.
+  - Place an instance of this placeholder in the slot.
+  - Annotate the placeholder instance with a note: "⚠ Dependency not yet built."
+  Never create a raw shape or group in place of a referenced component.
 
 **Step 4 — Create Variant properties**
 From Appearance > Props, add a Variant property for each prop:

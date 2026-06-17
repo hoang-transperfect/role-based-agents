@@ -52,7 +52,7 @@ The build brief from `designer-ds-molecule-build`, containing:
 Verify:
 - Component name and design file link are present.
 - Every atom component URL in the Composition table is valid. If any slot is missing a URL,
-  stop: "Cannot build — atom component URL missing for slot `{slot}`."
+  a placeholder component will be created in Step 3 — do not stop.
 - Layout and Spacing sections are present in the brief.
 
 ### Gate 2 — Process
@@ -73,21 +73,33 @@ Apply this conversion whenever a name comes from the spec or brief. Token names 
 references are the only exception — they must match the published Variable name exactly.
 
 **Step 1 — Create or navigate to the component page**
-Convert the component name from the brief to lowercase kebab-case — this is the page name
-(e.g. `FormField` → `form-field`, `SearchBar` → `search-bar`). Check whether the page exists:
-- If it does not exist, create it with the kebab-case name, then navigate to it.
+Convert the component name to PascalCase with spaces (per the naming convention above) — this
+is the page name (e.g. `form-field` → `Form Field`, `search-bar` → `Search Bar`). Check
+whether the page exists:
+- If it does not exist, create it with that name, then navigate to it.
 - If it exists, navigate to it.
 All subsequent steps place content on this page only.
 
-**Step 2 — Create the Component frame**
-Create or locate the molecule Component on the current page. Name it using the same lowercase
-kebab-case form (e.g. `form-field`, `search-bar`).
+**Step 2 — Create the Component frame and write the spec**
+Create or locate the molecule Component on the current page. Name it using PascalCase with
+spaces (e.g. `Form Field`, `Search Bar`).
+
+Write the full component spec from the build brief into the Component's **description** field
+in Figma. Include all sections: Anatomy, Appearance (Variants, State, Tokens), Content, and
+Accessibility. This makes the spec readable directly from Figma without leaving the file.
 
 **Step 3 — Place atom instances**
 From the Composition table, for each slot in the listed order:
-- Place a Component Instance of the atom at the given component URL.
-- Name the instance layer exactly as the slot name in the brief.
-- Never create a raw shape, group, or local frame in place of an atom instance.
+- Convert the slot name to PascalCase with spaces before using it as the instance layer name
+  (e.g. `input-slot` → `Input Slot`).
+- If the atom component URL is present, place a Component Instance at that URL.
+- If the atom component URL is missing, create a **placeholder component** on the current page:
+  - Name it using PascalCase with spaces (e.g. `Button`, `Input`).
+  - Fill it with a solid `#FF00FF` (magenta) rectangle and add a text layer reading
+    `Placeholder — replace with {component name}`.
+  - Place an instance of this placeholder in the slot.
+  - Annotate the instance with a note: "⚠ Dependency not yet built."
+- Never create a raw shape, group, or local frame in place of a component instance.
 
 **Step 4 — Apply auto-layout**
 From Anatomy > Layout:

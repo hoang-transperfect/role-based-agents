@@ -69,7 +69,7 @@ The build brief from `designer-ds-organism-build`, containing:
 Verify:
 - Component name and design file link are present.
 - Every molecule and atom component URL in the Composition table is valid. If any is missing,
-  stop: "Cannot build — component URL missing for slot `{slot}`."
+  a placeholder component will be created in Step 3 — do not stop.
 - Responsive > Breakpoints is present (at least one breakpoint must be defined).
 
 ### Gate 2 — Process
@@ -90,21 +90,34 @@ Apply this conversion whenever a name comes from the spec or brief. Token names 
 references are the only exception — they must match the published Variable name exactly.
 
 **Step 1 — Create or navigate to the component page**
-Convert the component name from the brief to lowercase kebab-case — this is the page name
-(e.g. `NavigationBar` → `navigation-bar`, `DataTable` → `data-table`). Check whether the page exists:
-- If it does not exist, create it with the kebab-case name, then navigate to it.
+Convert the component name to PascalCase with spaces (per the naming convention above) — this
+is the page name (e.g. `navigation-bar` → `Navigation Bar`, `DataTable` → `Data Table`). Check
+whether the page exists:
+- If it does not exist, create it with that name, then navigate to it.
 - If it exists, navigate to it.
 All subsequent steps — including the Component frame and all responsive frames — are placed on
 this page only.
 
-**Step 2 — Create the Component frame**
-Create or locate the organism Component on the current page. Name it using the same lowercase
-kebab-case form (e.g. `navigation-bar`, `data-table`).
+**Step 2 — Create the Component frame and write the spec**
+Create or locate the organism Component on the current page. Name it using PascalCase with
+spaces (e.g. `Navigation Bar`, `Data Table`).
+
+Write the full component spec from the build brief into the Component's **description** field
+in Figma. Include all sections: Anatomy, Appearance (Variants, State, Tokens), Responsive,
+Content, and Accessibility. This makes the spec readable directly from Figma without leaving
+the file.
 
 **Step 3 — Place sub-component instances**
 From the Composition table, for each slot in the listed order:
-- Place a Component Instance of the molecule or atom at the given URL.
-- Name the instance layer exactly as the slot name.
+- Convert the slot name to PascalCase with spaces before using it as the instance layer name
+  (e.g. `header-region` → `Header Region`).
+- If the molecule or atom component URL is present, place a Component Instance at that URL.
+- If the component URL is missing, create a **placeholder component** on the current page:
+  - Name it using PascalCase with spaces (e.g. `Navigation Item`, `Data Row`).
+  - Fill it with a solid `#FF00FF` (magenta) rectangle and add a text layer reading
+    `Placeholder — replace with {component name}`.
+  - Place an instance of this placeholder in the slot.
+  - Annotate the instance with a note: "⚠ Dependency not yet built."
 - Never create raw shapes or groups in place of component instances.
 
 **Step 4 — Apply auto-layout and spacing**
