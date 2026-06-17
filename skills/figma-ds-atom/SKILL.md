@@ -1,48 +1,31 @@
 ---
 name: figma-ds-atom
 description: >
-  Figma adapter for designer-ds-atom-build. Receives the atom build brief and creates or updates
-  a Component in Figma: builds the layer hierarchy from Anatomy > Structure (part names become
-  layer names exactly), creates Variant properties from Appearance > Props, creates variant frames
-  from Appearance > Variants, applies Variable references from Appearance > Tokens (no hardcoded
-  values), represents all states from Appearance > State, and adds accessibility annotations
-  (ARIA role, aria-* attributes, keyboard interactions, 44×44px touch target). Where Anatomy
-  references Icon or Text dependencies, places Component Instances — not raw shapes. Invoked by
-  designer-ds-atom-build when design-tool is figma.
+  Figma adapter for building one design system atom. Reads the atom
+  component-spec.md directly and creates or updates a Component in Figma:
+  builds the layer hierarchy from Anatomy > Structure, creates Variant
+  properties from Appearance > Props, creates variant frames from Appearance >
+  Variants arranged as a grid table, applies Variable references from
+  Appearance > Tokens (no hardcoded values), represents all states from
+  Appearance > State, and adds accessibility annotations (ARIA role, aria-*
+  attributes, keyboard interactions, 44×44px touch target). Where Anatomy
+  references Icon or Text dependencies, places Component Instances or
+  placeholders. Invoked by designer-ds-atom-build when design-tool is figma.
 ---
 
 # figma-ds-atom
 
-This skill builds one atom Component in Figma from the atom build brief. It maps every section
-of the brief to Figma-specific operations. It does not read `component-spec.md` directly — the
-brief is fully prepared by `designer-ds-atom-build`.
-
-## Naming convention
-
-All Figma artifact names — pages, component names, and frame names — use **lowercase kebab-case**.
-Convert the component name from the brief before using it anywhere in Figma:
-`Button` → `button`, `FormField` → `form-field`, `NavigationBar` → `navigation-bar`.
-
-Exception: internal layer names inside a Component must match the Anatomy > Structure part names
-from the spec exactly, regardless of casing, because they are the implementation contract with
-engineering.
+This skill builds one atom Component in Figma by reading the atom
+`component-spec.md` directly. It maps every section of the spec to
+Figma-specific operations.
 
 ## Inputs
 
-The build brief from `designer-ds-atom-build`, containing:
-- **Component name** and **design file link**.
-- **Anatomy > Structure** — the layer hierarchy: frame name, child layers, part names in order.
-- **Anatomy > Details** — slot behaviours, constraints, child component references (Icon, Text,
-  or other atom dependencies).
-- **Appearance > Props** — variant property names and all accepted values.
-- **Appearance > Variants** — rows: prop-value combination → style rules.
-- **Appearance > State** — appearance states (system-driven) and interaction states
-  (user-driven) with their visual treatment.
-- **Appearance > Tokens** — rows: token name → layer name → CSS property mapping.
-- **Accessibility** — ARIA role, aria-* attributes and conditions, keyboard interactions,
-  minimum touch target size.
-- **Dependency component URLs** — Figma component URLs for Icon, Text, and any other atoms
-  this atom embeds as instances.
+- **Spec file path** — `<real_project_path>/design-system/atoms/<component-name>/component-spec.md`
+- **Design file link** — from `designer-artifacts/resource.md`
+- **Dependency component URLs** — Figma component URLs for Icon, Text, and any
+  other atoms this atom embeds as instances (from the `link:` fields of their
+  own `component-spec.md` files). Missing URLs result in placeholders, not a stop.
 
 ## Outputs
 - Component in the target Figma file.
@@ -53,11 +36,13 @@ The build brief from `designer-ds-atom-build`, containing:
 ## The 3-gate flow
 
 ### Gate 1 — Input
-Verify:
-- Component name and design file link are present.
-- Anatomy, Props, Variants, State, and Tokens sections are all in the brief.
-- For any child component reference in Anatomy > Details, the dependency URL is present.
-  If missing, a placeholder component will be created in Step 3 — do not stop.
+- Read `component-spec.md` at the given spec file path. Confirm it exists.
+- Confirm the design file link is present in `resource.md`.
+- Confirm the Spec checklist in `component-spec.md` is fully checked (Anatomy,
+  Appearance, Content, Accessibility). If any item is unchecked and not waived,
+  stop: "Spec checklist incomplete — resolve before building."
+- For each dependency in `dependencies`, check whether its `link:` field has a
+  component URL. Missing URLs are handled by placeholders in Step 3 — do not stop.
 
 ### Gate 2 — Process
 
@@ -73,12 +58,12 @@ underscores, slashes, or camelCase.
 | Layer / part | `icon-slot` | `Icon Slot` |
 | Layer / part | `labelText` | `Label Text` |
 
-Apply this conversion whenever a name comes from the spec or brief. Token names in Variable
+Apply this conversion whenever a name comes from the spec. Token names in Variable
 references are the only exception — they must match the published Variable name exactly.
 
 **Step 1 — Create or navigate to the component page**
-Convert the component name to PascalCase with spaces (per the naming convention above) — this
-is the page name (e.g. `button` → `Button`, `icon-button` → `Icon Button`). Check whether the
+Convert the component name to PascalCase with spaces — this is the page name
+(e.g. `button` → `Button`, `icon-button` → `Icon Button`). Check whether the
 page already exists:
 - If it does not exist, create it with that name, then navigate to it.
 - If it exists, navigate to it.
@@ -88,9 +73,8 @@ All subsequent steps place content on this page only.
 Create a new Component (or locate the existing one to update by name) on the current page.
 Name it using PascalCase with spaces (e.g. `Button`, `Icon Button`).
 
-Write the full component spec from the build brief into the Component's **description** field
-in Figma. Include all sections: Anatomy, Appearance (Props, Variants, State, Tokens), Content,
-and Accessibility. This makes the spec readable directly from Figma without leaving the file.
+Write the full content of `component-spec.md` into the Component's **description** field
+in Figma. This makes the spec readable directly from Figma without leaving the file.
 
 **Step 3 — Build the layer hierarchy**
 From Anatomy > Structure, build the layer tree inside the Component:
@@ -104,12 +88,12 @@ From Anatomy > Structure, build the layer tree inside the Component:
     `Placeholder — replace with {component name}`.
   - Place an instance of this placeholder in the slot.
   - Annotate the placeholder instance with a note: "⚠ Dependency not yet built."
-  Never create a raw shape or group in place of a referenced component.
+- Never create a raw shape or group in place of a referenced component.
 
 **Step 4 — Create Variant properties**
 From Appearance > Props, add a Variant property for each prop:
-- Property name = prop name from the brief, exactly.
-- Values = all accepted values from the brief, in the same order listed.
+- Property name = prop name from the spec, exactly.
+- Values = all accepted values from the spec, in the same order listed.
 
 **Step 5 — Create variant frames and arrange as a table**
 From Appearance > Variants, for each row (prop combination → style rules):
@@ -142,7 +126,7 @@ From Appearance > State (both appearance states and interaction states):
 - **Interaction states** (hover, focus, pressed, active) — represent as Figma interactive
   component states using the "Change to" interaction trigger where possible; otherwise as
   additional Variant property values.
-- Every state in the brief must have a representation. No state may be silently omitted.
+- Every state in the spec must have a representation. No state may be silently omitted.
 
 **Step 8 — Add accessibility annotations**
 From Accessibility, add annotation layers (or use Figma's built-in annotation system):
@@ -155,7 +139,7 @@ From Accessibility, add annotation layers (or use Figma's built-in annotation sy
 
 ### Gate 3 — Output
 
-Run a full verification pass against the brief before returning:
+Run a full verification pass against the spec before returning:
 
 **Props check** — for each prop in Appearance > Props: a Variant property with that exact name
 and every listed value exists in the Component.
@@ -170,10 +154,10 @@ No state is absent.
 reference on the correct layer with the correct property.
 
 **Layer names check** — all layer names inside the Component match the Anatomy > Structure
-part names exactly.
+part names (converted to PascalCase with spaces).
 
 **Accessibility check** — ARIA role, aria-* attributes, keyboard interactions, and touch
 target annotation are all present.
 
 Any gap must be corrected before returning. When all rows are accounted for, return the
-component URL to `designer-ds-atom-build`.
+component URL.

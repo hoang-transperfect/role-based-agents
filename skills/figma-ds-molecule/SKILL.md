@@ -1,44 +1,30 @@
 ---
 name: figma-ds-molecule
 description: >
-  Figma adapter for designer-ds-molecule-build. Receives the molecule build brief and creates or
-  updates a Component in Figma by placing atom Component Instances (never raw shapes), applying
-  auto-layout with spacing Variable references (direction, alignment, gap, padding), setting up
-  molecule-level Variant properties and state propagation to the correct atom instances within
-  each variant frame, applying molecule-scope Variable references, and annotating ARIA
-  relationships and keyboard tab order. Invoked by designer-ds-molecule-build when design-tool
+  Figma adapter for building one design system molecule. Reads the molecule
+  component-spec.md directly and creates or updates a Component in Figma by
+  placing atom Component Instances (never raw shapes), applying auto-layout
+  with spacing Variable references (direction, alignment, gap, padding), setting
+  up molecule-level Variant properties and state propagation to the correct atom
+  instances within each variant frame arranged as a grid table, applying
+  molecule-scope Variable references, and annotating ARIA relationships and
+  keyboard tab order. Invoked by designer-ds-molecule-build when design-tool
   is figma.
 ---
 
 # figma-ds-molecule
 
-This skill builds one molecule Component in Figma from the molecule build brief. Sub-components
-are always Component Instances of already-built atoms — never raw shapes or groups that duplicate
-an atom's appearance. It does not read `component-spec.md` directly.
-
-## Naming convention
-
-All Figma artifact names — pages, component names, and frame names — use **lowercase kebab-case**.
-Convert the component name from the brief before using it anywhere in Figma:
-`FormField` → `form-field`, `SearchBar` → `search-bar`.
-
-Exception: internal layer names inside a Component must match the Anatomy > Structure part names
-from the spec exactly, regardless of casing.
+This skill builds one molecule Component in Figma by reading the molecule
+`component-spec.md` directly. Sub-components are always Component Instances of
+already-built atoms — never raw shapes or groups that duplicate an atom's appearance.
 
 ## Inputs
 
-The build brief from `designer-ds-molecule-build`, containing:
-- **Component name** and **design file link**.
-- **Composition table** — slot name → atom component name → atom component URL.
-- **Anatomy > Layout** — direction (horizontal / vertical), alignment, gap token, wrap behaviour.
-- **Anatomy > Spacing** — internal padding tokens (top, right, bottom, left).
-- **Appearance > Variants** — molecule-level Variant property names, values, and style rules.
-- **Appearance > State** — molecule states with the atoms-affected column: which atom instances
-  change state and to what value for each molecule state.
-- **Appearance > Tokens** — molecule-scope token-to-layer mapping (spacing, radius).
-- **Accessibility > ARIA relationships** — which atom instances carry aria-labelledby /
-  aria-describedby pointing to other instances, and the conditions under which each applies.
-- **Accessibility > Keyboard flow** — tab order across atom instances within the molecule.
+- **Spec file path** — `<real_project_path>/design-system/molecules/<component-name>/component-spec.md`
+- **Design file link** — from `designer-artifacts/resource.md`
+- **Dependency component URLs** — Figma component URLs for each atom in
+  `dependencies.atoms` (from the `link:` fields of their own `component-spec.md`
+  files). Missing URLs result in placeholders, not a stop.
 
 ## Outputs
 - Molecule Component in the target Figma file.
@@ -49,11 +35,15 @@ The build brief from `designer-ds-molecule-build`, containing:
 ## The 3-gate flow
 
 ### Gate 1 — Input
-Verify:
-- Component name and design file link are present.
-- Every atom component URL in the Composition table is valid. If any slot is missing a URL,
-  a placeholder component will be created in Step 3 — do not stop.
-- Layout and Spacing sections are present in the brief.
+- Read `component-spec.md` at the given spec file path. Confirm it exists.
+- Confirm the design file link is present in `resource.md`.
+- Confirm the Spec checklist in `component-spec.md` is fully checked (Anatomy,
+  Appearance, Content, Accessibility). If any item is unchecked and not waived,
+  stop: "Spec checklist incomplete — resolve before building."
+- For each dependency in `dependencies.atoms` (and `dependencies.molecules`),
+  check whether its `link:` field has a component URL. Missing URLs are handled
+  by placeholders in Step 3 — do not stop.
+- Confirm Layout and Spacing sections are present in the spec.
 
 ### Gate 2 — Process
 
@@ -69,13 +59,12 @@ underscores, slashes, or camelCase.
 | Layer / slot | `input-slot` | `Input Slot` |
 | Layer / slot | `helperText` | `Helper Text` |
 
-Apply this conversion whenever a name comes from the spec or brief. Token names in Variable
+Apply this conversion whenever a name comes from the spec. Token names in Variable
 references are the only exception — they must match the published Variable name exactly.
 
 **Step 1 — Create or navigate to the component page**
-Convert the component name to PascalCase with spaces (per the naming convention above) — this
-is the page name (e.g. `form-field` → `Form Field`, `search-bar` → `Search Bar`). Check
-whether the page exists:
+Convert the component name to PascalCase with spaces — this is the page name
+(e.g. `form-field` → `Form Field`, `search-bar` → `Search Bar`). Check whether the page exists:
 - If it does not exist, create it with that name, then navigate to it.
 - If it exists, navigate to it.
 All subsequent steps place content on this page only.
@@ -84,12 +73,11 @@ All subsequent steps place content on this page only.
 Create or locate the molecule Component on the current page. Name it using PascalCase with
 spaces (e.g. `Form Field`, `Search Bar`).
 
-Write the full component spec from the build brief into the Component's **description** field
-in Figma. Include all sections: Anatomy, Appearance (Variants, State, Tokens), Content, and
-Accessibility. This makes the spec readable directly from Figma without leaving the file.
+Write the full content of `component-spec.md` into the Component's **description** field
+in Figma. This makes the spec readable directly from Figma without leaving the file.
 
 **Step 3 — Place atom instances**
-From the Composition table, for each slot in the listed order:
+From Anatomy > Composition, for each slot in the listed order:
 - Convert the slot name to PascalCase with spaces before using it as the instance layer name
   (e.g. `input-slot` → `Input Slot`).
 - If the atom component URL is present, place a Component Instance at that URL.
@@ -110,7 +98,7 @@ From Anatomy > Layout:
 
 From Anatomy > Spacing:
 - Set padding on each side (top, right, bottom, left) using the spacing Variable references
-  named in the brief.
+  named in the spec.
 
 **Step 5 — Create molecule-level Variant properties and arrange as a table**
 From Appearance > Variants:
@@ -133,29 +121,29 @@ From Appearance > State, for each molecule state:
 - Determine the representation: Variant property value or Figma interactive state.
 - Within each state's variant frame, for every atom listed in the atoms-affected column:
   switch that atom's Component Instance to the specified state by updating its Variant
-  property to the value named in the brief.
-- Every atom-state pairing in the brief must be reflected in the corresponding variant frame.
+  property to the value named in the spec.
+- Every atom-state pairing in the spec must be reflected in the corresponding variant frame.
 
 **Step 7 — Apply molecule-scope Variable references**
 From Appearance > Tokens:
 - Apply each token as a Variable reference on the named layer (spacing gaps, border radius
   at molecule scope, etc.).
-- No hardcoded values where the brief names a token.
+- No hardcoded values where the spec names a token.
 
 **Step 8 — Add ARIA and keyboard annotations**
-From Accessibility > ARIA relationships:
+From Accessibility > ARIA:
 - Annotate each atom instance that carries an aria-labelledby or aria-describedby reference,
   naming the target instance it points to and the condition under which the relationship applies.
 
 From Accessibility > Keyboard flow:
-- Annotate the tab order across atom instances, numbered in the sequence specified in the brief.
+- Annotate the tab order across atom instances, numbered in the sequence specified in the spec.
 
 ### Gate 3 — Output
 
 **Instances check** — every slot in the Composition table has a Component Instance of the
-correct atom (not a raw shape). Instance layer names match slot names exactly.
+correct atom (not a raw shape). Instance layer names match slot names (PascalCase with spaces).
 
-**Layout check** — auto-layout direction, alignment, gap, and padding match the brief using
+**Layout check** — auto-layout direction, alignment, gap, and padding match the spec using
 Variable references (no hardcoded px values).
 
 **Variants check** — every molecule-level variant combination has a matching variant frame with
@@ -170,4 +158,4 @@ layer.
 **Accessibility check** — ARIA relationship annotations and keyboard tab order are present.
 
 Any gap must be corrected before returning. When all rows are accounted for, return the
-component URL to `designer-ds-molecule-build`.
+component URL.
