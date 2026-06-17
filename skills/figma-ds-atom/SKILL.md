@@ -61,6 +61,21 @@ Verify:
 
 ### Gate 2 — Process
 
+**Naming convention**
+All Figma names — pages, components, and layers — use **PascalCase with spaces**: every word
+starts with an uppercase letter and words are separated by a single space. No hyphens,
+underscores, slashes, or camelCase.
+
+| Type | Example spec name | Figma name |
+|------|------------------|------------|
+| Page | `button` | `Button` |
+| Component | `icon-button` | `Icon Button` |
+| Layer / part | `icon-slot` | `Icon Slot` |
+| Layer / part | `labelText` | `Label Text` |
+
+Apply this conversion whenever a name comes from the spec or brief. Token names in Variable
+references are the only exception — they must match the published Variable name exactly.
+
 **Step 1 — Create or navigate to the component page**
 Convert the component name from the brief to lowercase kebab-case — this is the page name
 (e.g. `Button` → `button`, `InputField` → `input-field`). Check whether the page already exists:

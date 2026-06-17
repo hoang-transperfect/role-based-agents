@@ -52,6 +52,13 @@ If the file link is missing or the brief is empty, stop and report the gap to
 
 ### Gate 2 — Process
 
+**Naming convention**
+Page names use **PascalCase with spaces**: every word starts with an uppercase letter and words
+are separated by a single space. No hyphens, underscores, or camelCase.
+
+Variable and Style names are the only exception — they must match the token names from the
+brief exactly (e.g. `color/action/primary`) so Variable references resolve correctly.
+
 Open the target Figma file. Before publishing any tokens, ensure a dedicated page exists for
 each token category. Page names are fixed:
 
