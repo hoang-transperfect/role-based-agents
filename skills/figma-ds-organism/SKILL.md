@@ -92,8 +92,9 @@ From Anatomy > Composition, for each slot in the listed order:
 - If the molecule or atom component URL is present, place a Component Instance at that URL.
 - If the component URL is missing, create a **placeholder component** on the current page:
   - Name it using PascalCase with spaces (e.g. `Navigation Item`, `Data Row`).
-  - Fill it with a solid `#FF00FF` (magenta) rectangle and add a text layer reading
-    `Placeholder — replace with {component name}`.
+  - For icon-type dependencies: embed the Icon V2 / not_interested SVG (see Icon samples below).
+    For all other dependencies: fill with a solid `#FF00FF` (magenta) rectangle and a text
+    layer reading `Placeholder — replace with {component name}`.
   - Place an instance of this placeholder in the slot.
   - Annotate the instance with a note: "⚠ Dependency not yet built."
 - Never create raw shapes or groups in place of component instances.
@@ -158,26 +159,78 @@ From Accessibility, annotate on the default Component frame:
 
 ### Gate 3 — Output
 
-**Instances check** — every slot in the Composition table has a molecule or atom Component
-Instance. Layer names match slot names (PascalCase with spaces).
+Run a section-by-section verification pass against every section of the spec before returning.
+Every row in every table must be accounted for — a missing row is a gap, not a skip.
 
-**Layout check** — auto-layout direction, alignment, gap, and padding match the spec using
-Variable references.
+**Anatomy > Composition check** — every slot in the Composition table has a Component Instance
+(or annotated placeholder). Layer names match slot names in PascalCase with spaces.
 
-**Variants check** — every organism-level variant combination has a matching frame with style
-applied as Variable references.
+**Anatomy > Layout check** — auto-layout direction, alignment, and gap match the spec using
+Variable references. No hardcoded px values.
 
-**State check** — every lifecycle state and interactive state has a representation. Sub-component
-state propagation matches the spec description for each state.
+**Anatomy > Spacing check** — padding on each side uses the spacing Variable named in the spec.
 
-**Tokens check** — every organism-scope token is applied as a Variable reference on the correct
-layer. No hardcoded values.
+**Appearance > Variants check** — every row in Appearance > Variants has a matching variant
+frame with style applied as Variable references (no hardcoded value).
+
+**Appearance > State check** — every lifecycle state (loading, empty, error) and every
+interactive state has a representation. Sub-component state propagation matches the spec
+description for each state. The `loading` state uses Icon V2 / loader for any spinner element.
+Empty and error states use the correct copy from Content > Empty state and Content > Error state.
+
+**Appearance > Tokens check** — every row in Appearance > Tokens is applied as a Variable
+reference on the correct layer. No hardcoded hex, px, or font value on any mapped layer.
 
 **Responsive check** — a frame named `{Component Name} / {Breakpoint Name}` exists for every
-breakpoint in the spec, demonstrating the reflow strategy written for that breakpoint.
+breakpoint in Responsive > Breakpoints. Each frame demonstrates the reflow strategy written
+for that breakpoint (layout direction, hidden slots, overflow behaviour).
 
-**Accessibility check** — landmark, heading hierarchy, ARIA attributes, focus management, live
-regions, and skip links (if applicable) are all annotated on the Component frame.
+**Content > Empty state check** — the empty state frame matches the headline, body, and CTA
+label from the spec exactly.
+
+**Content > Error state check** — the error state frame matches the headline, body, and CTA
+label from the spec exactly.
+
+**Content > Copy check** — every string in the Copy table is present on the correct layer.
+
+**Accessibility > Landmark check** — the landmark role is annotated on the outermost frame
+with the correct aria-label or aria-labelledby value.
+
+**Accessibility > Heading hierarchy check** — every heading level in the spec table is
+annotated on the correct text layer. No levels are skipped.
+
+**Accessibility > ARIA check** — every attribute in the ARIA table is annotated with its
+value and condition.
+
+**Accessibility > Focus management check** — focus behaviour is annotated for every moment
+defined in the spec (mount, data load, refresh, action, error, loading→empty).
+
+**Accessibility > Live regions check** — every region in the Live regions table is annotated
+with its aria-live value (polite/assertive) and aria-atomic.
+
+**Accessibility > Skip links check** — if skip links are specified, the target element IDs
+are annotated.
 
 Any gap must be corrected before returning. When all rows and breakpoints are accounted for,
 return the component URL.
+
+---
+
+## Icon samples
+
+When a sub-component dependency is unavailable or a loading spinner is needed, use these SVGs
+inline. Reference the icon by its Icon V2 name in any annotation or note.
+
+**Icon V2 / not_interested** — use for generic icon placeholders:
+```svg
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.58 20 4 16.42 4 12C4 10.15 4.63 8.45 5.69 7.1L16.9 18.31C15.55 19.37 13.85 20 12 20ZM18.31 16.9L7.1 5.69C8.45 4.63 10.15 4 12 4C16.42 4 20 7.58 20 12C20 13.85 19.37 15.55 18.31 16.9Z" fill="#393F4C"/>
+</svg>
+```
+
+**Icon V2 / loader** — use for loading states:
+```svg
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 22.4805C10.558 22.4805 9.20053 22.2059 7.92753 21.6565C6.6547 21.1074 5.54311 20.3576 4.59278 19.4073C3.64245 18.4569 2.8927 17.3454 2.34353 16.0725C1.7942 14.7995 1.51953 13.442 1.51953 12C1.51953 10.5494 1.79411 9.19053 2.34328 7.92353C2.89245 6.65636 3.64211 5.54653 4.59228 4.59403C5.54245 3.64153 6.65411 2.89095 7.92728 2.34228C9.20045 1.79378 10.558 1.51953 12 1.51953C12.3682 1.51953 12.681 1.64836 12.9385 1.90603C13.1962 2.1637 13.325 2.47653 13.325 2.84453C13.325 3.2127 13.1962 3.52561 12.9385 3.78328C12.681 4.04078 12.3682 4.16953 12 4.16953C9.83037 4.16953 7.98286 4.9322 6.45753 6.45753C4.9322 7.98286 4.16953 9.83028 4.16953 11.9998C4.16953 14.1694 4.9322 16.017 6.45753 17.5425C7.98286 19.0679 9.83028 19.8305 11.9998 19.8305C14.1694 19.8305 16.017 19.0679 17.5425 17.5425C19.0679 16.0172 19.8305 14.1697 19.8305 12C19.8305 11.6319 19.9593 11.319 20.2168 11.0615C20.4744 10.8039 20.7874 10.675 21.1555 10.675C21.5235 10.675 21.8364 10.8039 22.094 11.0615C22.3517 11.319 22.4805 11.6319 22.4805 12C22.4805 13.442 22.2059 14.7997 21.6568 16.073C21.1076 17.3464 20.3579 18.4584 19.4078 19.409C18.4576 20.3595 17.3484 21.1091 16.0803 21.6578C14.8121 22.2063 13.452 22.4805 12 22.4805Z" fill="#393F4C"/>
+</svg>
+```

@@ -84,10 +84,12 @@ From Anatomy > Structure, build the layer tree inside the Component:
   Text instance): place a Component Instance using the dependency URL.
 - If a dependency URL is missing, create a **placeholder component** on the current page:
   - Name it using PascalCase with spaces (e.g. `Icon`, `Text`).
-  - Fill it with a solid `#FF00FF` (magenta) rectangle and add a text layer reading
+  - For icon-type dependencies: embed the `not_interested` SVG from Icon V2 as the
+    placeholder visual (see Icon samples below). For all other dependencies: fill with
+    a solid `#FF00FF` (magenta) rectangle and a text layer reading
     `Placeholder — replace with {component name}`.
   - Place an instance of this placeholder in the slot.
-  - Annotate the placeholder instance with a note: "⚠ Dependency not yet built."
+  - Annotate the placeholder instance with a note: "⚠ Dependency not yet built — Icon V2 / not_interested used as sample."
 - Never create a raw shape or group in place of a referenced component.
 
 **Step 4 — Create Variant properties**
@@ -122,7 +124,8 @@ From Appearance > Tokens, for each row (token name → layer → property):
 From Appearance > State (both appearance states and interaction states):
 - **Appearance states** (disabled, error, loading, read-only) — represent as Variant property
   values on the existing Variant property set. Apply the visual treatment for each using
-  Variable references.
+  Variable references. For the `loading` state, use the `loader` SVG from Icon V2 as the
+  spinner visual (see Icon samples below).
 - **Interaction states** (hover, focus, pressed, active) — represent as Figma interactive
   component states using the "Change to" interaction trigger where possible; otherwise as
   additional Variant property values.
@@ -139,25 +142,66 @@ From Accessibility, add annotation layers (or use Figma's built-in annotation sy
 
 ### Gate 3 — Output
 
-Run a full verification pass against the spec before returning:
+Run a section-by-section verification pass against every section of the spec before returning.
+Every row in every table must be accounted for — a missing row is a gap, not a skip.
 
-**Props check** — for each prop in Appearance > Props: a Variant property with that exact name
-and every listed value exists in the Component.
+**Anatomy > Structure check** — every part listed in Structure exists as a named layer in the
+Component, converted to PascalCase with spaces. Layer nesting matches the spec hierarchy.
 
-**Variants check** — for each row in Appearance > Variants: a variant frame exists and its
-style is applied as a Variable reference (not a hardcoded value).
+**Anatomy > Details check** — every child component reference in Details has a Component
+Instance (or an annotated placeholder). No raw shapes stand in for a referenced component.
 
-**State check** — for each row in Appearance > State (both tables): a representation exists.
-No state is absent.
+**Appearance > Props check** — for each prop in Appearance > Props: a Variant property exists
+with that exact name and every listed value present, in the same order.
 
-**Tokens check** — for each row in Appearance > Tokens: the token is applied as a Variable
-reference on the correct layer with the correct property.
+**Appearance > Variants check** — for each row in Appearance > Variants: a variant frame
+exists and every style rule is applied as a Variable reference (no hardcoded value).
 
-**Layer names check** — all layer names inside the Component match the Anatomy > Structure
-part names (converted to PascalCase with spaces).
+**Appearance > State check** — for each row in both Appearance > State tables (appearance
+states and interaction states): a representation exists. The `loading` state uses the
+Icon V2 / loader SVG. No state is absent.
 
-**Accessibility check** — ARIA role, aria-* attributes, keyboard interactions, and touch
-target annotation are all present.
+**Appearance > Tokens check** — for each row in Appearance > Tokens: the token is applied
+as a Variable reference on the correct layer with the correct CSS property. No hardcoded
+hex, px, or font value on any layer that the Tokens table maps.
 
-Any gap must be corrected before returning. When all rows are accounted for, return the
-component URL.
+**Content check** — for each row in Content > Copy: the default text is present on the
+correct layer. Sections marked "(Skip if not applicable)" are confirmed as truly N/A for
+this component.
+
+**Accessibility > ARIA check** — every attribute in the ARIA table is annotated on the
+Component with its value and condition.
+
+**Accessibility > Keyboard check** — every key in the Keyboard table is annotated.
+
+**Accessibility > Focus management check** — the HTML element, tab stop, and focus trap
+behaviour are annotated.
+
+**Accessibility > Touch target check** — minimum 44×44px hit area is annotated.
+
+**Accessibility > Screen reader check** — every state change in the Screen reader table is
+annotated with the announced text and method.
+
+Any gap must be corrected before returning. When all rows in all sections are accounted for,
+return the component URL.
+
+---
+
+## Icon samples
+
+When an icon dependency is unavailable (no component URL) or when a loading spinner is needed,
+use these SVGs inline. Reference the icon by its Icon V2 name in any annotation or note.
+
+**Icon V2 / not_interested** — use for generic icon placeholders:
+```svg
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.58 20 4 16.42 4 12C4 10.15 4.63 8.45 5.69 7.1L16.9 18.31C15.55 19.37 13.85 20 12 20ZM18.31 16.9L7.1 5.69C8.45 4.63 10.15 4 12 4C16.42 4 20 7.58 20 12C20 13.85 19.37 15.55 18.31 16.9Z" fill="#393F4C"/>
+</svg>
+```
+
+**Icon V2 / loader** — use for loading states:
+```svg
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 22.4805C10.558 22.4805 9.20053 22.2059 7.92753 21.6565C6.6547 21.1074 5.54311 20.3576 4.59278 19.4073C3.64245 18.4569 2.8927 17.3454 2.34353 16.0725C1.7942 14.7995 1.51953 13.442 1.51953 12C1.51953 10.5494 1.79411 9.19053 2.34328 7.92353C2.89245 6.65636 3.64211 5.54653 4.59228 4.59403C5.54245 3.64153 6.65411 2.89095 7.92728 2.34228C9.20045 1.79378 10.558 1.51953 12 1.51953C12.3682 1.51953 12.681 1.64836 12.9385 1.90603C13.1962 2.1637 13.325 2.47653 13.325 2.84453C13.325 3.2127 13.1962 3.52561 12.9385 3.78328C12.681 4.04078 12.3682 4.16953 12 4.16953C9.83037 4.16953 7.98286 4.9322 6.45753 6.45753C4.9322 7.98286 4.16953 9.83028 4.16953 11.9998C4.16953 14.1694 4.9322 16.017 6.45753 17.5425C7.98286 19.0679 9.83028 19.8305 11.9998 19.8305C14.1694 19.8305 16.017 19.0679 17.5425 17.5425C19.0679 16.0172 19.8305 14.1697 19.8305 12C19.8305 11.6319 19.9593 11.319 20.2168 11.0615C20.4744 10.8039 20.7874 10.675 21.1555 10.675C21.5235 10.675 21.8364 10.8039 22.094 11.0615C22.3517 11.319 22.4805 11.6319 22.4805 12C22.4805 13.442 22.2059 14.7997 21.6568 16.073C21.1076 17.3464 20.3579 18.4584 19.4078 19.409C18.4576 20.3595 17.3484 21.1091 16.0803 21.6578C14.8121 22.2063 13.452 22.4805 12 22.4805Z" fill="#393F4C"/>
+</svg>
+```
