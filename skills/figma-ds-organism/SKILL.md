@@ -78,12 +78,20 @@ page exists:
 All subsequent steps — including the Component frame and all responsive frames — are placed on
 this page only.
 
+> **Step 1 ACs — verify before continuing to Step 2:**
+> - ✓ A page named `{Component Name}` (PascalCase with spaces) exists in the Figma file.
+> - ✓ The page is the currently active page.
+
 **Step 2 — Create the Component frame and write the spec**
 Create or locate the organism Component on the current page. Name it using PascalCase with
 spaces (e.g. `Navigation Bar`, `Data Table`).
 
 Write the full content of `component-spec.md` into the Component's **description** field
 in Figma. This makes the spec readable directly from Figma without leaving the file.
+
+> **Step 2 ACs — verify before continuing to Step 3:**
+> - ✓ A Component named `{Component Name}` (PascalCase with spaces) exists on the current page.
+> - ✓ The Component's description field contains the full `component-spec.md` content, not a summary.
 
 **Step 3 — Place sub-component instances**
 From Anatomy > Composition, for each slot in the listed order:
@@ -99,10 +107,20 @@ From Anatomy > Composition, for each slot in the listed order:
   - Annotate the instance with a note: "⚠ Dependency not yet built."
 - Never create raw shapes or groups in place of component instances.
 
+> **Step 3 ACs — verify before continuing to Step 4:**
+> - ✓ Every slot in Anatomy > Composition has a Component Instance (or annotated placeholder).
+> - ✓ Every instance layer name matches the slot name in PascalCase with spaces.
+> - ✓ No raw shapes or groups stand in for component instances.
+> - ✓ Every placeholder uses the correct visual (Icon V2 / not_interested SVG for icon-type; magenta #FF00FF for others) and carries the annotation note.
+
 **Step 4 — Apply auto-layout and spacing**
 From Anatomy > Layout and Anatomy > Spacing:
 - Set auto-layout direction, alignment, and gap using Variable references.
 - Set padding on each side using spacing Variable references.
+
+> **Step 4 ACs — verify before continuing to Step 5:**
+> - ✓ Auto-layout direction, alignment, and gap use Variable references — no hardcoded px values.
+> - ✓ Padding on each side uses the spacing Variable named in Anatomy > Spacing.
 
 **Step 5 — Create Variant properties, states, and arrange as a table**
 From Appearance > Variants:
@@ -129,9 +147,21 @@ or stacking:
 - Use a consistent gap of 40px between cells in both directions.
 - Responsive frames (from Step 7) are placed below the component set, not inside it.
 
+> **Step 5 ACs — verify before continuing to Step 6:**
+> - ✓ A Variant property exists for every property in Appearance > Variants.
+> - ✓ A variant frame exists for every combination, with every style rule applied as a Variable reference.
+> - ✓ Every lifecycle state (loading, empty, error) has a variant frame or separate frame.
+> - ✓ Every interactive state is represented as a Variant value or Figma interactive state.
+> - ✓ Variant frames form a grid table: columns = first property values, rows = lifecycle states (default, loading, empty, error), 40px gap in both directions.
+> - ✓ Responsive frames are placed below the component set, not inside it.
+
 **Step 6 — Apply organism-scope Variable references**
 From Appearance > Tokens:
 - Apply each token as a Variable reference on the named layer. No hardcoded values.
+
+> **Step 6 ACs — verify before continuing to Step 7:**
+> - ✓ Every token in Appearance > Tokens is applied as a Variable reference on the correct layer.
+> - ✓ No hardcoded hex, px, or font value on any mapped layer.
 
 **Step 7 — Create responsive frames**
 From Responsive > Breakpoints, for each breakpoint:
@@ -145,6 +175,11 @@ From Responsive > Breakpoints, for each breakpoint:
 - Apply any mobile-specific patterns from Responsive > Mobile-specific patterns (bottom sheet,
   collapsed navigation, etc.).
 
+> **Step 7 ACs — verify before continuing to Step 8:**
+> - ✓ A separate artboard frame named `{Component Name} / {Breakpoint Name}` (PascalCase with spaces) exists for every breakpoint in Responsive > Breakpoints.
+> - ✓ Each responsive frame demonstrates the correct reflow: layout direction changes, hidden or reordered slots, and overflow behaviour match the spec.
+> - ✓ Mobile-specific patterns (bottom sheet, collapsed navigation, etc.) are applied where the spec defines them.
+
 **Step 8 — Add accessibility annotations**
 From Accessibility, annotate on the default Component frame:
 - **Landmark** — annotate the ARIA landmark role on the outermost frame.
@@ -156,6 +191,14 @@ From Accessibility, annotate on the default Component frame:
 - **Live regions** — annotate which state transitions trigger a live region announcement,
   the aria-live value (polite / assertive), and the content of the announcement.
 - **Skip links** — if the spec defines skip links, annotate the target element IDs.
+
+> **Step 8 ACs — verify before Gate 3:**
+> - ✓ The ARIA landmark role is annotated on the outermost Component frame with the correct aria-label or aria-labelledby value.
+> - ✓ Every heading level in the Accessibility > Heading hierarchy table is annotated on the correct text layer; no levels are skipped.
+> - ✓ Every aria-* attribute from the ARIA table is annotated with its value and condition.
+> - ✓ Focus management behaviour (trap, return point) is annotated.
+> - ✓ Every live region in the Live regions table is annotated with its aria-live value (polite/assertive) and aria-atomic.
+> - ✓ Skip links and their target element IDs are annotated (if specified in the spec).
 
 ### Gate 3 — Output
 
