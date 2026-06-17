@@ -16,6 +16,15 @@ This skill builds one molecule Component in Figma from the molecule build brief.
 are always Component Instances of already-built atoms — never raw shapes or groups that duplicate
 an atom's appearance. It does not read `component-spec.md` directly.
 
+## Naming convention
+
+All Figma artifact names — pages, component names, and frame names — use **lowercase kebab-case**.
+Convert the component name from the brief before using it anywhere in Figma:
+`FormField` → `form-field`, `SearchBar` → `search-bar`.
+
+Exception: internal layer names inside a Component must match the Anatomy > Structure part names
+from the spec exactly, regardless of casing.
+
 ## Inputs
 
 The build brief from `designer-ds-molecule-build`, containing:
@@ -49,14 +58,15 @@ Verify:
 ### Gate 2 — Process
 
 **Step 1 — Create or navigate to the component page**
-Each molecule lives on its own dedicated Figma page named exactly after the component (e.g.
-`FormField`, `SearchBar`). Check whether the page already exists in the design file:
-- If it does not exist, create it with that name, then navigate to it.
+Convert the component name from the brief to lowercase kebab-case — this is the page name
+(e.g. `FormField` → `form-field`, `SearchBar` → `search-bar`). Check whether the page exists:
+- If it does not exist, create it with the kebab-case name, then navigate to it.
 - If it exists, navigate to it.
 All subsequent steps place content on this page only.
 
 **Step 2 — Create the Component frame**
-Create or locate the molecule Component on the current page. Name it exactly as in the brief.
+Create or locate the molecule Component on the current page. Name it using the same lowercase
+kebab-case form (e.g. `form-field`, `search-bar`).
 
 **Step 3 — Place atom instances**
 From the Composition table, for each slot in the listed order:

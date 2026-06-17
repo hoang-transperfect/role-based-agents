@@ -16,6 +16,12 @@ This skill translates the foundation build brief into Figma primitives. It is in
 directly. Its only job is to faithfully publish every token in the brief into the target Figma
 file as Variables or Styles.
 
+## Naming convention
+
+All Figma artifact names — pages, Variable collection names, and Style group names — use
+**lowercase kebab-case**. Token/Variable names within collections must match the brief exactly
+(they use slash-separated hierarchy, e.g. `color/action/primary`).
+
 ## Inputs
 
 The build brief from `designer-ds-foundation-build`, containing:
@@ -51,11 +57,11 @@ each token category. Page names are fixed:
 
 | Token category | Figma page name |
 |----------------|----------------|
-| Color tokens | `Color` |
-| Spacing tokens | `Spacing` |
-| Typography tokens | `Typography` |
-| Elevation / shadow tokens | `Elevation` |
-| Any other category | The category name, title-cased |
+| Color tokens | `color` |
+| Spacing tokens | `spacing` |
+| Typography tokens | `typography` |
+| Elevation / shadow tokens | `elevation` |
+| Any other category | The category name in lowercase kebab-case |
 
 For each page: if it does not exist, create it. If it exists, navigate to it before working on
 that category. All Variables and Styles for a category are displayed on their own page — never
@@ -64,7 +70,7 @@ mixed across pages.
 Work through each token category in order:
 
 **Color tokens → Color Variables**
-- Create (or open existing) a Variable collection named `Color`.
+- Create (or open existing) a Variable collection named `color`.
 - For each token, create a Color Variable. Use the token name exactly as the Variable name,
   preserving the grouping hierarchy with `/` as separator
   (e.g. token `color/action/primary` → Variable `color/action/primary` in group `color/action`).
@@ -74,7 +80,7 @@ Work through each token category in order:
   value.
 
 **Spacing tokens → Number Variables**
-- Create (or open existing) a Variable collection named `Spacing`.
+- Create (or open existing) a Variable collection named `spacing`.
 - For each token, create a Number Variable with the exact token name and the px value.
 
 **Typography tokens → Text Styles**

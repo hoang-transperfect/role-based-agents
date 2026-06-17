@@ -18,6 +18,18 @@ are the most complex component level: they add responsive reflow frames, lifecyc
 a full accessibility structure. All sub-components are molecule or atom Component Instances —
 never raw shapes. It does not read `component-spec.md` directly.
 
+## Naming convention
+
+All Figma artifact names — pages, component names, and frame names — use **lowercase kebab-case**.
+Convert the component name from the brief before using it anywhere in Figma:
+`NavigationBar` → `navigation-bar`, `DataTable` → `data-table`.
+
+Responsive frames follow the pattern `{component-name}/{breakpoint-name}`, both in kebab-case
+(e.g. `data-table/mobile`, `data-table/tablet`).
+
+Exception: internal layer names inside a Component must match the Anatomy > Structure part names
+from the spec exactly, regardless of casing.
+
 ## Inputs
 
 The build brief from `designer-ds-organism-build`, containing:
@@ -63,15 +75,16 @@ Verify:
 ### Gate 2 — Process
 
 **Step 1 — Create or navigate to the component page**
-Each organism lives on its own dedicated Figma page named exactly after the component (e.g.
-`NavigationBar`, `DataTable`, `Modal`). Check whether the page already exists in the design file:
-- If it does not exist, create it with that name, then navigate to it.
+Convert the component name from the brief to lowercase kebab-case — this is the page name
+(e.g. `NavigationBar` → `navigation-bar`, `DataTable` → `data-table`). Check whether the page exists:
+- If it does not exist, create it with the kebab-case name, then navigate to it.
 - If it exists, navigate to it.
 All subsequent steps — including the Component frame and all responsive frames — are placed on
 this page only.
 
 **Step 2 — Create the Component frame**
-Create or locate the organism Component on the current page. Name it exactly as in the brief.
+Create or locate the organism Component on the current page. Name it using the same lowercase
+kebab-case form (e.g. `navigation-bar`, `data-table`).
 
 **Step 3 — Place sub-component instances**
 From the Composition table, for each slot in the listed order:
@@ -116,7 +129,7 @@ From Appearance > Tokens:
 **Step 7 — Create responsive frames**
 From Responsive > Breakpoints, for each breakpoint:
 - Create a separate artboard frame (not a variant — a standalone frame) named
-  `{ComponentName} / {breakpoint-name}` (e.g. `DataTable / mobile`).
+  `{component-name}/{breakpoint-name}` in lowercase kebab-case (e.g. `data-table/mobile`).
 - Start from the default Component composition, then apply the reflow changes described in
   Responsive > Reflow strategy:
   - Layout direction changes (horizontal → vertical).
