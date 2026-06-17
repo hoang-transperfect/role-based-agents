@@ -46,7 +46,22 @@ If the file link is missing or the brief is empty, stop and report the gap to
 
 ### Gate 2 — Process
 
-Open the target Figma file. Work through each token category in order:
+Open the target Figma file. Before publishing any tokens, ensure a dedicated page exists for
+each token category. Page names are fixed:
+
+| Token category | Figma page name |
+|----------------|----------------|
+| Color tokens | `Color` |
+| Spacing tokens | `Spacing` |
+| Typography tokens | `Typography` |
+| Elevation / shadow tokens | `Elevation` |
+| Any other category | The category name, title-cased |
+
+For each page: if it does not exist, create it. If it exists, navigate to it before working on
+that category. All Variables and Styles for a category are displayed on their own page — never
+mixed across pages.
+
+Work through each token category in order:
 
 **Color tokens → Color Variables**
 - Create (or open existing) a Variable collection named `Color`.

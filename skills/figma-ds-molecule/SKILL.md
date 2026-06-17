@@ -48,16 +48,23 @@ Verify:
 
 ### Gate 2 — Process
 
-**Step 1 — Create the Component frame**
-Create or locate the molecule Component in the design file. Name it exactly as in the brief.
+**Step 1 — Create or navigate to the component page**
+Each molecule lives on its own dedicated Figma page named exactly after the component (e.g.
+`FormField`, `SearchBar`). Check whether the page already exists in the design file:
+- If it does not exist, create it with that name, then navigate to it.
+- If it exists, navigate to it.
+All subsequent steps place content on this page only.
 
-**Step 2 — Place atom instances**
+**Step 2 — Create the Component frame**
+Create or locate the molecule Component on the current page. Name it exactly as in the brief.
+
+**Step 3 — Place atom instances**
 From the Composition table, for each slot in the listed order:
 - Place a Component Instance of the atom at the given component URL.
 - Name the instance layer exactly as the slot name in the brief.
 - Never create a raw shape, group, or local frame in place of an atom instance.
 
-**Step 3 — Apply auto-layout**
+**Step 4 — Apply auto-layout**
 From Anatomy > Layout:
 - Set auto-layout direction (horizontal / vertical).
 - Set alignment (start / center / end / space-between) as specified.
@@ -68,13 +75,23 @@ From Anatomy > Spacing:
 - Set padding on each side (top, right, bottom, left) using the spacing Variable references
   named in the brief.
 
-**Step 4 — Create molecule-level Variant properties**
+**Step 5 — Create molecule-level Variant properties and arrange as a table**
 From Appearance > Variants:
 - Add Variant properties at the molecule Component level.
 - For each variant combination, create or select the variant frame.
 - Apply style rules using Variable references only — no hardcoded values.
 
-**Step 5 — Set up state propagation**
+After all variant frames are created, arrange the component set as a grid table — no overlapping
+or stacking:
+- **Columns** = values of the first variant property.
+- **Rows** = values of the second variant property.
+- If there are more than two variant properties, nest additional properties within each column
+  group as sub-columns.
+- Use a consistent gap of 40px between cells in both directions.
+- Every cell position in the grid must correspond to exactly one variant combination — no cell
+  is left empty or duplicated.
+
+**Step 6 — Set up state propagation**
 From Appearance > State, for each molecule state:
 - Determine the representation: Variant property value or Figma interactive state.
 - Within each state's variant frame, for every atom listed in the atoms-affected column:
@@ -82,13 +99,13 @@ From Appearance > State, for each molecule state:
   property to the value named in the brief.
 - Every atom-state pairing in the brief must be reflected in the corresponding variant frame.
 
-**Step 6 — Apply molecule-scope Variable references**
+**Step 7 — Apply molecule-scope Variable references**
 From Appearance > Tokens:
 - Apply each token as a Variable reference on the named layer (spacing gaps, border radius
   at molecule scope, etc.).
 - No hardcoded values where the brief names a token.
 
-**Step 7 — Add ARIA and keyboard annotations**
+**Step 8 — Add ARIA and keyboard annotations**
 From Accessibility > ARIA relationships:
 - Annotate each atom instance that carries an aria-labelledby or aria-describedby reference,
   naming the target instance it points to and the condition under which the relationship applies.

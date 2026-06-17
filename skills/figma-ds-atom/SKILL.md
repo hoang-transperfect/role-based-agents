@@ -51,11 +51,18 @@ Verify:
 
 ### Gate 2 — Process
 
-**Step 1 — Create the Component frame**
-Create a new Component (or locate the existing one to update by name) in the design file. Name
+**Step 1 — Create or navigate to the component page**
+Each atom lives on its own dedicated Figma page named exactly after the component (e.g. `Button`,
+`Input`, `Checkbox`). Check whether the page already exists in the design file:
+- If it does not exist, create it with that name, then navigate to it.
+- If it exists, navigate to it.
+All subsequent steps place content on this page only.
+
+**Step 2 — Create the Component frame**
+Create a new Component (or locate the existing one to update by name) on the current page. Name
 it exactly as the component name in the brief.
 
-**Step 2 — Build the layer hierarchy**
+**Step 3 — Build the layer hierarchy**
 From Anatomy > Structure, build the layer tree inside the Component:
 - Each part name in the hierarchy becomes a named frame or layer.
 - Layer names must match the part names **exactly** — no renaming, no abbreviation.
@@ -63,25 +70,35 @@ From Anatomy > Structure, build the layer tree inside the Component:
   Text instance): place a Component Instance using the dependency URL. Never create a raw
   shape or group in place of a referenced component.
 
-**Step 3 — Create Variant properties**
+**Step 4 — Create Variant properties**
 From Appearance > Props, add a Variant property for each prop:
 - Property name = prop name from the brief, exactly.
 - Values = all accepted values from the brief, in the same order listed.
 
-**Step 4 — Create variant frames**
+**Step 5 — Create variant frames and arrange as a table**
 From Appearance > Variants, for each row (prop combination → style rules):
 - Create or select the variant frame matching that combination.
 - Apply the style rules (fill, stroke, radius, opacity, spacing) using Variable references only.
   If a style rule names a token, apply it as a Variable reference — never as a hardcoded value.
 
-**Step 5 — Apply Variable references**
+After all variant frames are created, arrange the component set as a grid table — no overlapping
+or stacking:
+- **Columns** = values of the first variant property (e.g. `variant: primary, secondary, ghost`).
+- **Rows** = values of the second variant property (e.g. `size: sm, md, lg`).
+- If there are more than two variant properties, nest additional properties within each column
+  group as sub-columns.
+- Use a consistent gap of 40px between cells in both directions.
+- Every cell position in the grid must correspond to exactly one variant combination — no cell
+  is left empty or duplicated.
+
+**Step 6 — Apply Variable references**
 From Appearance > Tokens, for each row (token name → layer → property):
 - Navigate to the named layer within the Component.
 - Apply the token as a Variable reference on the specified property.
 - If the token name does not match a published Variable in the file, stop:
   "Token `{name}` not found in Figma Variables. Resolve before continuing."
 
-**Step 6 — Represent states**
+**Step 7 — Represent states**
 From Appearance > State (both appearance states and interaction states):
 - **Appearance states** (disabled, error, loading, read-only) — represent as Variant property
   values on the existing Variant property set. Apply the visual treatment for each using
@@ -91,7 +108,7 @@ From Appearance > State (both appearance states and interaction states):
   additional Variant property values.
 - Every state in the brief must have a representation. No state may be silently omitted.
 
-**Step 7 — Add accessibility annotations**
+**Step 8 — Add accessibility annotations**
 From Accessibility, add annotation layers (or use Figma's built-in annotation system):
 - **ARIA role** — annotate the role on the outermost Component frame.
 - **aria-* attributes** — annotate each attribute and the condition under which it applies

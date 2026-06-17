@@ -62,21 +62,29 @@ Verify:
 
 ### Gate 2 — Process
 
-**Step 1 — Create the Component frame**
-Create or locate the organism Component in the design file. Name it exactly as in the brief.
+**Step 1 — Create or navigate to the component page**
+Each organism lives on its own dedicated Figma page named exactly after the component (e.g.
+`NavigationBar`, `DataTable`, `Modal`). Check whether the page already exists in the design file:
+- If it does not exist, create it with that name, then navigate to it.
+- If it exists, navigate to it.
+All subsequent steps — including the Component frame and all responsive frames — are placed on
+this page only.
 
-**Step 2 — Place sub-component instances**
+**Step 2 — Create the Component frame**
+Create or locate the organism Component on the current page. Name it exactly as in the brief.
+
+**Step 3 — Place sub-component instances**
 From the Composition table, for each slot in the listed order:
 - Place a Component Instance of the molecule or atom at the given URL.
 - Name the instance layer exactly as the slot name.
 - Never create raw shapes or groups in place of component instances.
 
-**Step 3 — Apply auto-layout and spacing**
+**Step 4 — Apply auto-layout and spacing**
 From Anatomy > Layout and Anatomy > Spacing:
 - Set auto-layout direction, alignment, and gap using Variable references.
 - Set padding on each side using spacing Variable references.
 
-**Step 4 — Create Variant properties and states**
+**Step 5 — Create Variant properties, states, and arrange as a table**
 From Appearance > Variants:
 - Add organism-level Variant properties and create variant frames.
 - Apply style rules using Variable references only.
@@ -91,11 +99,21 @@ From Appearance > State (lifecycle and interactive):
 - **Interactive states** — represent as Variant property values or Figma interactive
   component states using "Change to" interactions.
 
-**Step 5 — Apply organism-scope Variable references**
+After all variant frames are created, arrange the component set as a grid table — no overlapping
+or stacking:
+- **Columns** = values of the first variant property.
+- **Rows** = values of the second variant property (e.g. lifecycle state: default, loading,
+  empty, error).
+- If there are more than two variant properties, nest additional properties within each column
+  group as sub-columns.
+- Use a consistent gap of 40px between cells in both directions.
+- Responsive frames (from Step 6) are placed below the component set, not inside it.
+
+**Step 6 — Apply organism-scope Variable references**
 From Appearance > Tokens:
 - Apply each token as a Variable reference on the named layer. No hardcoded values.
 
-**Step 6 — Create responsive frames**
+**Step 7 — Create responsive frames**
 From Responsive > Breakpoints, for each breakpoint:
 - Create a separate artboard frame (not a variant — a standalone frame) named
   `{ComponentName} / {breakpoint-name}` (e.g. `DataTable / mobile`).
@@ -107,7 +125,7 @@ From Responsive > Breakpoints, for each breakpoint:
 - Apply any mobile-specific patterns from Responsive > Mobile-specific patterns (bottom sheet,
   collapsed navigation, etc.).
 
-**Step 7 — Add accessibility annotations**
+**Step 8 — Add accessibility annotations**
 From Accessibility, annotate on the default Component frame:
 - **Landmark** — annotate the ARIA landmark role on the outermost frame (e.g. `role="main"`,
   `role="navigation"`, `role="complementary"`).
