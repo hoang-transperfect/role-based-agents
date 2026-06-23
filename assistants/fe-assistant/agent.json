@@ -1,56 +1,56 @@
 {
   "version": "1.0.5",
   "agentFile": {
-    "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/assistants/fe-assistant/fe-assistant.md"
+    "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/assistants/fe-assistant/fe-assistant.md"
   },
   "skills": [
     {
       "name": "create-project",
-      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/create-project/SKILL.md"
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/skills/create-project/SKILL.md"
     },
     {
       "name": "gather-needs",
-      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/gather-needs/SKILL.md"
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/skills/gather-needs/SKILL.md"
     },
     {
       "name": "create-task",
-      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/create-task/SKILL.md"
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/skills/create-task/SKILL.md"
     },
     {
       "name": "resume-task",
-      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/resume-task/SKILL.md"
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/skills/resume-task/SKILL.md"
     },
     {
       "name": "improve-skill",
-      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/improve-skill/SKILL.md"
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/skills/improve-skill/SKILL.md"
     },
     {
       "name": "create-skill",
-      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/create-skill/SKILL.md"
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/skills/create-skill/SKILL.md"
     },
     {
       "name": "commit-work",
-      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/commit-work/SKILL.md"
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/skills/commit-work/SKILL.md"
     },
     {
       "name": "fe-scan-context",
-      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/fe-scan-context/SKILL.md"
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/skills/fe-scan-context/SKILL.md"
     },
     {
       "name": "fe-setup-project",
-      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/fe-setup-project/SKILL.md"
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/skills/fe-setup-project/SKILL.md"
     },
     {
       "name": "fe-lib-plan",
-      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/fe-lib-plan/SKILL.md"
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/skills/fe-lib-plan/SKILL.md"
     },
     {
       "name": "fe-write-tests",
-      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/fe-write-tests/SKILL.md"
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/skills/fe-write-tests/SKILL.md"
     },
     {
       "name": "fe-implement",
-      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/main/skills/fe-implement/SKILL.md"
+      "source": "https://raw.githubusercontent.com/hoang-transperfect/role-based-agents/create-assitant-skill/skills/fe-implement/SKILL.md"
     }
   ],
   "rules": [],
